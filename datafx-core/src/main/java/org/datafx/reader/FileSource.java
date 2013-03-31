@@ -28,9 +28,9 @@ import org.xml.sax.SAXException;
  *
  * @author johan
  */
-public class FileSource<T> extends AbstractDataReader<T> {
+public class FileSource<T> extends InputStreamDataReader<T> {
 
-    private InputStream is;
+  //  private InputStream is;
     private InputStreamConverter<T> converter;
 
     /**
@@ -90,8 +90,8 @@ public class FileSource<T> extends AbstractDataReader<T> {
      * @throws FileNotFoundException
      */
     public FileSource(File f, InputStreamConverter converter, Class clazz) throws FileNotFoundException {
-        this.is = new FileInputStream(f);
-        this.converter = converter;
+        setInputStream(new FileInputStream(f));
+        setConverter(converter);
     }
 
     /**
@@ -107,18 +107,4 @@ public class FileSource<T> extends AbstractDataReader<T> {
 //        this.clazz = clazz;
 //    }
     
-    public T getData() {
-        if (isSingle()) {
-            T answer = converter.convert(is);
-            return answer;
-        }
-        else {
-            T answer = converter.next(is);
-            return answer;
-        }
-    }
-
-    public boolean hasMoreData() {
-        return converter.hasMoreData(is);
-    }
 }

@@ -24,7 +24,7 @@ import org.datafx.reader.util.OAuth;
  *
  * @author johan
  */
-public class RestSource <T> extends AbstractDataReader<T> {
+public class RestSource <T> extends InputStreamDataReader<T> {
     
     private InputStreamConverter<T> converter;
     private String host;
@@ -38,7 +38,7 @@ public class RestSource <T> extends AbstractDataReader<T> {
     private Map<String, String> formParams = new HashMap<String, String>();
     private String dataString;
     private String requestMethod;
-    private InputStream is;
+ //   private InputStream is;
     
     public RestSource(String host,InputStreamConverter converter) {
         this.host = host;
@@ -49,28 +49,13 @@ public class RestSource <T> extends AbstractDataReader<T> {
         this.path = path;
     }
     
-        public T getData() {
-        if (isSingle()) {
-            T answer = converter.convert(is);
-            return answer;
-        }
-        else {
-            T answer = converter.next(is);
-            return answer;
-        }
-    }
-
-    public boolean hasMoreData() {
-        return converter.hasMoreData(is);
-    }
-    
     private synchronized void createRequest () {
         InputStream is = null;
         try {
             if (requestMade) {
                 return;
             }
-            is = getInputStream();
+            setInputStream(createInputStream());
             requestMade = true;
         } catch (IOException ex) {
             Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,7 +68,7 @@ public class RestSource <T> extends AbstractDataReader<T> {
         }
     }
     
-     public InputStream getInputStream() throws IOException {
+     public InputStream createInputStream() throws IOException {
         URL url = new URL(host);
         URLConnection connection = url.openConnection();
         if (getConsumerKey() != null) {
