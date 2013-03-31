@@ -1,0 +1,8 @@
+----------------------------------------------------------------
+2013-03-31 15:36:54.438 GMT:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.6.2.1 - (999685): instance a816c00e-013d-c118-1737-00000604bf68 
+on database directory memory:/home/johan/javafx/datafx/modular/datafx-samples/myDB  with class loader sun.misc.Launcher$AppClassLoader@4af6ae1c 
+Loaded from file:/home/johan/.m2/repository/org/apache/derby/derby/10.6.2.1/derby-10.6.2.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_09-b05
+Database Class Loader started - derby.database.classpath=''
