@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.datafx.reader.util.Converter;
 import org.datafx.reader.util.InputStreamConverter;
 import org.datafx.reader.util.OAuth;
 

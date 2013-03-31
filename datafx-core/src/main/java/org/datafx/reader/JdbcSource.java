@@ -15,12 +15,11 @@ import org.datafx.reader.util.JdbcDataSourceUtil;
  *
  * @author johan
  */
-public class JdbcSource<T> implements DataReader<T> {
+public class JdbcSource<T> extends AbstractDataReader<T> {
 
     private final String jdbcUrl;
     private final String selectStatement;
     private final JdbcConverter<T> converter;
-    private boolean single;
     private boolean connectionCreated;
     private boolean lastResult;
     private ResultSet resultSet;
@@ -36,22 +35,16 @@ public class JdbcSource<T> implements DataReader<T> {
         this.converter = converter;
     }
 
-    public void setSingle(boolean v) {
-        this.single = v;
-    }
 
     private synchronized void createConnection() {
-        System.out.println("Creating connection");
         if (connectionCreated) {
-            System.out.println("Already created");
             return;
         }
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(jdbcUrl);
             Statement query = connection.createStatement();
-            if (single) {
-                System.out.println("single, maxrows = 1");
+            if (isSingle()) {
                 query.setMaxRows(1);
             }
             resultSet = query.executeQuery(selectStatement);
@@ -65,7 +58,6 @@ public class JdbcSource<T> implements DataReader<T> {
     }
 
     public T getData() {
-        System.out.println("Get data called, resultset = "+resultSet);
        
         if (!connectionCreated) {
             createConnection();
@@ -89,10 +81,6 @@ public class JdbcSource<T> implements DataReader<T> {
         }
         try {
             return lastResult;
-//            if  (resultSet.next()) {
-//                resultSet.previous();
-//                return true;
-//            }
         } catch (Exception ex) {
             Logger.getLogger(JdbcSource.class.getName()).log(Level.SEVERE, null, ex);
         }

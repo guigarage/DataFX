@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.datafx.reader;
 
 import java.io.InputStream;
@@ -9,6 +5,9 @@ import org.datafx.reader.util.InputStreamConverter;
 
 /**
  *
+ * Abstract class for functionality common across datareaders that rely on
+ * InputStreams. Common functionality includes the handling of a
+ * Converting, translating the inputstream data into Object(s)
  * @author johan
  */
 public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
