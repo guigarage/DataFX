@@ -30,6 +30,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
     }
 
     public boolean hasMoreData() {
+        System.out.println("HMD called, conv = "+converter+", is = "+is);
         return converter.hasMoreData(is);
     }
 

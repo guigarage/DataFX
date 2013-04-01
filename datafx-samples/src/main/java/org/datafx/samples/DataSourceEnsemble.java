@@ -40,9 +40,11 @@ public class DataSourceEnsemble extends Application {
         tabPane.prefHeightProperty().bind(scene.heightProperty());
         root.getChildren().add(tabPane);
        
-        createTab("Single", tabPane, new SingleObjectSample().getContent(scene));
-        createTab("List", tabPane, new ListObjectSample().getContent(scene));
-        createTab("jdbc", tabPane, new JdbcSample().getContent(scene));
+        createTab("File-XML-Single", tabPane, new FileXmlSingleSample().getContent(scene));
+        createTab("File-XML-List", tabPane, new FileXmlListSample().getContent(scene));
+        createTab("jdbc-list", tabPane, new JdbcSample().getContent(scene));
+       // createTab("Network-XML-List", tabPane, new RestSample().getContent(scene));
+
    
         stage.setScene(scene);
         stage.show();

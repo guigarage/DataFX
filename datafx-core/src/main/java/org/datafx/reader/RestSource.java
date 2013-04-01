@@ -25,7 +25,7 @@ import org.datafx.reader.util.OAuth;
  */
 public class RestSource <T> extends InputStreamDataReader<T> {
     
-    private InputStreamConverter<T> converter;
+ //   private InputStreamConverter<T> converter;
     private String host;
     private String path;
     private String urlBase;
@@ -41,7 +41,8 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     
     public RestSource(String host,InputStreamConverter converter) {
         this.host = host;
-        this.converter= converter;
+        setConverter (converter);
+        //this.converter= converter;
     }
     
     public void setPath(String path) {
@@ -49,7 +50,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     }
     
     private synchronized void createRequest () {
-        InputStream is = null;
+      
         try {
             if (requestMade) {
                 return;
@@ -58,13 +59,21 @@ public class RestSource <T> extends InputStreamDataReader<T> {
             requestMade = true;
         } catch (IOException ex) {
             Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
+    }
+    
+    public T getData() {
+        if (!requestMade) {
+            createRequest();
+        }
+        return super.getData();
+    }
+
+    public boolean hasMoreData() {
+        if (!requestMade) {
+            createRequest();
+        }
+        return super.hasMoreData();
     }
     
      public InputStream createInputStream() throws IOException {
