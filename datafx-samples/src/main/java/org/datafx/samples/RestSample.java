@@ -53,6 +53,7 @@ public class RestSample {
         try {
             XmlConverter converter = new XmlConverter("item", Tweet.class);
             RestSource dr = new RestSource("http://search.twitter.com", converter);
+            dr.setPath("search.rss?q=javafx");
             ListObjectDataProvider<Tweet> sodp = new ListObjectDataProvider(dr);
             sodp.retrieve();
 
@@ -64,7 +65,7 @@ public class RestSample {
         }
     }
 
-    public class Tweet {
+    public static class Tweet {
 
         private StringProperty titleProperty = new SimpleStringProperty();
         private StringProperty authorProperty = new SimpleStringProperty();

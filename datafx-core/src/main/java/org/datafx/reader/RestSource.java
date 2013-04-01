@@ -77,7 +77,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     }
     
      public InputStream createInputStream() throws IOException {
-        URL url = new URL(host);
+        URL url = new URL(host+"/"+ path);
         URLConnection connection = url.openConnection();
         if (getConsumerKey() != null) {
             try {

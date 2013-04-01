@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.118" errors="0" skipped="0" tests="2" name="org.datafx.test.FileSourceTest">
+<testsuite failures="0" time="0.133" errors="0" skipped="0" tests="2" name="org.datafx.test.FileSourceTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/opt/jdk1.7.0_09/jre/lib/amd64"/>
@@ -24,9 +24,9 @@
 "/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Linux"/>
-    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="classworlds.conf" value="/opt/netbeans-7.2/java/maven/bin/m2.conf"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.library.path" value="/home/johan/lib:/usr/local/JMF-2.1.1e/lib:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="51.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -37,7 +37,7 @@
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.specification.version" value="1.7"/>
     <property name="user.name" value="johan"/>
-    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.class.path" value="/opt/netbeans-7.2/java/maven/boot/plexus-classworlds-2.4.jar"/>
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/opt/jdk1.7.0_09/jre"/>
@@ -51,7 +51,7 @@
     <property name="securerandom.source" value="file:/dev/./urandom"/>
     <property name="sun.boot.class.path" value="/opt/jdk1.7.0_09/jre/lib/resources.jar:/opt/jdk1.7.0_09/jre/lib/rt.jar:/opt/jdk1.7.0_09/jre/lib/sunrsasign.jar:/opt/jdk1.7.0_09/jre/lib/jsse.jar:/opt/jdk1.7.0_09/jre/lib/jce.jar:/opt/jdk1.7.0_09/jre/lib/charsets.jar:/opt/jdk1.7.0_09/jre/lib/jfr.jar:/opt/jdk1.7.0_09/jre/classes"/>
     <property name="java.vendor" value="Oracle Corporation"/>
-    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="maven.home" value="/opt/netbeans-7.2/java/maven"/>
     <property name="file.separator" value="/"/>
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -59,6 +59,6 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.104" classname="org.datafx.test.FileSourceTest" name="testReadManyXML"/>
+  <testcase time="0.115" classname="org.datafx.test.FileSourceTest" name="testReadManyXML"/>
   <testcase time="0.003" classname="org.datafx.test.FileSourceTest" name="testReadSingleXML"/>
 </testsuite>
