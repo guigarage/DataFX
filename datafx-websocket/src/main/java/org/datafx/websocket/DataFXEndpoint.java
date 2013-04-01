@@ -15,13 +15,15 @@ import javax.websocket.Session;
  */
 public class DataFXEndpoint extends Endpoint implements MessageHandler.Whole<String> {
 
+    static protected WebSocketReader parent;
+    
     @Override
     public void onOpen(Session session, EndpointConfig config) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        session.addMessageHandler(this);
     }
 
     public void onMessage(String message) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        parent.setAvailableData(message);
     }
     
 }

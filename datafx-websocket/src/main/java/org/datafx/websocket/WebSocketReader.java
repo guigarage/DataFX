@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.datafx.websocket;
 
 import java.io.IOException;
@@ -21,12 +17,17 @@ import org.datafx.reader.DataReader;
 public class WebSocketReader<T> implements DataReader<T> {
     
     private String address;
+    private boolean connected = false;
+    private T availableData;
+    private Object availableLock = new Object();
+    private boolean closed = false;
     
     public WebSocketReader (String address) {
         this.address = address;
+        DataFXEndpoint.parent = this; // TODO refactor this
     }
     
-    private void connectEndpoing () {
+    private void connectEndpoint () {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(DataFXEndpoint.class, null, new URI(address));
@@ -38,12 +39,28 @@ public class WebSocketReader<T> implements DataReader<T> {
             Logger.getLogger(WebSocketReader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void setAvailableData (T data) {
+        synchronized (this.availableLock) {
+            this.availableData = data;
+        }
+    }
+    
     public T getData() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        synchronized (this.availableLock) {
+            if (this.availableData == null) {
+                try {
+                    this.availableLock.wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(WebSocketReader.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return this.availableData;
     }
 
     public boolean hasMoreData() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return !closed;
     }
 
     
