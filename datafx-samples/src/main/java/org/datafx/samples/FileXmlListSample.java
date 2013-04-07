@@ -17,7 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.datafx.provider.ListObjectDataProvider;
 import org.datafx.reader.FileSource;
-import org.datafx.reader.util.XmlConverter;
+import org.datafx.reader.converter.XmlConverter;
 
 /**
  *
@@ -52,13 +52,13 @@ public class FileXmlListSample {
 	private void buildLocalTab(Tab tab) {
 		try {
 			URL resource = this.getClass().getResource("manybooks.xml");
-            XmlConverter converter = new XmlConverter("book", Book.class);
-			FileSource<Book> dr = new FileSource(new File(resource.getFile()),converter, Book.class);
-			ListObjectDataProvider<Book> sodp = new ListObjectDataProvider(dr);
+            XmlConverter<Book> converter = new XmlConverter<Book>("book", Book.class);
+			FileSource<Book> dr = new FileSource<Book>(new File(resource.getFile()),converter);
+			ListObjectDataProvider<Book> sodp = new ListObjectDataProvider<Book>(dr);
 			sodp.retrieve();
 		
 			final ListProperty<Book> op = sodp.getData();
-            ListView lv = new ListView(op.get());
+            ListView<Book> lv = new ListView<Book>(op.get());
 			tab.setContent(lv);
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(FileXmlSingleSample.class.getName()).log(Level.SEVERE, null, ex);

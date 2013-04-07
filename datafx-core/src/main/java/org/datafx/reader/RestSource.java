@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.datafx.reader.util.InputStreamConverter;
-import org.datafx.reader.util.OAuth;
+
+import org.datafx.reader.converter.InputStreamConverter;
 
 /**
  *
@@ -39,9 +39,9 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     private String requestMethod;
  //   private InputStream is;
     
-    public RestSource(String host,InputStreamConverter converter) {
+    public RestSource(String host,InputStreamConverter<T> converter) {
+        super(converter);
         this.host = host;
-        setConverter (converter);
         //this.converter= converter;
     }
     
@@ -50,7 +50,6 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     }
     
     private synchronized void createRequest () {
-      
         try {
             if (requestMade) {
                 return;
@@ -62,21 +61,21 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         }
     }
     
-    public T getData() {
+    @Override public T get() {
         if (!requestMade) {
             createRequest();
         }
-        return super.getData();
+        return super.get();
     }
 
-    public boolean hasMoreData() {
+    @Override public boolean next() {
         if (!requestMade) {
             createRequest();
         }
-        return super.hasMoreData();
+        return super.next();
     }
     
-     public InputStream createInputStream() throws IOException {
+    public InputStream createInputStream() throws IOException {
         URL url = new URL(host+"/"+ path);
         URLConnection connection = url.openConnection();
         if (getConsumerKey() != null) {

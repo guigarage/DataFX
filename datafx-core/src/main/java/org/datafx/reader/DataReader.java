@@ -10,7 +10,8 @@ package org.datafx.reader;
  */
 public interface DataReader<T> {
 	
-	public T getData();
-	public boolean hasMoreData();
+	public T get();
+	
+	public boolean next();
 	
 }

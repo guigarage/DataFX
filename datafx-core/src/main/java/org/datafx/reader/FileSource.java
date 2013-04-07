@@ -3,8 +3,9 @@ package org.datafx.reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import org.datafx.reader.util.InputStreamConverter;
-import org.datafx.reader.util.XmlConverter;
+
+import org.datafx.reader.converter.InputStreamConverter;
+import org.datafx.reader.converter.XmlConverter;
 
 /**
  *
@@ -35,8 +36,8 @@ public class FileSource<T> extends InputStreamDataReader<T> {
      * @param filename the filename
      * @throws FileNotFoundException
      */
-    public FileSource(File f, Class clazz) throws FileNotFoundException {
-        this(f, new XmlConverter<T>("", clazz), clazz);
+    public FileSource(File f) throws FileNotFoundException {
+        this(f, new XmlConverter<T>("", null));
     }
 
     /**
@@ -71,9 +72,8 @@ public class FileSource<T> extends InputStreamDataReader<T> {
      * @param format the format of the data
      * @throws FileNotFoundException
      */
-    public FileSource(File f, InputStreamConverter converter, Class clazz) throws FileNotFoundException {
-        setInputStream(new FileInputStream(f));
-        setConverter(converter);
+    public FileSource(File f, InputStreamConverter<T> converter) throws FileNotFoundException {
+        super(new FileInputStream(f), converter);
     }
 
     /**

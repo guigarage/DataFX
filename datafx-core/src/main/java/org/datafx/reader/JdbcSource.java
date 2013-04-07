@@ -1,15 +1,12 @@
 package org.datafx.reader;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.datafx.reader.util.JdbcConverter;
-import org.datafx.reader.util.JdbcDataSourceUtil;
+
+import org.datafx.reader.converter.JdbcConverter;
+import org.datafx.reader.converter.JdbcDataSourceUtil;
 
 /**
  *
@@ -44,46 +41,24 @@ public class JdbcSource<T> extends AbstractDataReader<T> {
         try {
             connection = DriverManager.getConnection(jdbcUrl);
             Statement query = connection.createStatement();
-            if (isSingle()) {
-                query.setMaxRows(1);
-            }
             resultSet = query.executeQuery(selectStatement);
             lastResult = resultSet.next();
-           
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
         connectionCreated = true;
     }
 
-    public T getData() {
-       
+    @Override public T get() {
         if (!connectionCreated) {
             createConnection();
         }
-        if (hasMoreData()) {
-            try {
-                T answer = converter.convert(resultSet);
-                lastResult = resultSet.next();
-                return answer;
-            } catch (SQLException ex) {
-                Logger.getLogger(JdbcSource.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-      
-        return null;
+        
+        return converter.get();
     }
 
-    public boolean hasMoreData() {
-        if (!connectionCreated) {
-            createConnection();
-        }
-        try {
-            return lastResult;
-        } catch (Exception ex) {
-            Logger.getLogger(JdbcSource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
+    @Override public boolean next() {
+        return converter.next();
     }
+    
 }

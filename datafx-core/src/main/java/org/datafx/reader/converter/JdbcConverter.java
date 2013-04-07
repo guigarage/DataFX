@@ -24,23 +24,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.reader.util;
+package org.datafx.reader.converter;
 
-public class JdbcDataSourceUtil {
-    public static String createSelectStatement(String table, String... cols) {
-        if (cols == null || cols.length < 1) {
-            throw new IllegalArgumentException("No columns assigned!");
-        }
-        String queryString = "SELECT ";
-        int i = 0;
-        int totcols = cols.length;
-        while (i < totcols) {
-            queryString = queryString + cols[i];
-            i++;
-            if (i < totcols) {
-                queryString = queryString + ", ";
-            }
-        }
-        return queryString + " FROM " + table;
-    }
+import java.sql.ResultSet;
+
+
+public interface JdbcConverter<T> extends Converter<ResultSet, T> {
 }

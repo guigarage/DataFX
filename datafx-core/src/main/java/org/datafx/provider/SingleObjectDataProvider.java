@@ -93,7 +93,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
 		System.out.println("[JVDBG] createReceivertask called");
         Task<T> answer = new Task<T>() {
             @Override protected T call() throws Exception {
-				T entry = reader.getData();
+				T entry = reader.get();
 				System.out.println("[JVDBG] RECEIVERTASK RETURNS "+entry);
                 return entry;
             }

@@ -17,7 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import org.datafx.provider.ListObjectDataProvider;
 import org.datafx.reader.RestSource;
-import org.datafx.reader.util.XmlConverter;
+import org.datafx.reader.converter.XmlConverter;
 
 /**
  *

@@ -14,7 +14,7 @@ import java.util.List;
 import javax.xml.bind.JAXB;
 import junit.framework.TestCase;
 import org.datafx.reader.FileSource;
-import org.datafx.reader.util.XmlConverter;
+import org.datafx.reader.converter.XmlConverter;
 
 /**
  *
@@ -40,9 +40,9 @@ public class FileSourceTest extends TestCase {
 		URL url = this.getClass().getResource("singlebook.xml");
 		File f = new File(url.getFile());
 		assertTrue(f.exists());
-		FileSource<Book> fs = new FileSource(f, Book.class);
-		fs.setSingle(true);
-		Book data = fs.getData();
+		FileSource<Book> fs = new FileSource(f);
+//		fs.setSingle(true);
+		Book data = fs.get();
 		assertNotNull(data);
 	}
 	
@@ -53,12 +53,12 @@ public class FileSourceTest extends TestCase {
 		System.out.println("filename = "+fn);
 		File f = new File(fn);
 		assertTrue(f.exists());
-        XmlConverter converter = new XmlConverter("entries", Book.class);
-		FileSource<Book> fs = new FileSource(f, converter, Book.class);
+        XmlConverter<Book> converter = new XmlConverter<Book>("entries", Book.class);
+		FileSource<Book> fs = new FileSource<Book>(f, converter);
 		
 		List<Book> data = new LinkedList<Book>();
-		while (fs.hasMoreData()) {
-			data.add(fs.getData());
+		while (fs.next()) {
+			data.add(fs.get());
 		}
 		assertNotNull(data);
 		assertEquals(data.size(),2);

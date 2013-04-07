@@ -1,8 +1,8 @@
-package org.datafx.reader.util;
+package org.datafx.reader;
 
 import java.io.ByteArrayOutputStream;
 
-public class Base64 {
+class Base64 {
 
     private final static String base64 =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

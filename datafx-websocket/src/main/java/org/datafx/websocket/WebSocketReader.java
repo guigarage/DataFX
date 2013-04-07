@@ -46,7 +46,7 @@ public class WebSocketReader<T> implements DataReader<T> {
         }
     }
     
-    public T getData() {
+    public T get() {
         synchronized (this.availableLock) {
             if (this.availableData == null) {
                 try {
@@ -59,7 +59,7 @@ public class WebSocketReader<T> implements DataReader<T> {
         return this.availableData;
     }
 
-    public boolean hasMoreData() {
+    public boolean next() {
         return !closed;
     }
 

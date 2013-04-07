@@ -49,14 +49,13 @@ class FileXmlSingleSample {
 	private void buildLocalTab(Tab tab) {
 		try {
 			URL resource = this.getClass().getResource("singlebook.xml");
-			FileSource<Book> dr = new FileSource(new File(resource.getFile()), Book.class);
-			dr.setSingle(true);
-			SingleObjectDataProvider<Book> sodp = new SingleObjectDataProvider(dr);
+			FileSource<Book> dr = new FileSource<Book>(new File(resource.getFile()));
+			SingleObjectDataProvider<Book> sodp = new SingleObjectDataProvider<Book>(dr);
 			sodp.retrieve();
 			final Label title = new Label("HELLO");
 			final ObjectProperty<Book> op = sodp.getData();
 			op.addListener(new InvalidationListener() {
-				public void invalidated(Observable o) {
+				@Override public void invalidated(Observable o) {
 					Book book = op.get();
 					title.setText(book.getTitle());
 				}

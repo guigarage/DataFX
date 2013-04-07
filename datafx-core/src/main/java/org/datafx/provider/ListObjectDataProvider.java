@@ -23,7 +23,7 @@ import org.datafx.reader.DataReader;
 public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>>{
 	
 	private ListProperty<T> listProperty;
-    final private DataReader<T> reader;
+    private DataReader<T> reader;
     private Executor executor;
 
 	public ListObjectDataProvider (DataReader<T> reader) {
@@ -41,7 +41,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     }
 
     public void setReader(DataReader<T> reader) {
-        reader = reader;
+        this.reader = reader;
     }
 
     public DataReader<T> getReader() {
@@ -102,8 +102,8 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         PublishingTask<T> answer = new PublishingTask<T>() {
             @Override protected void callTask() throws Exception {
                 System.out.println("CallTask called");
-				while (getReader().hasMoreData()) {
-					final T entry = getReader().getData();
+				while (getReader().next()) {
+					final T entry = getReader().get();
                     System.out.println("Got data: "+entry);
 					publish (entry);
 				}

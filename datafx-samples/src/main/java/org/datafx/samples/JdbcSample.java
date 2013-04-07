@@ -23,7 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.datafx.provider.ListObjectDataProvider;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.JdbcSource;
-import org.datafx.reader.util.JdbcConverter;
+import org.datafx.reader.converter.JdbcConverter;
 
 /**
  *
@@ -60,26 +60,32 @@ public class JdbcSample {
         try {
             // We can create a DefaultJdbcConverter that does what we do below
             JdbcConverter<Person> converter = new JdbcConverter<Person>() {
-                public Person convert(ResultSet input) {
+                private ResultSet resultSet;
+                
+                @Override public void initialize(ResultSet input) {
+                    this.resultSet = input;
+                }
+                
+                @Override public Person get() {
                     try {
                         Person answer = new Person();
-                        answer.setFirstName(input.getString("firstName"));
-                        answer.setLastName(input.getString("lastName"));
-                        answer.setCountry(input.getString("country"));
+                        answer.setFirstName(resultSet.getString("firstName"));
+                        answer.setLastName(resultSet.getString("lastName"));
+                        answer.setCountry(resultSet.getString("country"));
                         return answer;
                     } catch (SQLException ex) {
                         Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     return null;
                 }
-
-                public Person next(ResultSet input) {
+                
+                @Override public boolean next() {
                     try {
-                        return convert(input);
-                    } catch (Exception ex) {
-                        Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
+                        return resultSet != null && ! resultSet.last();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                    return null;
+                    return false;
                 }
             };
             DataReader<Book> dr = new JdbcSource(dbURL, converter, "PERSON", "firstName", "lastName", "country");

@@ -24,12 +24,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.reader.util;
+package org.datafx.reader.converter;
 
 public interface Converter<T, U> {
-   // void initialize(U input);
     
-    T convert(U input);
+    public void initialize(T input);
     
-    T next(U input);
+    public U get();
+    
+    public boolean next();
 }

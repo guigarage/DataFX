@@ -1,4 +1,4 @@
-package org.datafx.reader.util;
+package org.datafx.reader;
 
 
 import java.io.UnsupportedEncodingException;
@@ -12,7 +12,7 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-public class OAuth {
+class OAuth {
 
     public static final String SIGNATURE = "oauth_signature";
     public static final String NONCE = "oauth_nonce";
