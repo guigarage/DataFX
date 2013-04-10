@@ -31,7 +31,6 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import javafx.scene.control.TableCell;
 import org.datafx.control.TableViewFactory;
 
 /**

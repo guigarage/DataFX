@@ -82,19 +82,19 @@ public class TableViewFactory<S> {
         return table;
     }
 
-    public static <S> TableViewFactory create(List<? extends S> items) {
+    public static <S> TableViewFactory<S> create(List<? extends S> items) {
         return create(FXCollections.observableArrayList(items));
     }
 
-    public static <S> TableViewFactory create(Class<? extends S> dataType, List<S> items) {
+    public static <S> TableViewFactory<S> create(Class<? extends S> dataType, List<S> items) {
         return create(dataType, FXCollections.observableArrayList(items));
     }
 
-    public static <S> TableViewFactory create(ObservableList<? extends S> items) {
+    public static <S> TableViewFactory<S> create(ObservableList<? extends S> items) {
         return create(null, FXCollections.observableArrayList(items));
     }
 
-    public static <S> TableViewFactory create(Class<? extends S> dataType, final ObservableList<S> items) {
+    public static <S> TableViewFactory<S> create(Class<? extends S> dataType, final ObservableList<S> items) {
         if (items == null) {
             throw new NullPointerException("items can not be null");
         }
@@ -126,7 +126,9 @@ public class TableViewFactory<S> {
     }
 
     private static <S> void createColumns(TableView<S> table) {
-        Class actualDataType = table.getItems().get(0).getClass();
+        @SuppressWarnings("unchecked")
+        Class<? extends S> actualDataType = (Class<? extends S>)table.getItems().get(0).getClass();
+        
         if (actualDataType != null) {
             List<TableColumn<S, ?>> columns = createColumns(actualDataType);
             table.getColumns().setAll(columns);
@@ -218,18 +220,18 @@ public class TableViewFactory<S> {
     private boolean columnSelectPerformed = false;
     private ObservableList<TableColumn<S, ?>> finalColumns;
 
-    public static <S> TableViewFactory configure(TableView<S> table) {
+    public static <S> TableViewFactory<S> configure(TableView<S> table) {
         return new TableViewFactory<S>(table);
     }
 
-    public static void print(TableView table) {
+    public static <S> void print(TableView<S> table) {
         print(table.getColumns());
     }
 
     public static <S> void print(ObservableList<TableColumn<S, ?>> columns) {
         System.out.println("Columns:");
         for (int i = 0; i < columns.size(); i++) {
-            TableColumn tc = columns.get(i);
+            TableColumn<S,?> tc = columns.get(i);
             System.out.println("    Text: " + tc.getText());
         }
     }
@@ -249,7 +251,7 @@ public class TableViewFactory<S> {
             return this;
         }
         
-        TableColumn tc;
+        TableColumn<S,?> tc;
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
 
@@ -271,7 +273,7 @@ public class TableViewFactory<S> {
             return this;
         }
         for (int i = 0; i < columns.size(); i++) {
-            TableColumn tc = columns.get(i);
+            TableColumn<S,?> tc = columns.get(i);
             if (oldName.equals(tc.getText())) {
                 tc.setText(newName);
                 break;
