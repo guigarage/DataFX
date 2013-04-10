@@ -248,15 +248,15 @@ public class TableViewFactory<S> {
         if (names == null || names.length == 0) {
             return this;
         }
+        
+        TableColumn tc;
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
 
-        for (int i = 0; i < columns.size(); i++) {
-            TableColumn tc = columns.get(i);
+            for (int j = 0; j < columns.size(); j++) {
+                tc = columns.get(j);
 
-            for (int j = 0; j < names.length; j++) {
-                String name = names[j];
-                if (name == null) {
-                    continue;
-                }
+                if (name == null) continue;
                 if (name.equals(tc.getText())) {
                     finalColumns.add(tc);
                     columnSelectPerformed = true;
@@ -264,7 +264,7 @@ public class TableViewFactory<S> {
             }
         }
         return this;
-    }
+    } 
 
     public TableViewFactory<S> renameColumn(String oldName, String newName) {
         if (oldName == null || oldName.isEmpty() || newName == null || newName.isEmpty()) {
