@@ -7,6 +7,7 @@ package org.datafx.test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,9 +37,9 @@ public class FileSourceTest extends TestCase {
 		super.tearDown();
 	}
 	
-	public void testReadSingleXML() throws FileNotFoundException {
+	public void testReadSingleXML() throws FileNotFoundException, URISyntaxException {
 		URL url = this.getClass().getResource("singlebook.xml");
-		File f = new File(url.getFile());
+		File f = new File(url.toURI());
 		assertTrue(f.exists());
 		FileSource<Book> fs = new FileSource(f);
 //		fs.setSingle(true);
