@@ -14,6 +14,19 @@
 
 	<name>datafx-core</name>
 	<url>http://maven.apache.org</url>
+
+	<developers>
+		<developer>
+			<name>Jonathan Giles</name>
+		</developer>
+		<developer>
+			<name>Johan Vos</name>
+		</developer>
+		<developer>
+			<name>Hendrik Ebbers</name>
+		</developer>
+	</developers>
+
 	<build>
 		<plugins>
 			<plugin>
