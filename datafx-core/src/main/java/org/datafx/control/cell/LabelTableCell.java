@@ -27,13 +27,9 @@
 package org.datafx.control.cell;
 
 import java.text.Format;
-import javafx.geometry.Pos;
+
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Callback;
 
 /**
  * <p>A class containing a {@link TableCell} implementation that draws a {@link Label}
