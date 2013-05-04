@@ -37,15 +37,15 @@ public class FileSourceTest extends TestCase {
 		super.tearDown();
 	}
 	
-	public void testReadSingleXML() throws FileNotFoundException, URISyntaxException {
-		URL url = this.getClass().getResource("singlebook.xml");
-		File f = new File(url.toURI());
-		assertTrue(f.exists());
-		FileSource<Book> fs = new FileSource(f);
-//		fs.setSingle(true);
-		Book data = fs.get();
-		assertNotNull(data);
-	}
+//	public void testReadSingleXML() throws FileNotFoundException, URISyntaxException {
+//		URL url = this.getClass().getResource("singlebook.xml");
+//		File f = new File(url.toURI());
+//		assertTrue(f.exists());
+//		FileSource<Book> fs = new FileSource(f);
+////		fs.setSingle(true);
+//		Book data = fs.get();
+//		assertNotNull(data);
+//	}
 	
 	public void testReadManyXML() throws FileNotFoundException, IOException {
 		//URL url = this.getClass().getResource("manybooks.xml");
