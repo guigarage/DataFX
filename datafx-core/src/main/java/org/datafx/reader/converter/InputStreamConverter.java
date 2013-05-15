@@ -1,8 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.datafx.reader.converter;
+
 
 import java.io.InputStream;
 

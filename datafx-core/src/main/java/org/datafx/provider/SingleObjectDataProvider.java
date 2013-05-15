@@ -21,7 +21,8 @@ import org.datafx.reader.DataReader;
  * @author johan
  */
 public class SingleObjectDataProvider<T> implements DataProvider<T> {
- private ObjectProperty<T> objectProperty;
+    // we can't make this final since the result objectproperty can be set via setResultObjectProperty.
+    private ObjectProperty<T> objectProperty;
     private Executor executor;
 	private final DataReader<T> reader;
 
@@ -30,12 +31,21 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
     }
 
     public SingleObjectDataProvider(DataReader<T> reader, Executor executor) {
-         this.reader = reader;
-		 this.executor = executor;
-		 this.objectProperty = new SimpleObjectProperty<T>();
-
+        this.reader = reader;
+        this.executor = executor;
+        this.objectProperty = new SimpleObjectProperty<T>();
     }
 
+    /**
+     * Sets the ObjectProperty that contains the result of the data retrieval.
+     * This method should not be called once the <code>retrieve</code> method has been called
+     * // TODO: enforce this
+     * @param result 
+     */
+    public void setResultObjectProperty(ObjectProperty<T> result) {
+        this.objectProperty = result;
+    }
+    
     public Worker<T> retrieve() {
         final Service<T> retriever = createService(objectProperty);
         retriever.setOnFailed(new EventHandler<WorkerStateEvent>() {
@@ -88,9 +98,8 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
         };
     }
 	
-	
     protected Task<T> createReceiverTask(final DataReader<T> reader) {
-		System.out.println("[JVDBG] createReceivertask called");
+        System.out.println("[JVDBG] createReceivertask called");
         Task<T> answer = new Task<T>() {
             @Override protected T call() throws Exception {
 				T entry = reader.get();

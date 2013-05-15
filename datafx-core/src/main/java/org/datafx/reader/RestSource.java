@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.datafx.reader;
 
 import java.io.IOException;
@@ -45,8 +41,36 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         //this.converter= converter;
     }
     
+    /**
+     * Append the provided path segment to the path
+     * @param p
+     * @return 
+     */
+    public RestSource path (String p) {
+        if (this.path == null) {
+            this.path ="";
+        }
+        this.path = this.path + "/"+ p;
+        
+        return this;
+    }
+    
+    /**
+     * Explicitly sets the path for this resource. 
+     * @param path the path. If null, the path will be empty
+     */
     public void setPath(String path) {
-        this.path = path;
+        if (path == null) {
+            this.path = "";
+        }
+        else {
+            if (path.startsWith("/")) {
+                this.path = path;
+            }
+            else {
+                this.path = "/"+path;
+            }
+        }
     }
     
     private synchronized void createRequest () {
@@ -75,8 +99,9 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         return super.next();
     }
     
-    public InputStream createInputStream() throws IOException {
-        URL url = new URL(host+"/"+ path);
+     public InputStream createInputStream() throws IOException {
+        URL url = new URL(host+ path);
+
         URLConnection connection = url.openConnection();
         if (getConsumerKey() != null) {
             try {

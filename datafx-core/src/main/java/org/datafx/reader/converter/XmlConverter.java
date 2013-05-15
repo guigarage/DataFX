@@ -33,11 +33,11 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
     private InputStream inputStream;
     
     public XmlConverter (String tag, Class<T> clazz) {
-        System.out.println("Created xmlconverter, tag = "+tag+" class = "+clazz);
+
         this.tag = tag;
         this.clazz = clazz;
     }
-    
+
     @Override public T get() {
         // if no clazz is specified, we assume it is a single item
         if (clazz == null) {
@@ -61,6 +61,7 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         final T entry = (T) JAXB.unmarshal(source, clazz);
         currentNode++;
         return entry;
+
     }
 
     @Override public boolean next() {
@@ -83,13 +84,12 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         if (clazz == null) {
             return;
         }
-        
+
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(inputStream);
             childNodes = doc.getElementsByTagName(tag);
-            System.out.println("tag = "+tag);
             totalNodes = childNodes.getLength();
             currentNode = 0;
             domCreated = true;
@@ -100,6 +100,5 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         } catch (IOException ex) {
             Logger.getLogger(XmlConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }
