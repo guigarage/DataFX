@@ -31,6 +31,14 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         this(reader, null, null);
     }
 
+    /**
+     * Create a ListObjectDataProvider with a given Executor and an existing ListProperty
+     * @param reader
+     * @param executor
+     * @param existingList the ListProperty that will be populated with the retrieved data. 
+     * Note that we have to use a ListProperty rather than an ObservableList since we 
+     * override the getData() method, which should return ObservableValue<T>
+     */
     public ListObjectDataProvider(DataReader<T> reader, Executor executor, ListProperty<T> existingList) {
         this.reader = reader;
         this.executor = executor;
