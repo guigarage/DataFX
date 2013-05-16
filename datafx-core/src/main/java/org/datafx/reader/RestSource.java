@@ -120,10 +120,22 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         if (getRequestMethod() != null) {
             ((HttpURLConnection) connection).setRequestMethod(getRequestMethod());
         }
-
+         System.out.println("RestSource, grm = "+getRequestMethod()+", conn = "+((HttpURLConnection) connection).getRequestMethod());
         if (getRequestProperties() != null) {
             for (Map.Entry<String, String> requestProperty : getRequestProperties().entrySet()) {
                 connection.addRequestProperty(requestProperty.getKey(), requestProperty.getValue());
+            }
+        }
+        if ((getFormParams() != null) && (getFormParams().size() > 0)) {
+            if (dataString == null) {
+                dataString="";
+            }
+            boolean first = true;
+            for (Map.Entry<String, String> entry : getFormParams().entrySet()) {
+                if (!first) {
+                    dataString = dataString+ "&";
+                } else {first = false;}
+                dataString = dataString+entry.getKey()+"="+entry.getValue();
             }
         }
 

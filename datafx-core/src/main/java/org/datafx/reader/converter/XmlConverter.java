@@ -39,8 +39,8 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
     }
 
     @Override public T get() {
-        // if no clazz is specified, we assume it is a single item
-        if (clazz == null) {
+        // if no tag is specified, we assume it is a single item
+        if (tag == null) {
             if (currentNode == 0) {
                 T answer = JAXB.unmarshal(inputStream, clazz);
                 return answer;
