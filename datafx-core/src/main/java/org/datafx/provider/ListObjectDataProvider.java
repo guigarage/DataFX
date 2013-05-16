@@ -58,7 +58,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
      */
     public void setResultObservableList (final ObservableList<T> ol) {
         ol.clear();
-        ol.addListener(new ListChangeListener<T>() {
+        listProperty.addListener(new ListChangeListener<T>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends T> change) {
                 while (change.next()) {
