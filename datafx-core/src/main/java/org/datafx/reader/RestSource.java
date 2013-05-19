@@ -32,7 +32,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     private Map<String, String> queryParams = new HashMap<String, String>();
     private Map<String, String> formParams = new HashMap<String, String>();
     private String dataString;
-    private String requestMethod;
+    private String requestMethod = "GET";
  //   private InputStream is;
     
     public RestSource(String host,InputStreamConverter<T> converter) {
@@ -108,9 +108,10 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                 Map<String, String> allParams = new HashMap<String, String>();
                 allParams.putAll(getQueryParams());
                 allParams.putAll(getFormParams());
-                String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
+                System.out.println("params? "+allParams);
+                String header = OAuth.getHeader(getRequestMethod(), url.toString(), allParams, getConsumerKey(), getConsumerSecret());
                 connection.addRequestProperty("Authorization", header);
-
+                System.out.println("Auth-header: "+header);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
             } catch (GeneralSecurityException ex) {
@@ -120,7 +121,6 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         if (getRequestMethod() != null) {
             ((HttpURLConnection) connection).setRequestMethod(getRequestMethod());
         }
-         System.out.println("RestSource, grm = "+getRequestMethod()+", conn = "+((HttpURLConnection) connection).getRequestMethod());
         if (getRequestProperties() != null) {
             for (Map.Entry<String, String> requestProperty : getRequestProperties().entrySet()) {
                 connection.addRequestProperty(requestProperty.getKey(), requestProperty.getValue());
@@ -204,6 +204,11 @@ public class RestSource <T> extends InputStreamDataReader<T> {
      */
     public void setQueryParams(Map<String, String> queryParams) {
         this.queryParams = queryParams;
+    }
+    
+    public RestSource queryParam(String key, String val) {
+        this.queryParams.put(key, val);
+        return this;
     }
 
     /**
