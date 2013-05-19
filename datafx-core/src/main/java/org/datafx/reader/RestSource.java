@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +34,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     private Map<String, String> formParams = new HashMap<String, String>();
     private String dataString;
     private String requestMethod = "GET";
+    private StringBuilder queryString;
  //   private InputStream is;
     
     public RestSource(String host,InputStreamConverter<T> converter) {
@@ -100,7 +102,13 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     }
     
      public InputStream createInputStream() throws IOException {
-        URL url = new URL(host+ path);
+        String urlBase = host + path;
+        String request = urlBase;
+         if (queryString != null) {
+            request = request + "?" + queryString;
+        }
+         
+        URL url = new URL(request);
 
         URLConnection connection = url.openConnection();
         if (getConsumerKey() != null) {
@@ -109,7 +117,8 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                 allParams.putAll(getQueryParams());
                 allParams.putAll(getFormParams());
                 System.out.println("params? "+allParams);
-                String header = OAuth.getHeader(getRequestMethod(), url.toString(), allParams, getConsumerKey(), getConsumerSecret());
+                System.out.println("baseurl? "+url.toString());
+                String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
                 connection.addRequestProperty("Authorization", header);
                 System.out.println("Auth-header: "+header);
             } catch (UnsupportedEncodingException ex) {
@@ -121,8 +130,9 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         if (getRequestMethod() != null) {
             ((HttpURLConnection) connection).setRequestMethod(getRequestMethod());
         }
-        if (getRequestProperties() != null) {
-            for (Map.Entry<String, String> requestProperty : getRequestProperties().entrySet()) {
+         System.out.println("requestprops = "+getQueryParams());
+        if (getQueryParams() != null) {
+            for (Map.Entry<String, String> requestProperty : getQueryParams().entrySet()) {
                 connection.addRequestProperty(requestProperty.getKey(), requestProperty.getValue());
             }
         }
@@ -203,11 +213,18 @@ public class RestSource <T> extends InputStreamDataReader<T> {
      * @param queryParams the queryParams to set
      */
     public void setQueryParams(Map<String, String> queryParams) {
-        this.queryParams = queryParams;
+       for (Entry<String,String> entry: queryParams.entrySet()) {
+           queryParam(entry.getKey(), entry.getValue());
+       }
     }
     
-    public RestSource queryParam(String key, String val) {
-        this.queryParams.put(key, val);
+    public RestSource queryParam(String key, String value) {
+        this.queryParams.put(key, value); 
+        if (queryString == null) {
+            queryString = new StringBuilder(key).append("=").append(value);
+        } else {
+            queryString.append("&").append(key).append("=").append(value);
+        }
         return this;
     }
 
