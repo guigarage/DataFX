@@ -116,11 +116,8 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                 Map<String, String> allParams = new HashMap<String, String>();
                 allParams.putAll(getQueryParams());
                 allParams.putAll(getFormParams());
-                System.out.println("params? "+allParams);
-                System.out.println("baseurl? "+url.toString());
                 String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
                 connection.addRequestProperty("Authorization", header);
-                System.out.println("Auth-header: "+header);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
             } catch (GeneralSecurityException ex) {
@@ -130,7 +127,6 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         if (getRequestMethod() != null) {
             ((HttpURLConnection) connection).setRequestMethod(getRequestMethod());
         }
-         System.out.println("requestprops = "+getQueryParams());
         if (getQueryParams() != null) {
             for (Map.Entry<String, String> requestProperty : getQueryParams().entrySet()) {
                 connection.addRequestProperty(requestProperty.getKey(), requestProperty.getValue());
