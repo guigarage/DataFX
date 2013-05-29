@@ -4,6 +4,7 @@ package org.datafx.reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -22,12 +23,21 @@ class OAuth {
     public static final String TIMESTAMP = "oauth_timestamp";
 
     public static String getHeader(String method, String url,
-            Map<String, String> requestParams, String consumerKey, String consumerSecret)
+           MultiValuedMap requestParams, String consumerKey, String consumerSecret)
             throws UnsupportedEncodingException, GeneralSecurityException {
         Map<String, String> params = new TreeMap<String, String>();
-        for (Entry<String, String> entry : requestParams.entrySet()) {
-            params.put(percentEncode(entry.getKey()), percentEncode(entry.getValue()));
+        for (Map.Entry<String, List<String>> entry: requestParams.entrySet()) {
+            String key = entry.getKey();
+            for (String val : entry.getValue()) {
+                params.put(percentEncode(key), percentEncode(val));
+
+            }
         }
+//        
+//        for (Entry<String, String> entry : requestParams.entrySet()) {
+//            
+//            params.put(percentEncode(entry.getKey()), percentEncode(entry.getValue()));
+//        }
         String nonce = getNonce();
         params.put(percentEncode(NONCE), percentEncode(nonce));
         String version = "1.0";

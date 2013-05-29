@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     private boolean requestMade;
     private Map<String, String> requestProperties;
     private Map<String, String> queryParams = new HashMap<String, String>();
-    private Map<String, String> formParams = new HashMap<String, String>();
+    private MultiValuedMap formParams = new MultiValuedMap();
     private String dataString;
     private String requestMethod = "GET";
     private StringBuilder queryString;
@@ -113,8 +114,8 @@ public class RestSource <T> extends InputStreamDataReader<T> {
         URLConnection connection = url.openConnection();
         if (getConsumerKey() != null) {
             try {
-                Map<String, String> allParams = new HashMap<String, String>();
-                allParams.putAll(getQueryParams());
+                MultiValuedMap allParams = new MultiValuedMap();
+                allParams.putMap(getQueryParams());
                 allParams.putAll(getFormParams());
                 String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
                 connection.addRequestProperty("Authorization", header);
@@ -137,12 +138,21 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                 dataString="";
             }
             boolean first = true;
-            for (Map.Entry<String, String> entry : getFormParams().entrySet()) {
-                if (!first) {
+            for (Map.Entry<String, List<String>> entryList: getFormParams().entrySet()) {
+                String key = entryList.getKey();
+                for (String val: entryList.getValue()) {
+                    if (!first) {
                     dataString = dataString+ "&";
                 } else {first = false;}
-                dataString = dataString+entry.getKey()+"="+entry.getValue();
+                dataString = dataString+key+"="+val;
+                }
             }
+//            for (Map.Entry<String, String> entry : getFormParams().entrySet()) {
+//                if (!first) {
+//                    dataString = dataString+ "&";
+//                } else {first = false;}
+//                dataString = dataString+entry.getKey()+"="+entry.getValue();
+//            }
         }
 
         if (getDataString() != null) {
@@ -227,15 +237,23 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     /**
      * @return the formParams
      */
-    public Map<String, String> getFormParams() {
+    public MultiValuedMap getFormParams() {
         return formParams;
     }
 
     /**
      * @param formParams the formParams to set
      */
-    public void setFormParams(Map<String, String> formParams) {
-        this.formParams = formParams;
+    public void setFormParams(Map<String, String> p) {
+        
+        this.formParams = new MultiValuedMap();
+        for (Map.Entry<String, String> entry: p.entrySet()) {
+            this.formParams.put(entry.getKey(), entry.getValue());
+        }
+    }
+    
+    public void setFormParams(MultiValuedMap formParams) {
+        
     }
 
     /**
