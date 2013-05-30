@@ -138,13 +138,15 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                 dataString="";
             }
             boolean first = true;
-            for (Map.Entry<String, List<String>> entryList: getFormParams().entrySet()) {
+            for (Map.Entry<String, List<String>> entryList : getFormParams().entrySet()) {
                 String key = entryList.getKey();
-                for (String val: entryList.getValue()) {
+                for (String val : entryList.getValue()) {
                     if (!first) {
-                    dataString = dataString+ "&";
-                } else {first = false;}
-                dataString = dataString+key+"="+val;
+                        dataString = dataString + "&";
+                    } else {
+                        first = false;
+                    }
+                    dataString = dataString + key + "=" + val;
                 }
             }
 //            for (Map.Entry<String, String> entry : getFormParams().entrySet()) {
@@ -253,7 +255,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     }
     
     public void setFormParams(MultiValuedMap formParams) {
-        
+        this.formParams = formParams;
     }
 
     /**
