@@ -285,6 +285,17 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     public void setRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
     }
+    
+    // fluent methods
+    public RestSource consumerKey (String key) {
+        setConsumerKey(key);
+        return this;
+    }
+    
+    public RestSource consumerSecret (String secret) {
+        setConsumerSecret(secret);
+        return this;
+    }
 
     
 }
