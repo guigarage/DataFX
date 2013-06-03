@@ -36,7 +36,13 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
             rootNode = jp.readValueAsTree();
             if (tag != null) {
                 JsonNode cNode = rootNode.findValue(tag);
-                iterator = cNode.iterator();
+                if (cNode != null) {
+                    iterator = cNode.iterator();
+                }
+                else {
+                    // we were looking for a tag, but couldn't find one. 
+                    // TODO: does this mean we should throw an exception, or will we use the children on the root node instead?
+                }
             }
         } catch (IOException ex) {
             // TODO throw an exception? fatal?
@@ -57,6 +63,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
             }
         } else {
             try {
+                // this will fail if the iterator is null, which happens if we don't find the tag in the nodelist
                 JsonNode candidate = iterator.next();
                 ObjectMapper om = new ObjectMapper();
                 final T entry = (T) om.readValue(candidate, clazz);
