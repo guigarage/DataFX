@@ -135,14 +135,11 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         PublishingTask<T> answer = new PublishingTask<T>() {
             @Override
             protected void callTask() throws Exception {
-                System.out.println("CallTask called");
+              
                 while (getReader().next()) {
                     final T entry = getReader().get();
-                    System.out.println("Got data: " + entry);
                     publish(entry);
                 }
-                System.out.println("No more data");
-
             }
         };
         return answer;
