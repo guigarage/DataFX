@@ -57,7 +57,6 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         
         Node node = childNodes.item(currentNode);
         DOMSource source = new DOMSource(node);
-        System.out.println(source + " , " + clazz);
         final T entry = (T) JAXB.unmarshal(source, clazz);
         currentNode++;
         return entry;
