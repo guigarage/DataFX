@@ -4,10 +4,19 @@
  */
 package org.datafx.provider;
 
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -15,6 +24,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
+import org.datafx.writer.WriteBackHandler;
 
 /**
  *
@@ -22,12 +32,15 @@ import org.datafx.reader.DataReader;
  */
 public class SingleObjectDataProvider<T> implements DataProvider<T> {
     // we can't make this final since the result objectproperty can be set via setResultObjectProperty.
+
     private ObjectProperty<T> objectProperty;
     private Executor executor;
-	private final DataReader<T> reader;
+    private final DataReader<T> reader;
+    private WriteBackHandler<T> writeBackHandler;
+    private boolean enableWriteBack;
 
     public SingleObjectDataProvider(DataReader<T> reader) {
-         this(reader,null);
+        this(reader, null);
     }
 
     public SingleObjectDataProvider(DataReader<T> reader, Executor executor) {
@@ -38,18 +51,20 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
 
     /**
      * Sets the ObjectProperty that contains the result of the data retrieval.
-     * This method should not be called once the <code>retrieve</code> method has been called
-     * // TODO: enforce this
-     * @param result 
+     * This method should not be called once the
+     * <code>retrieve</code> method has been called // TODO: enforce this
+     *
+     * @param result
      */
     public void setResultObjectProperty(ObjectProperty<T> result) {
         this.objectProperty = result;
     }
-    
+
     public Worker<T> retrieve() {
         final Service<T> retriever = createService(objectProperty);
         retriever.setOnFailed(new EventHandler<WorkerStateEvent>() {
-            @Override public void handle(WorkerStateEvent arg0) {
+            @Override
+            public void handle(WorkerStateEvent arg0) {
                 System.err.println("Default DataFX error handler:");
                 retriever.getException().printStackTrace();
             }
@@ -65,20 +80,17 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
         }
     }
 
-
     protected Service<T> createService(ObjectProperty<T> value) {
-		System.out.println("Create Service");
         return new Service<T>() {
-            @Override protected Task<T> createTask() {
-				System.out.println("[JVDBG] CreateTask called");
+            @Override
+            protected Task<T> createTask() {
                 final Task<T> task = createReceiverTask(reader);
                 task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override public void handle(WorkerStateEvent arg0) {
+                    @Override
+                    public void handle(WorkerStateEvent arg0) {
                         T value = null;
                         try {
-							System.out.println("[JVDBG] handle got something!");
                             value = task.get();
-							System.out.println("[JVDBG] handle got "+value);
                         } catch (InterruptedException e) {
                             // Execution of the task was not working. So we do
                             // not need
@@ -91,27 +103,77 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
                             return;
                         }
                         objectProperty.set(value);
+                        if (enableWriteBack) checkProperties(value);
+                      
                     }
                 });
                 return task;
             }
         };
     }
-	
+
+    public void enableWriteBack(boolean v) {
+        this.enableWriteBack = v;
+    }
+    
     protected Task<T> createReceiverTask(final DataReader<T> reader) {
         System.out.println("[JVDBG] createReceivertask called");
         Task<T> answer = new Task<T>() {
-            @Override protected T call() throws Exception {
-				T entry = reader.get();
-				System.out.println("[JVDBG] RECEIVERTASK RETURNS "+entry);
+            @Override
+            protected T call() throws Exception {
+                T entry = reader.get();
+                System.out.println("[JVDBG] RECEIVERTASK RETURNS " + entry);
                 return entry;
             }
         };
         return answer;
     }
 
-    @Override public ObjectProperty<T> getData() {
+    @Override
+    public ObjectProperty<T> getData() {
         return objectProperty;
     }
-	
+
+    public void setWriteBackHandler(WriteBackHandler<T> handler) {
+        this.writeBackHandler = handler;
+    }
+
+    private void checkProperties(final T target) {
+        Class c = target.getClass();
+        Field[] fields = c.getDeclaredFields();
+        for (final Field field : fields) {
+            Class clazz = field.getType();
+
+            if (Observable.class.isAssignableFrom(clazz)) {
+                try {
+
+                    AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                        public Void run() {
+                            try {
+
+                                field.setAccessible(true);
+                                Object f = field.get(target);
+                                Observable obs = (Observable) f;
+                                obs.addListener(new InvalidationListener() {
+                                    @Override
+                                    public void invalidated(Observable o) {
+                                        System.out.println("invalidated!!!!! " + o);
+                                    }
+                                });
+                                return null;
+                            } catch (IllegalArgumentException ex) {
+                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalAccessException ex) {
+                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            return null;
+                        }
+                    });
+
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
 }
