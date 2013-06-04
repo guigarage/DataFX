@@ -25,9 +25,14 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
         setInputStream(is);
     }
 
+    public InputStreamConverter<T> getConverter() {
+        return this.converter;
+    }
     public void setInputStream(InputStream is) {
         this.is = is;
-        converter.initialize(is);
+        if (converter != null) {
+            converter.initialize(is);
+        }
     }
 
     @Override public T get() {

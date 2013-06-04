@@ -88,12 +88,17 @@ public class RestSource <T> extends InputStreamDataReader<T> {
             Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    @Override public T get() {
+
+    @Override
+    public T get() {
         if (!requestMade) {
             createRequest();
         }
-        return super.get();
+        if (getConverter() != null) {
+            return super.get();
+        } else {
+            return null;
+        }
     }
 
     @Override public boolean next() {
@@ -151,17 +156,14 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                         dataString = dataString + key + "=" + val;
                     }
                 }
-    //            for (Map.Entry<String, String> entry : getFormParams().entrySet()) {
-    //                if (!first) {
-    //                    dataString = dataString+ "&";
-    //                } else {first = false;}
-    //                dataString = dataString+entry.getKey()+"="+entry.getValue();
-    //            }
+ 
             }
-
+            System.out.println("Do I have to send a datastring? "+getDataString());
             if (getDataString() != null) {
                 connection.setDoOutput(true);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
+                
+                System.out.println("I write datastring: "+getDataString());
                 outputStreamWriter.write(getDataString());
                 outputStreamWriter.close();
             }

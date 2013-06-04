@@ -115,7 +115,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
     public void enableWriteBack(boolean v) {
         this.enableWriteBack = v;
     }
-    
+     
     protected Task<T> createReceiverTask(final DataReader<T> reader) {
         System.out.println("[JVDBG] createReceivertask called");
         Task<T> answer = new Task<T>() {
@@ -146,27 +146,28 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
 
             if (Observable.class.isAssignableFrom(clazz)) {
                 try {
-
-                    AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                        public Void run() {
+                    Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
+                        public Observable run() {
                             try {
 
                                 field.setAccessible(true);
                                 Object f = field.get(target);
-                                Observable obs = (Observable) f;
-                                obs.addListener(new InvalidationListener() {
-                                    @Override
-                                    public void invalidated(Observable o) {
-                                        System.out.println("invalidated!!!!! " + o);
-                                    }
-                                });
-                                return null;
+                                Observable answer = (Observable) f;
+                                return answer;
                             } catch (IllegalArgumentException ex) {
                                 Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IllegalAccessException ex) {
                                 Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             return null;
+                        }
+                    });
+                    observable.addListener(new InvalidationListener() {
+                        @Override
+                        public void invalidated(Observable o) {
+                            DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
+                            Object response = reader.get();
+                            System.out.println("done getting response " + response);
                         }
                     });
 

@@ -9,4 +9,8 @@ public class WriteBackEvent<T>  {
     
     private T changedObject;
     
+    public T getObject() {
+        return changedObject;
+    }
+    
 }
