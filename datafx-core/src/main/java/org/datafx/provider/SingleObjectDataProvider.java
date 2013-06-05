@@ -15,8 +15,8 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -143,9 +143,10 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
         Field[] fields = c.getDeclaredFields();
         for (final Field field : fields) {
             Class clazz = field.getType();
-
+            System.out.println("Evaluate field "+field);
             if (Observable.class.isAssignableFrom(clazz)) {
                 try {
+                    System.out.println("yes, we are assignable");
                     Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
                         public Observable run() {
                             try {
@@ -162,14 +163,31 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
                             return null;
                         }
                     });
-                    observable.addListener(new InvalidationListener() {
-                        @Override
-                        public void invalidated(Observable o) {
-                            DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
-                            Object response = reader.get();
-                            System.out.println("done getting response " + response);
+                    if (observable != null) {
+                        observable.addListener(new InvalidationListener() {
+                            @Override
+                            public void invalidated(Observable o) {
+                                System.out.println("invalidated");
+                                DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
+                                Object response = reader.get();
+                                System.out.println("done getting response " + response);
+                            }
+                        });
+                        if (ObservableList.class.isAssignableFrom(observable.getClass())) {
+                            ObservableList observableList = (ObservableList)observable;
+                            observableList.addListener(new ListChangeListener(){
+
+                                @Override
+                                public void onChanged(ListChangeListener.Change change) {
+                                    System.out.println("LIST changed");
+                                    DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
+                                    Object response = reader.get();
+                                    System.out.println("done getting response from listchange" + response);
+                                }
+                            });
                         }
-                    });
+                        System.out.println("added a listener to "+observable+", class = "+observable.getClass());
+                    }
 
                 } catch (IllegalArgumentException ex) {
                     Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
