@@ -156,12 +156,9 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                 }
  
             }
-            System.out.println("Do I have to send a datastring? "+getDataString());
             if (getDataString() != null) {
                 connection.setDoOutput(true);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
-                
-                System.out.println("I write datastring: "+getDataString());
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());             
                 outputStreamWriter.write(getDataString());
                 outputStreamWriter.close();
             }
