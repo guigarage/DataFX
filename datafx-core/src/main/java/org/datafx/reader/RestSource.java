@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
@@ -151,7 +152,8 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                         } else {
                             first = false;
                         }
-                        dataString = dataString + key + "=" + val;
+                        String eval =URLEncoder.encode(val, "UTF-8"); 
+                        dataString = dataString + key + "=" + eval;
                     }
                 }
  

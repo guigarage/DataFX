@@ -1,8 +1,15 @@
 package org.datafx.provider;
 
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.WritableListValue;
@@ -16,6 +23,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
+import org.datafx.writer.WriteBackHandler;
 
 /**
  *
@@ -27,6 +35,8 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     private DataReader<T> reader;
     private Executor executor;
 
+    private WriteBackHandler<T> writeBackHandler;
+    
     public ListObjectDataProvider(DataReader<T> reader) {
         this(reader, null, null);
     }
@@ -139,6 +149,10 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                 while (getReader().next()) {
                     final T entry = getReader().get();
                     publish(entry);
+                    if (writeBackHandler != null) {
+                            checkProperties(entry);
+                        }
+                    
                 }
             }
         };
@@ -158,4 +172,64 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     public ListProperty<T> getData() {
         return listProperty;
     }
+    
+    
+    public void setWriteBackHandler(WriteBackHandler<T> handler) {
+        this.writeBackHandler = handler;
+    }
+
+    private void checkProperties(final T target) {
+        Class c = target.getClass();
+        Field[] fields = c.getDeclaredFields();
+        for (final Field field : fields) {
+            Class clazz = field.getType();
+            if (Observable.class.isAssignableFrom(clazz)) {
+                try {
+                    Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
+                        public Observable run() {
+                            try {
+
+                                field.setAccessible(true);
+                                Object f = field.get(target);
+                                Observable answer = (Observable) f;
+                                return answer;
+                            } catch (IllegalArgumentException ex) {
+                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalAccessException ex) {
+                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            return null;
+                        }
+                    });
+                    if (observable != null) {
+                        observable.addListener(new InvalidationListener() {
+                            @Override
+                            public void invalidated(Observable o) {
+                                DataReader reader = writeBackHandler.createDataSource(target);
+                                Object response = reader.get();
+                            }
+                        });
+//                        if (ObservableList.class.isAssignableFrom(observable.getClass())) {
+//                            ObservableList observableList = (ObservableList)observable;
+//                            observableList.addListener(new ListChangeListener(){
+//
+//                                @Override
+//                                public void onChanged(ListChangeListener.Change change) {
+//                                    System.out.println("LIST changed");
+//                                    DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
+//                                    Object response = reader.get();
+//                                    System.out.println("done getting response from listchange" + response);
+//                                }
+//                            });
+//                        }
+              //          System.out.println("added a listener to "+observable+", class = "+observable.getClass());
+                    }
+
+                } catch (IllegalArgumentException ex) {
+                    Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    
 }

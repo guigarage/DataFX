@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.datafx.provider;
 
 import java.lang.reflect.Field;
@@ -185,4 +181,5 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
             }
         }
     }
+    
 }
