@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -25,11 +26,12 @@ class OAuth {
     public static String getHeader(String method, String url,
            MultiValuedMap requestParams, String consumerKey, String consumerSecret)
             throws UnsupportedEncodingException, GeneralSecurityException {
-        Map<String, String> params = new TreeMap<String, String>();
+      //  Map<String, String> params = new TreeMap<String, String>();
+        TreeSet<String> params = new TreeSet<>();
         for (Map.Entry<String, List<String>> entry: requestParams.entrySet()) {
             String key = entry.getKey();
             for (String val : entry.getValue()) {
-                params.put(percentEncode(key), percentEncode(val));
+                params.add(percentEncode(key)+"="+ percentEncode(val));
 
             }
         }
@@ -39,23 +41,29 @@ class OAuth {
 //            params.put(percentEncode(entry.getKey()), percentEncode(entry.getValue()));
 //        }
         String nonce = getNonce();
-        params.put(percentEncode(NONCE), percentEncode(nonce));
+        params.add(percentEncode(NONCE)+"="+percentEncode(nonce));
         String version = "1.0";
-        params.put(percentEncode(VERSION), percentEncode(version));
+        params.add(percentEncode(VERSION)+"="+percentEncode(version));
         String timeStamp = Long.toString(System.currentTimeMillis() / 1000);
-        params.put(percentEncode(TIMESTAMP), percentEncode(timeStamp));
+        params.add(percentEncode(TIMESTAMP)+"="+percentEncode(timeStamp));
         String signatureMethod = "HMAC-SHA1";
-        params.put(percentEncode(SIGNATURE_METHOD), percentEncode(signatureMethod));
-        params.put(percentEncode(CONSUMER_KEY), percentEncode(consumerKey));
+        params.add(percentEncode(SIGNATURE_METHOD)+"="+percentEncode(signatureMethod));
+        params.add(percentEncode(CONSUMER_KEY)+"="+percentEncode(consumerKey));
         int idx = 0;
         int psize = params.size();
         StringBuilder sb = new StringBuilder();
-        for (Entry<String, String> entry : params.entrySet()) {
-            sb.append(entry.getKey()).append("=").append(entry.getValue());
+        for (String part : params) {
+            sb.append(part);
             if (++idx < psize) {
                 sb.append("&");
             }
         }
+//        for (Entry<String, String> entry : params.entrySet()) {
+//            sb.append(entry.getKey()).append("=").append(entry.getValue());
+//            if (++idx < psize) {
+//                sb.append("&");
+//            }
+//        }
         String baseString = method + "&" + percentEncode(url) + "&" + percentEncode(sb.toString());
         String signKey = percentEncode(consumerSecret) + "&";
         String signature = computeSignature(baseString, signKey);
