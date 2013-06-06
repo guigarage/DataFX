@@ -26,7 +26,8 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     
  //   private InputStreamConverter<T> converter;
     private String host;
-    private String path;
+    // path should never be null. We check on this in all methods that can change the path.
+    private String path = "";
     private String urlBase;
     private String consumerKey;
     private String consumerSecret;
@@ -51,9 +52,6 @@ public class RestSource <T> extends InputStreamDataReader<T> {
      * @return 
      */
     public RestSource path (String p) {
-        if (this.path == null) {
-            this.path ="";
-        }
         this.path = this.path + "/"+ p;
         
         return this;
@@ -61,7 +59,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     
     /**
      * Explicitly sets the path for this resource. 
-     * @param path the path. If null, the path will be empty
+     * @param path the path. If null, the path will be the empty String
      */
     public void setPath(String path) {
         if (path == null) {
