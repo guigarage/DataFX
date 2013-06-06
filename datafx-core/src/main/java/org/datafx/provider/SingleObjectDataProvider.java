@@ -37,8 +37,6 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
     private Executor executor;
     private final DataReader<T> reader;
     private WriteBackHandler<T> writeBackHandler;
-    private boolean enableWriteBack;
-
     public SingleObjectDataProvider(DataReader<T> reader) {
         this(reader, null);
     }
@@ -103,7 +101,9 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
                             return;
                         }
                         objectProperty.set(value);
-                        if (enableWriteBack) checkProperties(value);
+                        if (writeBackHandler != null) {
+                            checkProperties(value);
+                        }
                       
                     }
                 });
@@ -111,18 +111,12 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
             }
         };
     }
-
-    public void enableWriteBack(boolean v) {
-        this.enableWriteBack = v;
-    }
      
     protected Task<T> createReceiverTask(final DataReader<T> reader) {
-        System.out.println("[JVDBG] createReceivertask called");
         Task<T> answer = new Task<T>() {
             @Override
             protected T call() throws Exception {
                 T entry = reader.get();
-                System.out.println("[JVDBG] RECEIVERTASK RETURNS " + entry);
                 return entry;
             }
         };
@@ -143,10 +137,8 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
         Field[] fields = c.getDeclaredFields();
         for (final Field field : fields) {
             Class clazz = field.getType();
-            System.out.println("Evaluate field "+field);
             if (Observable.class.isAssignableFrom(clazz)) {
                 try {
-                    System.out.println("yes, we are assignable");
                     Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
                         public Observable run() {
                             try {
@@ -167,26 +159,24 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
                         observable.addListener(new InvalidationListener() {
                             @Override
                             public void invalidated(Observable o) {
-                                System.out.println("invalidated");
                                 DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
                                 Object response = reader.get();
-                                System.out.println("done getting response " + response);
                             }
                         });
-                        if (ObservableList.class.isAssignableFrom(observable.getClass())) {
-                            ObservableList observableList = (ObservableList)observable;
-                            observableList.addListener(new ListChangeListener(){
-
-                                @Override
-                                public void onChanged(ListChangeListener.Change change) {
-                                    System.out.println("LIST changed");
-                                    DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
-                                    Object response = reader.get();
-                                    System.out.println("done getting response from listchange" + response);
-                                }
-                            });
-                        }
-                        System.out.println("added a listener to "+observable+", class = "+observable.getClass());
+//                        if (ObservableList.class.isAssignableFrom(observable.getClass())) {
+//                            ObservableList observableList = (ObservableList)observable;
+//                            observableList.addListener(new ListChangeListener(){
+//
+//                                @Override
+//                                public void onChanged(ListChangeListener.Change change) {
+//                                    System.out.println("LIST changed");
+//                                    DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
+//                                    Object response = reader.get();
+//                                    System.out.println("done getting response from listchange" + response);
+//                                }
+//                            });
+//                        }
+              //          System.out.println("added a listener to "+observable+", class = "+observable.getClass());
                     }
 
                 } catch (IllegalArgumentException ex) {
