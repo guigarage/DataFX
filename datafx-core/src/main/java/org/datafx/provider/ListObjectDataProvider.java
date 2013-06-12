@@ -1,5 +1,6 @@
 package org.datafx.provider;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -24,6 +25,7 @@ import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.writer.WriteBackHandler;
+import org.datafx.writer.WriteTransient;
 
 /**
  *
@@ -183,9 +185,10 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         Field[] fields = c.getDeclaredFields();
         for (final Field field : fields) {
             Class clazz = field.getType();
-            if (Observable.class.isAssignableFrom(clazz)) {
+            // Only Observable fields without a WriteTransient annotation are considered
+            if ((Observable.class.isAssignableFrom(clazz)) &&(field.getAnnotation(WriteTransient.class)==null)) {
                 try {
-                    Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
+                    final Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
                         public Observable run() {
                             try {
 
@@ -205,6 +208,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                         observable.addListener(new InvalidationListener() {
                             @Override
                             public void invalidated(Observable o) {
+                                System.out.println("DataFX, invalidated called due to "+observable);
                                 DataReader reader = writeBackHandler.createDataSource(target);
                                 Object response = reader.get();
                             }
