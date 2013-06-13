@@ -2,7 +2,6 @@ package org.datafx.provider;
 
 import java.util.Arrays;
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,17 +12,17 @@ import javafx.concurrent.Task;
  * @author johan
  */
 public abstract class PublishingTask<T> extends Task<ObservableList<T>> {
-    private ListProperty<T> publishedValues;
+    private final  ObservableList<T> publishedValues;
 
     public PublishingTask() {
         this(new SimpleListProperty<T>(FXCollections.<T>observableArrayList()));
     }
 
-    public PublishingTask(ListProperty<T> values) {
+    public PublishingTask(ObservableList<T> values) {
         this.publishedValues = values;
     }
 
-    public ListProperty<T> getPublishedValues() {
+    public ObservableList<T> getPublishedValues() {
         return publishedValues;
     }
 
