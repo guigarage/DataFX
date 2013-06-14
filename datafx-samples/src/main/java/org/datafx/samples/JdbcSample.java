@@ -15,17 +15,24 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.datafx.provider.ListObjectDataProvider;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.JdbcSource;
 import org.datafx.reader.converter.JdbcConverter;
+import org.datafx.writer.WriteBackHandler;
 
 /**
  *
@@ -75,28 +82,61 @@ public class JdbcSample {
                 }
                 
             };
-            DataReader<Book> dr = new JdbcSource(dbURL, converter, "PERSON", "firstName", "lastName", "country");
-            ListObjectDataProvider<Book> lodp = new ListObjectDataProvider(dr);
-            ObservableList<Book> myList = FXCollections.observableArrayList();
+            DataReader<Person> dr = new JdbcSource(dbURL, converter, "PERSON", "firstName", "lastName", "country");
+            ListObjectDataProvider<Person> lodp = new ListObjectDataProvider(dr);
+            ObservableList<Person> myList = FXCollections.observableArrayList();
             lodp.setResultObservableList(myList);
+            lodp.setWriteBackHandler(new WriteBackHandler<Person>() {
+                @Override
+                public DataReader createDataSource(Person me) {
+                    String statement = "UPDATE PERSON SET lastName=\'" + me.getLastName() + "\' WHERE firstName=\'" + me.getFirstName() + "\'";
+                    JdbcSource<Person> dr = new JdbcSource(dbURL, statement, null);
+                    dr.setUpdateQuery(true);
+                    System.out.println("Writeback called with statement "+statement);
+                    return dr;
+                }
+            });
             lodp.retrieve();
 
-            final ListProperty<Book> op = lodp.getData();
-            System.out.println("data from lodp = "+lodp.getData());
-            //TableView tv = new TableView(op);
-            TableView tv = new TableView(myList);
+            final ListProperty<Person> op = lodp.getData();
+            TableView<Person> tv = new TableView(myList);
+            tv.setEditable(true);
             TableColumn<Person, String> firstNameCol = new TableColumn<Person, String>("First Name");
             firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
             TableColumn<Person, String> lastNameCol = new TableColumn<Person, String>("Last Name");
             lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
+            lastNameCol.setCellFactory(new Callback<TableColumn<Person, String>, TableCell<Person, String>>(){
+
+                @Override
+                public TableCell<Person, String> call(TableColumn<Person, String> p) {
+                    return new TextFieldTableCell(new StringConverter<String>() {
+
+                        @Override
+                        public String toString(String t) {
+                            return t;
+                        }
+
+                        @Override
+                        public String fromString(String string) {
+                            return string;
+                        }
+                    });
+                }
+            });
+            lastNameCol.setEditable(true);
+            lastNameCol.setOnEditCommit(new EventHandler<CellEditEvent<Person,String>>() {
+
+                @Override
+                public void handle(CellEditEvent<Person, String> t) {
+                    Person person = t.getRowValue();
+                    String nv = t.getNewValue();
+                    person.setLastName(nv); // this will trigger the writeback handler
+                }
+            });
             TableColumn<Person, String> countryCol = new TableColumn<Person, String>("Country");
             countryCol.setCellValueFactory(new PropertyValueFactory("country"));
             tv.getColumns().setAll(firstNameCol, lastNameCol, countryCol);
-
-
             tab.setContent(tv);
-
-
         } catch (Exception ex) {
             Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -121,7 +161,8 @@ public class JdbcSample {
 
     public class Person {
 
-        private StringProperty firstName;
+        private StringProperty firstName = new SimpleStringProperty();
+        private StringProperty lastName = new SimpleStringProperty();
 
         public void setFirstName(String value) {
             firstNameProperty().set(value);
@@ -137,21 +178,20 @@ public class JdbcSample {
             }
             return firstName;
         }
-        private String lastName;
         private String country;
 
         /**
          * @return the lastName
          */
         public String getLastName() {
-            return lastName;
+            return lastName.get();
         }
 
         /**
          * @param lastName the lastName to set
          */
         public void setLastName(String lastName) {
-            this.lastName = lastName;
+            this.lastName.set(lastName);
         }
 
         /**
