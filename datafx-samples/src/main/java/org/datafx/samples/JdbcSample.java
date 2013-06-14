@@ -60,22 +60,13 @@ public class JdbcSample {
 
     private void buildLocalTab(Tab tab) {
         try {
-            // We can create a DefaultJdbcConverter that does what we do below
             JdbcConverter<Person> converter = new JdbcConverter<Person>() {
-                private ResultSet resultSet;
-                private boolean last = false;
-                
-                @Override public void initialize(ResultSet input) {
-                    this.resultSet = input;
-                }
-                
-                @Override public Person get() {
+                    public Person convertOneRow (ResultSet resultSet){
                     try {
                         Person answer = new Person();
                         answer.setFirstName(resultSet.getString("firstName"));
                         answer.setLastName(resultSet.getString("lastName"));
                         answer.setCountry(resultSet.getString("country"));
-                        resultSet.next();
                         return answer;
                     } catch (SQLException ex) {
                         Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,15 +74,6 @@ public class JdbcSample {
                     return null;
                 }
                 
-                @Override public boolean next() {
-                    try {
-                        return !resultSet.isAfterLast();
-//                    
-                    } catch (SQLException ex) {
-                        Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    return false;
-                }
             };
             DataReader<Book> dr = new JdbcSource(dbURL, converter, "PERSON", "firstName", "lastName", "country");
             ListObjectDataProvider<Book> lodp = new ListObjectDataProvider(dr);

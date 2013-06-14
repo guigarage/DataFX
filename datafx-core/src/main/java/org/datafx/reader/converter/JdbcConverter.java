@@ -27,7 +27,44 @@
 package org.datafx.reader.converter;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
-public interface JdbcConverter<T> extends Converter<ResultSet, T> {
+public abstract class JdbcConverter<T> implements Converter<ResultSet, T> {
+
+    protected ResultSet resultSet;
+    
+    @Override
+    public void initialize(ResultSet input) {
+        this.resultSet = input;
+    }
+
+    @Override
+    public T get() {
+        T entry = convertOneRow (resultSet);
+        try {
+            resultSet.next();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // TODO we rather should throw an exception than returning null here
+        }
+        return entry;
+    }
+    
+    public abstract T convertOneRow (ResultSet resultSet);
+    
+    @Override
+    public boolean next() {
+        try {
+            return !resultSet.isAfterLast();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+ 
+    
+    
 }
