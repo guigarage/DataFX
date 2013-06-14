@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
@@ -61,6 +63,7 @@ public class JdbcSample {
             // We can create a DefaultJdbcConverter that does what we do below
             JdbcConverter<Person> converter = new JdbcConverter<Person>() {
                 private ResultSet resultSet;
+                private boolean last = false;
                 
                 @Override public void initialize(ResultSet input) {
                     this.resultSet = input;
@@ -72,6 +75,7 @@ public class JdbcSample {
                         answer.setFirstName(resultSet.getString("firstName"));
                         answer.setLastName(resultSet.getString("lastName"));
                         answer.setCountry(resultSet.getString("country"));
+                        resultSet.next();
                         return answer;
                     } catch (SQLException ex) {
                         Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,19 +85,24 @@ public class JdbcSample {
                 
                 @Override public boolean next() {
                     try {
-                        return resultSet != null && ! resultSet.last();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                        return !resultSet.isAfterLast();
+//                    
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JdbcSample.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     return false;
                 }
             };
             DataReader<Book> dr = new JdbcSource(dbURL, converter, "PERSON", "firstName", "lastName", "country");
-            ListObjectDataProvider<Book> sodp = new ListObjectDataProvider(dr);
-            sodp.retrieve();
+            ListObjectDataProvider<Book> lodp = new ListObjectDataProvider(dr);
+            ObservableList<Book> myList = FXCollections.observableArrayList();
+            lodp.setResultObservableList(myList);
+            lodp.retrieve();
 
-            final ListProperty<Book> op = sodp.getData();
-            TableView tv = new TableView(op);
+            final ListProperty<Book> op = lodp.getData();
+            System.out.println("data from lodp = "+lodp.getData());
+            //TableView tv = new TableView(op);
+            TableView tv = new TableView(myList);
             TableColumn<Person, String> firstNameCol = new TableColumn<Person, String>("First Name");
             firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
             TableColumn<Person, String> lastNameCol = new TableColumn<Person, String>("Last Name");
