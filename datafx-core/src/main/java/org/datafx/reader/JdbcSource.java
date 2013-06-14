@@ -15,11 +15,12 @@ import org.datafx.reader.converter.JdbcDataSourceUtil;
 public class JdbcSource<T> extends AbstractDataReader<T> {
 
     private final String jdbcUrl;
-    private final String selectStatement;
+    private final String sqlStatement;
     private final JdbcConverter<T> converter;
     private boolean connectionCreated;
     private boolean lastResult;
     private ResultSet resultSet;
+    private boolean updateQuery = false;
 
     public JdbcSource(String jdbcUrl, JdbcConverter<T> converter, String table, String... cols) {
         this(jdbcUrl, JdbcDataSourceUtil.createSelectStatement(table, cols), converter);
@@ -28,10 +29,13 @@ public class JdbcSource<T> extends AbstractDataReader<T> {
     public JdbcSource(String jdbcUrl, String selectStatement,
             JdbcConverter<T> converter) {
         this.jdbcUrl = jdbcUrl;
-        this.selectStatement = selectStatement;
+        this.sqlStatement = selectStatement;
         this.converter = converter;
     }
-
+    
+    public void setUpdateQuery (boolean b) {
+        this.updateQuery = b;
+    }
 
     private synchronized void createConnection() {
         if (connectionCreated) {
@@ -40,31 +44,49 @@ public class JdbcSource<T> extends AbstractDataReader<T> {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(jdbcUrl);
-            Statement query = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                      ResultSet.CONCUR_UPDATABLE);
-            resultSet = query.executeQuery(selectStatement);
+            Statement query;
+            if (updateQuery) {
+                System.out.println("updatequery");
+                query = connection.createStatement();
+            } else {
+                System.out.println("regularquery");
+                query = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
+            }
+            if (updateQuery) {
+                query.executeUpdate(sqlStatement);
+            }
+            else {
+            resultSet = query.executeQuery(sqlStatement);
             lastResult = resultSet.next();
             converter.initialize(resultSet);
-            System.out.println("resultset = "+resultSet);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         connectionCreated = true;
     }
 
-    @Override public T get() {
+    @Override
+    public T get() {
+        // TODO: refactor this. We call this method on updates as well, while we don't need to parse a result on updates.
         if (!connectionCreated) {
             createConnection();
         }
-        return converter.get();
+        if (converter != null) {
+            return converter.get();
+        }
+        else {
+            return null;
+        }
     }
 
-    @Override public boolean next() {
+    @Override
+    public boolean next() {
         if (!connectionCreated) {
             createConnection();
         }
         boolean answer = converter.next();
         return answer;
     }
-    
 }

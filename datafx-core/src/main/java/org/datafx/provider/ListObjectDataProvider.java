@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +11,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.value.WritableListValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -196,7 +194,6 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                     final Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
                         public Observable run() {
                             try {
-
                                 field.setAccessible(true);
                                 Object f = field.get(target);
                                 Observable answer = (Observable) f;
@@ -213,7 +210,6 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                         observable.addListener(new InvalidationListener() {
                             @Override
                             public void invalidated(Observable o) {
-                                System.out.println("DataFX, invalidated called due to " + observable);
                                 DataReader reader = writeBackHandler.createDataSource(target);
                                 Object response = reader.get();
                             }
