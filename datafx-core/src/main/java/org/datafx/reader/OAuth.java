@@ -24,7 +24,6 @@ class OAuth {
     public static String getHeader(String method, String url,
            MultiValuedMap requestParams, String consumerKey, String consumerSecret)
             throws UnsupportedEncodingException, GeneralSecurityException {
-      //  Map<String, String> params = new TreeMap<String, String>();
         TreeSet<String> params = new TreeSet<>();
         for (Map.Entry<String, List<String>> entry: requestParams.entrySet()) {
             String key = entry.getKey();
@@ -33,11 +32,6 @@ class OAuth {
 
             }
         }
-//        
-//        for (Entry<String, String> entry : requestParams.entrySet()) {
-//            
-//            params.put(percentEncode(entry.getKey()), percentEncode(entry.getValue()));
-//        }
         String nonce = getNonce();
         params.add(percentEncode(NONCE)+"="+percentEncode(nonce));
         String version = "1.0";
@@ -56,12 +50,6 @@ class OAuth {
                 sb.append("&");
             }
         }
-//        for (Entry<String, String> entry : params.entrySet()) {
-//            sb.append(entry.getKey()).append("=").append(entry.getValue());
-//            if (++idx < psize) {
-//                sb.append("&");
-//            }
-//        }
         String baseString = method + "&" + percentEncode(url) + "&" + percentEncode(sb.toString());
         String signKey = percentEncode(consumerSecret) + "&";
         String signature = computeSignature(baseString, signKey);
