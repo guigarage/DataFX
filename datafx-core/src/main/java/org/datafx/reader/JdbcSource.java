@@ -40,9 +40,12 @@ public class JdbcSource<T> extends AbstractDataReader<T> {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(jdbcUrl);
-            Statement query = connection.createStatement();
+            Statement query = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                                      ResultSet.CONCUR_UPDATABLE);
             resultSet = query.executeQuery(selectStatement);
             lastResult = resultSet.next();
+            converter.initialize(resultSet);
+            System.out.println("resultset = "+resultSet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,12 +56,15 @@ public class JdbcSource<T> extends AbstractDataReader<T> {
         if (!connectionCreated) {
             createConnection();
         }
-        
         return converter.get();
     }
 
     @Override public boolean next() {
-        return converter.next();
+        if (!connectionCreated) {
+            createConnection();
+        }
+        boolean answer = converter.next();
+        return answer;
     }
     
 }
