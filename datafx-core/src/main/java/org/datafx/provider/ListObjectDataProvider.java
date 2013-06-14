@@ -3,6 +3,7 @@ package org.datafx.provider;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
@@ -34,20 +35,23 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     private ObservableList<T> resultList;
     private DataReader<T> reader;
     private Executor executor;
-
     private WriteBackHandler<T> writeBackHandler;
-    
+    private WriteBackHandler<T> entryAddedHandler;
+
     public ListObjectDataProvider(DataReader<T> reader) {
         this(reader, null, null);
     }
 
     /**
-     * Create a ListObjectDataProvider with a given Executor and an existing ListProperty
+     * Create a ListObjectDataProvider with a given Executor and an existing
+     * ListProperty
+     *
      * @param reader
      * @param executor
-     * @param existingList the ListProperty that will be populated with the retrieved data. 
-     * Note that we have to use a ListProperty rather than an ObservableList since we 
-     * override the getData() method, which should return ObservableValue<T>
+     * @param existingList the ListProperty that will be populated with the
+     * retrieved data. Note that in the past, we had to use a ListProperty
+     * rather than an ObservableList since we override the getData() method,
+     * which should return ObservableValue<T>
      */
     public ListObjectDataProvider(DataReader<T> reader, Executor executor, ObservableList<T> existingList) {
         this.reader = reader;
@@ -58,26 +62,19 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
             this.resultList = FXCollections.<T>observableArrayList();// = new SimpleListProperty<T>(FXCollections.<T>observableArrayList());
         }
     }
+
     /**
-     * This is a convenience method, allowing ObservableList instances (no ListProperties) to 
-     * be synchronized with the result of the ListObjectDataProvider. 
-     * 
-     * @param ol The ObservableList instance that should be synchronized with the data
-     * retrieved by this ListObjectDataProvider. Note that this ObservableList will be cleared
-     * when calling this method -- as there is no data retrieved yet.
+     * This is a convenience method, allowing ObservableList instances (no
+     * ListProperties) to be synchronized with the result of the
+     * ListObjectDataProvider.
+     *
+     * @param ol The ObservableList instance that should be synchronized with
+     * the data retrieved by this ListObjectDataProvider. Note that this
+     * ObservableList will be cleared when calling this method -- as there is no
+     * data retrieved yet.
      */
-    public void setResultObservableList (final ObservableList<T> ol) {
+    public void setResultObservableList(final ObservableList<T> ol) {
         this.resultList = ol;
-//        listProperty.addListener(new ListChangeListener<T>() {
-//            @Override
-//            public void onChanged(ListChangeListener.Change<? extends T> change) {
-//                while (change.next()) {
-//                    ol.addAll(change.getAddedSubList());
-//                    ol.removeAll(change.getRemoved());
-//                }
-//                
-//            }
-//        });
     }
 
     public void setReader(DataReader<T> reader) {
@@ -120,30 +117,22 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                 task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(WorkerStateEvent arg0) {
-                        ObservableList<T> value = null;
+                        if (entryAddedHandler != null) {
+                            value.addListener(new ListChangeListener<T>() {
+                                @Override
+                                public void onChanged(ListChangeListener.Change<? extends T> change) {
+                                    while (change.next()) {
+                                        List<? extends T> addedSubList = change.getAddedSubList();
+                                        for (T entry : addedSubList) {
+                                            DataReader dataReader = entryAddedHandler.createDataSource(entry);
+                                            Object result = dataReader.get();
 
-                        try {
-                            value = task.get();
-                        value.addListener(new InvalidationListener() {
+                                        }
+                                    }
 
-                            @Override
-                            public void invalidated(Observable o) {
-                                //TODO writebacktolist handler
-                                System.out.println("LIST INVALIDATED!! "+o);
-                            }
-                        });
-                        } catch (InterruptedException e) {
-                            // Execution of the task was not working. So we do
-                            // not need
-                            // to update the property
-                            return;
-                        } catch (ExecutionException e) {
-                            // Execution of the task was not working. So we do
-                            // not need
-                            // to update the property
-                            return;
+                                }
+                            });
                         }
-
                     }
                 });
                 return task;
@@ -155,14 +144,12 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         PublishingTask<T> answer = new PublishingTask<T>(myResult) {
             @Override
             protected void callTask() throws Exception {
-              
                 while (getReader().next()) {
                     final T entry = getReader().get();
                     publish(entry);
                     if (writeBackHandler != null) {
-                            checkProperties(entry);
-                        }
-                    
+                        checkProperties(entry);
+                    }
                 }
             }
         };
@@ -171,7 +158,6 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
 
     protected final Task<ObservableList<T>> createReceiverTask(ObservableList myResult) {
         PublishingTask<T> task = createPublishingReceiverTask(myResult);
-     //   listProperty.bind(task.getPublishedValues());
         return task;
     }
 
@@ -179,11 +165,22 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         return executor;
     }
 
+    /**
+     * returns the data obtained by this provider. This method has to return an
+     * ObservableValue, so it wraps the resulting ObservableList into a
+     * ListProperty
+     *
+     * @return
+     */
+    @Override
     public ListProperty<T> getData() {
         return new SimpleListProperty<T>(resultList);
     }
-    
-    
+
+    public void setAddEntryHandler(WriteBackHandler<T> handler) {
+        this.entryAddedHandler = handler;
+    }
+
     public void setWriteBackHandler(WriteBackHandler<T> handler) {
         this.writeBackHandler = handler;
     }
@@ -194,7 +191,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
         for (final Field field : fields) {
             Class clazz = field.getType();
             // Only Observable fields without a WriteTransient annotation are considered
-            if ((Observable.class.isAssignableFrom(clazz)) &&(field.getAnnotation(WriteTransient.class)==null)) {
+            if ((Observable.class.isAssignableFrom(clazz)) && (field.getAnnotation(WriteTransient.class) == null)) {
                 try {
                     final Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
                         public Observable run() {
@@ -216,25 +213,11 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                         observable.addListener(new InvalidationListener() {
                             @Override
                             public void invalidated(Observable o) {
-                                System.out.println("DataFX, invalidated called due to "+observable);
+                                System.out.println("DataFX, invalidated called due to " + observable);
                                 DataReader reader = writeBackHandler.createDataSource(target);
                                 Object response = reader.get();
                             }
                         });
-//                        if (ObservableList.class.isAssignableFrom(observable.getClass())) {
-//                            ObservableList observableList = (ObservableList)observable;
-//                            observableList.addListener(new ListChangeListener(){
-//
-//                                @Override
-//                                public void onChanged(ListChangeListener.Change change) {
-//                                    System.out.println("LIST changed");
-//                                    DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
-//                                    Object response = reader.get();
-//                                    System.out.println("done getting response from listchange" + response);
-//                                }
-//                            });
-//                        }
-//                      System.out.println("added a listener to "+observable+", class = "+observable.getClass());
                     }
 
                 } catch (IllegalArgumentException ex) {
@@ -243,5 +226,4 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
             }
         }
     }
-    
 }
