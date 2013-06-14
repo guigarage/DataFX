@@ -1,6 +1,6 @@
 package org.datafx.writer;
 
-import org.datafx.reader.DataReader;
+import org.datafx.reader.WritableDataReader;
 
 /**
  * A WriteBackHandler is used when data retrieved with DataFX changes due to 
@@ -18,5 +18,5 @@ public abstract class WriteBackHandler<T> {
      * @return a DataReader instance, capable of writing the changes back to
      * {persistent/external} storage.
      */
-    public abstract DataReader createDataSource (T observable);
+    public abstract WritableDataReader createDataSource (T observable);
 }

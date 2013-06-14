@@ -31,6 +31,7 @@ import javafx.util.StringConverter;
 import org.datafx.provider.ListObjectDataProvider;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.JdbcSource;
+import org.datafx.reader.WritableDataReader;
 import org.datafx.reader.converter.JdbcConverter;
 import org.datafx.writer.WriteBackHandler;
 
@@ -88,7 +89,7 @@ public class JdbcSample {
             lodp.setResultObservableList(myList);
             lodp.setWriteBackHandler(new WriteBackHandler<Person>() {
                 @Override
-                public DataReader createDataSource(Person me) {
+                public WritableDataReader createDataSource(Person me) {
                     String statement = "UPDATE PERSON SET lastName=\'" + me.getLastName() + "\' WHERE firstName=\'" + me.getFirstName() + "\'";
                     JdbcSource<Person> dr = new JdbcSource(dbURL, statement, null);
                     dr.setUpdateQuery(true);

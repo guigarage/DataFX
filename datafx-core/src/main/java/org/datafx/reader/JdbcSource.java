@@ -3,7 +3,10 @@ package org.datafx.reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.datafx.reader.converter.JdbcConverter;
 import org.datafx.reader.converter.JdbcDataSourceUtil;
@@ -12,7 +15,7 @@ import org.datafx.reader.converter.JdbcDataSourceUtil;
  *
  * @author johan
  */
-public class JdbcSource<T> extends AbstractDataReader<T> {
+public class JdbcSource<T> extends AbstractDataReader<T> implements WritableDataReader<T> {
 
     private final String jdbcUrl;
     private final String sqlStatement;
@@ -65,6 +68,18 @@ public class JdbcSource<T> extends AbstractDataReader<T> {
             e.printStackTrace();
         }
         connectionCreated = true;
+    }
+
+    @Override
+    public void writeBack() {
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl);
+            Statement query = connection.createStatement();
+            query.executeUpdate(sqlStatement);
+        } catch (SQLException ex) {
+            Logger.getLogger(JdbcSource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override

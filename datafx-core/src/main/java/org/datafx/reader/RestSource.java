@@ -23,7 +23,7 @@ import org.datafx.reader.converter.InputStreamConverter;
  *
  * @author johan
  */
-public class RestSource <T> extends InputStreamDataReader<T> {
+public class RestSource <T> extends InputStreamDataReader<T> implements WritableDataReader<T>{
     
  //   private InputStreamConverter<T> converter;
     private String host;
@@ -299,6 +299,15 @@ public class RestSource <T> extends InputStreamDataReader<T> {
     public RestSource consumerSecret (String secret) {
         setConsumerSecret(secret);
         return this;
+    }
+
+    @Override
+    public void writeBack() {
+        try {
+            createInputStream();
+        } catch (IOException ex) {
+            Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     

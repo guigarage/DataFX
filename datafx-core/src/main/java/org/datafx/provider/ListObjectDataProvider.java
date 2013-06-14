@@ -21,6 +21,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
+import org.datafx.reader.WritableDataReader;
 import org.datafx.writer.WriteBackHandler;
 import org.datafx.writer.WriteBackListProvider;
 import org.datafx.writer.WriteBackProvider;
@@ -125,8 +126,8 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                                     while (change.next()) {
                                         List<? extends T> addedSubList = change.getAddedSubList();
                                         for (T entry : addedSubList) {
-                                            DataReader dataReader = entryAddedHandler.createDataSource(entry);
-                                            Object result = dataReader.get();
+                                            WritableDataReader dataReader = entryAddedHandler.createDataSource(entry);
+                                            dataReader.writeBack();
 
                                         }
                                     }
@@ -215,8 +216,8 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                         observable.addListener(new InvalidationListener() {
                             @Override
                             public void invalidated(Observable o) {
-                                DataReader reader = writeBackHandler.createDataSource(target);
-                                Object response = reader.get();
+                                WritableDataReader reader = writeBackHandler.createDataSource(target);
+                                reader.writeBack();
                             }
                         });
                     }
