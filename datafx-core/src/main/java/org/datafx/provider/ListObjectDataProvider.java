@@ -22,13 +22,16 @@ import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.writer.WriteBackHandler;
+import org.datafx.writer.WriteBackListProvider;
+import org.datafx.writer.WriteBackProvider;
 import org.datafx.writer.WriteTransient;
 
 /**
  *
  * @author johan
  */
-public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>> {
+public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>>,
+        WriteBackProvider<T>, WriteBackListProvider<T> {
 
     private ObservableList<T> resultList;
     private DataReader<T> reader;
@@ -174,11 +177,13 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     public ListProperty<T> getData() {
         return new SimpleListProperty<T>(resultList);
     }
-
+    
+    @Override
     public void setAddEntryHandler(WriteBackHandler<T> handler) {
         this.entryAddedHandler = handler;
     }
 
+    @Override
     public void setWriteBackHandler(WriteBackHandler<T> handler) {
         this.writeBackHandler = handler;
     }

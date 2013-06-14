@@ -11,8 +11,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -21,12 +19,14 @@ import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.writer.WriteBackHandler;
+import org.datafx.writer.WriteBackProvider;
 
 /**
  *
  * @author johan
  */
-public class SingleObjectDataProvider<T> implements DataProvider<T> {
+public class SingleObjectDataProvider<T> implements DataProvider<T>,
+        WriteBackProvider<T>{
     // we can't make this final since the result objectproperty can be set via setResultObjectProperty.
 
     private ObjectProperty<T> objectProperty;
@@ -124,6 +124,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T> {
         return objectProperty;
     }
 
+    @Override
     public void setWriteBackHandler(WriteBackHandler<T> handler) {
         this.writeBackHandler = handler;
     }

@@ -123,7 +123,7 @@ public class RestSource <T> extends InputStreamDataReader<T> {
                     MultiValuedMap allParams = new MultiValuedMap();
                     allParams.putMap(getQueryParams());
                     allParams.putAll(getFormParams());
-                    String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
+                     String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
                     connection.addRequestProperty("Authorization", header);
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
