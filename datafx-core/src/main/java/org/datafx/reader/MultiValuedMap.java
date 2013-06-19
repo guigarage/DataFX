@@ -14,6 +14,24 @@ public class MultiValuedMap extends HashMap<String, List<String>>{
     public MultiValuedMap() {    
     }
     
+    /**
+     * Convenience method. Only add the value to the values already belonging 
+     * to this key in case value is not NULL. This saves client-checks on null
+     * values. 
+     * // TODO not sure we really want this.
+     * @param key
+     * @param value
+     * @return 
+     */
+    public List<String> optPut(String key, String value) {
+        if (value != null) {
+            return put(key, value);
+        }
+        else {
+            return super.get(key);
+        }
+    }
+    
     public List<String> put(String key, String value) {
         List<String> l = super.get(key);
         if (l == null) {
