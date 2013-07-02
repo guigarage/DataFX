@@ -55,6 +55,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
         this.objectProperty = result;
     }
 
+    @Override
     public Worker<T> retrieve() {
         final Service<T> retriever = createService(objectProperty);
         retriever.setOnFailed(new EventHandler<WorkerStateEvent>() {
@@ -158,7 +159,6 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                             @Override
                             public void invalidated(final Observable o) {
                                 final WritableDataReader reader = writeBackHandler.createDataSource(objectProperty.get());
-                                // TODO use executors, and return a Worker
                                 Service service = new Service() {
                                     @Override
                                     protected Task createTask() {
@@ -172,6 +172,9 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                                         return task;
                                     }
                                 };
+                                if (executor != null) {
+                                    service.setExecutor(executor);
+                                }
                                 service.start();
                             }
                         });
