@@ -122,13 +122,42 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                         if (entryAddedHandler != null) {
                             value.addListener(new ListChangeListener<T>() {
                                 @Override
-                                public void onChanged(ListChangeListener.Change<? extends T> change) {
+                                public void onChanged(final ListChangeListener.Change<? extends T> change) {
                                     while (change.next()) {
+                                        Service service = new Service() {
+                                            @Override
+                                            protected Task createTask() {
+                                                Task task = new Task() {
+                                                    @Override
+                                                    protected Object call() throws Exception {
+
+
+                                                        List<? extends T> addedSubList = change.getAddedSubList();
+                                                        for (T entry : addedSubList) {
+                                                            WritableDataReader dataReader = entryAddedHandler.createDataSource(entry);
+                                                            dataReader.writeBack();
+                                                        }
+                                                        return addedSubList;
+
+
+                                                    }
+                                                };
+                                                return task;
+                                            }
+                                        };
+                                        if (executor != null) {
+                                            service.setExecutor(executor);
+                                        }
+                                        service.start();
+
+
                                         List<? extends T> addedSubList = change.getAddedSubList();
                                         for (T entry : addedSubList) {
                                             WritableDataReader dataReader = entryAddedHandler.createDataSource(entry);
                                             dataReader.writeBack();
                                         }
+
+
                                     }
 
                                 }
@@ -177,7 +206,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     public ListProperty<T> getData() {
         return new SimpleListProperty<T>(resultList);
     }
-    
+
     @Override
     public void setAddEntryHandler(WriteBackHandler<T> handler) {
         this.entryAddedHandler = handler;
@@ -214,9 +243,27 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                     if (observable != null) {
                         observable.addListener(new InvalidationListener() {
                             @Override
-                            public void invalidated(Observable o) {
-                                WritableDataReader reader = writeBackHandler.createDataSource(target);
-                                reader.writeBack();
+                            public void invalidated(final Observable o) {
+
+                                Service service = new Service() {
+                                    @Override
+                                    protected Task createTask() {
+                                        Task task = new Task() {
+                                            @Override
+                                            protected Object call() throws Exception {
+
+                                                WritableDataReader reader = writeBackHandler.createDataSource(target);
+                                                reader.writeBack();
+                                                return o;
+                                            }
+                                        };
+                                        return task;
+                                    }
+                                };
+                                if (executor != null) {
+                                    service.setExecutor(executor);
+                                }
+                                service.start();
                             }
                         });
                     }
