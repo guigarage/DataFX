@@ -128,7 +128,6 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                                         for (T entry : addedSubList) {
                                             WritableDataReader dataReader = entryAddedHandler.createDataSource(entry);
                                             dataReader.writeBack();
-
                                         }
                                     }
 

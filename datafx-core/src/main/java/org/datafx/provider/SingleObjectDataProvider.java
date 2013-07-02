@@ -18,6 +18,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
+import org.datafx.reader.WritableDataReader;
 import org.datafx.writer.WriteBackHandler;
 import org.datafx.writer.WriteBackProvider;
 
@@ -155,25 +156,25 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                     if (observable != null) {
                         observable.addListener(new InvalidationListener() {
                             @Override
-                            public void invalidated(Observable o) {
-                                DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
-                                Object response = reader.get();
+                            public void invalidated(final Observable o) {
+                                final WritableDataReader reader = writeBackHandler.createDataSource(objectProperty.get());
+                                // TODO use executors, and return a Worker
+                                Service service = new Service() {
+                                    @Override
+                                    protected Task createTask() {
+                                        Task task = new Task() {
+                                            @Override
+                                            protected Object call() throws Exception {
+                                                reader.writeBack();
+                                                return o;
+                                            }
+                                        };
+                                        return task;
+                                    }
+                                };
+                                service.start();
                             }
                         });
-//                        if (ObservableList.class.isAssignableFrom(observable.getClass())) {
-//                            ObservableList observableList = (ObservableList)observable;
-//                            observableList.addListener(new ListChangeListener(){
-//
-//                                @Override
-//                                public void onChanged(ListChangeListener.Change change) {
-//                                    System.out.println("LIST changed");
-//                                    DataReader reader = writeBackHandler.createDataSource(objectProperty.get());
-//                                    Object response = reader.get();
-//                                    System.out.println("done getting response from listchange" + response);
-//                                }
-//                            });
-//                        }
-              //          System.out.println("added a listener to "+observable+", class = "+observable.getClass());
                     }
 
                 } catch (IllegalArgumentException ex) {
