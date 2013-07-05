@@ -23,7 +23,7 @@
     <dependency>
       <groupId>javax.websocket</groupId>
       <artifactId>javax.websocket-client-api</artifactId>
-      <version>1.0-rc5</version>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

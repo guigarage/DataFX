@@ -23,7 +23,8 @@ public class DataFXEndpoint extends Endpoint implements MessageHandler.Whole<Str
     }
 
     public void onMessage(String message) {
-        parent.setAvailableData(message);
+        System.out.println("DataFXEndpoint got a message!!");
+        parent.addAvailableData(message);
     }
     
 }
