@@ -1,5 +1,6 @@
 package org.datafx.websocket;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -72,6 +73,10 @@ public class WebSocketReader implements DataReader<String> {//, WritableDataRead
 
     public boolean next() {
         return !closed;
+    }
+    
+    public void sendMessage (String msg) throws IOException {
+        session.getBasicRemote().sendText(msg);
     }
 
 //    public void writeBack() {
