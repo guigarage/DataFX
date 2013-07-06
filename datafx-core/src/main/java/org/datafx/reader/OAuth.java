@@ -24,7 +24,7 @@ class OAuth {
     public static String getHeader(String method, String url,
            MultiValuedMap requestParams, String consumerKey, String consumerSecret)
             throws UnsupportedEncodingException, GeneralSecurityException {
-        TreeSet<String> params = new TreeSet<>();
+        TreeSet<String> params = new TreeSet<String>();
         for (Map.Entry<String, List<String>> entry: requestParams.entrySet()) {
             String key = entry.getKey();
             for (String val : entry.getValue()) {
