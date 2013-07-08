@@ -3,7 +3,12 @@ package org.datafx.provider;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,48 +115,82 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
             return retriever;
         }
     }
+    //   private static Map<ObservableList, ListChangeListener> addListeners = new HashMap<ObservableList, ListChangeListener>();
+    final static Map<ObservableList, ListChangeListener> addListeners = new HashMap();
+    final static List myListeners2 = new LinkedList();
 
     protected Service<ObservableList<T>> createService(final ObservableList<T> value) {
+
         return new Service<ObservableList<T>>() {
             @Override
             protected Task<ObservableList<T>> createTask() {
+                // We don't want to call writeback handlers while retrieving external data
+                ListChangeListener existingListener = null;
+                if (entryAddedHandler != null) {
+                    synchronized (addListeners) {
+                        Set<Map.Entry<ObservableList, ListChangeListener>> entrySet = addListeners.entrySet();
+                        for (Entry<ObservableList, ListChangeListener> entry : entrySet) {
+                            if (entry.getKey().equals(value)) {
+                                existingListener = entry.getValue();
+                            }
+                        }
+                        if (existingListener != null) {
+                            value.removeListener(existingListener);
+                        }
+                    }
+                }
                 final Task<ObservableList<T>> task = createReceiverTask(value);
+
+                final ListChangeListener myListener = existingListener;
                 task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(WorkerStateEvent arg0) {
                         if (entryAddedHandler != null) {
-                            value.addListener(new ListChangeListener<T>() {
-                                @Override
-                                public void onChanged(final ListChangeListener.Change<? extends T> change) {
-                                    while (change.next()) {
-                                        Service service = new Service() {
-                                            @Override
-                                            protected Task createTask() {
-                                                Task task = new Task() {
-                                                    @Override
-                                                    protected Object call() throws Exception {
+                            if (myListener != null) {
 
-                                                        List<? extends T> addedSubList = change.getAddedSubList();
-                                                        for (T entry : addedSubList) {
-                                                            WritableDataReader dataReader = entryAddedHandler.createDataSource(entry);
-                                                            dataReader.writeBack();
+                                value.addListener(myListener);
+                            } else {
+                                ListChangeListener<T> localListener =
+                                        new ListChangeListener<T>() {
+                                    @Override
+                                    public void onChanged(final ListChangeListener.Change<? extends T> change) {
+                                        while (change.next()) {
+                                            Service service = new Service() {
+                                                @Override
+                                                protected Task createTask() {
+                                                    Task task = new Task() {
+                                                        @Override
+                                                        protected Object call() throws Exception {
+
+                                                            List<? extends T> addedSubList = change.getAddedSubList();
+                                                            for (T entry : addedSubList) {
+                                                                WritableDataReader dataReader = entryAddedHandler.createDataSource(entry);
+                                                                dataReader.writeBack();
+                                                            }
+                                                            return addedSubList;
+
                                                         }
-                                                        return addedSubList;
-
-                                                    }
-                                                };
-                                                return task;
+                                                    };
+                                                    return task;
+                                                }
+                                            };
+                                            if (executor != null) {
+                                                service.setExecutor(executor);
                                             }
-                                        };
-                                        if (executor != null) {
-                                            service.setExecutor(executor);
+                                            service.start();
+
                                         }
-                                        service.start();
 
                                     }
+                                };
+                                synchronized (addListeners) {
+                                    addListeners.put(value, localListener);
 
+
+                                    value.addListener(localListener);
                                 }
-                            });
+                            }
+                            //        );
                         }
                     }
                 });
