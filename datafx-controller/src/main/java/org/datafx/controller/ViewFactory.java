@@ -1,7 +1,11 @@
 package org.datafx.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -58,7 +62,7 @@ public class ViewFactory {
     	String foundFxmlName = null;
         Node viewNode = null;
         
-        if(controllerClass.getName().endsWith("Controller")) {
+        if(controllerClass.getName().endsWith("Controller") && canAccess(controllerClass, foundFxmlName)) {
         	foundFxmlName = controllerClass.getName().substring(0, controllerClass.getName().length() - "Controller".length());
         }
         
@@ -144,6 +148,15 @@ public class ViewFactory {
          });
     }
     
+	private boolean canAccess(Class controllerClass, String resourceName) {
+		try {
+			controllerClass.getResource(resourceName);
+			return true;
+		} catch (Exception e) {
+		}
+		return false;
+	}
+	
     private void injectContexts(final Object bean, final ViewContext context) {
         Class<? extends Object> cls = bean.getClass();
         Field[] fields = cls.getDeclaredFields();
