@@ -1,11 +1,8 @@
 package org.datafx.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -62,8 +59,11 @@ public class ViewFactory {
     	String foundFxmlName = null;
         Node viewNode = null;
         
-        if(controllerClass.getName().endsWith("Controller") && canAccess(controllerClass, foundFxmlName)) {
-        	foundFxmlName = controllerClass.getName().substring(0, controllerClass.getName().length() - "Controller".length());
+        if(controllerClass.getSimpleName().endsWith("Controller")) {
+        	String nameByController = controllerClass.getSimpleName().substring(0, controllerClass.getSimpleName().length() - "Controller".length()) + ".fxml";
+        	if(canAccess(controllerClass, nameByController)) {
+        		foundFxmlName = nameByController;
+        	}
         }
         
         FXMLController controllerAnnotation = (FXMLController) controllerClass.getAnnotation(FXMLController.class);
@@ -148,9 +148,12 @@ public class ViewFactory {
          });
     }
     
-	private boolean canAccess(Class controllerClass, String resourceName) {
+	private boolean canAccess(Class<?> controllerClass, String resourceName) {
 		try {
-			controllerClass.getResource(resourceName);
+			URL url = controllerClass.getResource(resourceName);
+			if(url == null) {
+				return false;
+			}
 			return true;
 		} catch (Exception e) {
 		}
@@ -170,36 +173,37 @@ public class ViewFactory {
                 }
             } else if (field.isAnnotationPresent(FXMLViewFlowContext.class)) {
                 Class<?> type = field.getType();
-                if (FXMLViewFlowContext.class.isAssignableFrom(type)) {
+                if (ViewFlowContext.class.isAssignableFrom(type)) {
                 	setPrivileged(field, bean, context.getViewFlowContext());
                 } else {
                     throw new RuntimeException("Can not set FXMLViewFlowContext to field of type " + type + " (" + field + ")");
                 }
             } else if (field.isAnnotationPresent(FXMLApplicationContext.class)) {
                 Class<?> type = field.getType();
-                if (FXMLApplicationContext.class.isAssignableFrom(type)) {
+                if (ApplicationContext.class.isAssignableFrom(type)) {
                 	setPrivileged(field, bean, context.getApplicationContext());
                 } else {
                     throw new RuntimeException("Can not set FXMLViewFlowContext to field of type " + type + " (" + field + ")");
                 }
             } else {
-                AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                    @Override public Void run() {
-                        boolean wasAccessible = field.isAccessible();
-                        try {
-                            field.setAccessible(true);
-                            Object fieldData = field.get(bean);
-                            if (fieldData != null) {
-                                injectContexts(field, context);
-                            }
-                            return null; // return nothing...
-                        } catch (IllegalArgumentException | IllegalAccessException ex) {
-                            throw new IllegalStateException("Cannot set field: " + field, ex);
-                        } finally {
-                            field.setAccessible(wasAccessible);
-                        }
-                    }
-                });
+            	//TODO: CHECK FOR RECURSION
+//                AccessController.doPrivileged(new PrivilegedAction<Void>() {
+//                    @Override public Void run() {
+//                        boolean wasAccessible = field.isAccessible();
+//                        try {
+//                            field.setAccessible(true);
+//                            Object fieldData = field.get(bean);
+//                            if (fieldData != null) {
+//                                injectContexts(field, context);
+//                            }
+//                            return null; // return nothing...
+//                        } catch (IllegalArgumentException | IllegalAccessException ex) {
+//                            throw new IllegalStateException("Cannot set field: " + field, ex);
+//                        } finally {
+//                            field.setAccessible(wasAccessible);
+//                        }
+//                    }
+//                });
             }
         }
     }
