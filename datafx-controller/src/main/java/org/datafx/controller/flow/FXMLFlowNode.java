@@ -5,5 +5,5 @@ import org.datafx.controller.ViewFlowContext;
 
 public interface FXMLFlowNode {
 
-    public FXMLFlowView handle(FXMLFlowView flowView, ViewFlowContext flowContext) throws FXMLFlowException;
+    public FXMLFlowView handle(FXMLFlowView flowView, ViewFlowContext flowContext, FXMLFlowHandler flowHandler) throws FXMLFlowException;
 }

@@ -11,11 +11,15 @@ public class FXMLFlowHandler {
 
     private ViewFlowContext flowContext;
     
-    public FXMLFlowHandler(FXMLFlowView startView, FXMLFlowContainer container) {
+    public FXMLFlowHandler(FXMLFlowView startView, FXMLFlowContainer container, ViewFlowContext flowContext) {
         this.container = container;
         this.currentView = startView;
-        flowContext = new ViewFlowContext();
+        this.flowContext = flowContext;
         flowContext.register(this);
+    }
+    
+    public FXMLFlowHandler(FXMLFlowView startView, FXMLFlowContainer container) {
+    	this(startView, container, new ViewFlowContext());
     }
     
     public ViewContext start() throws FXMLFlowException {
@@ -27,7 +31,7 @@ public class FXMLFlowHandler {
     }
 
     private ViewContext handle(FXMLFlowNode node) throws FXMLFlowException {
-        currentView = node.handle(currentView, flowContext);
+        currentView = node.handle(currentView, flowContext, this);
         updateViewInContainer();
         return currentView.getViewContext();
     }

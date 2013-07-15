@@ -33,6 +33,7 @@ public class MasterViewController {
     public void init() {
     	DataModel model = context.getRegisteredObject(DataModel.class);
         myList.setItems(model.getImages());
+        myList.getSelectionModel().select(model.selectedIndex().get());
         model.selectedIndex().bind(myList.getSelectionModel().selectedIndexProperty());
     }
     

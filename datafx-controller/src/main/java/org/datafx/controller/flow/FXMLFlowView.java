@@ -23,9 +23,9 @@ public class FXMLFlowView implements FXMLFlowNode {
         flowMap = new HashMap<>();
     }
 
-    @Override public FXMLFlowView handle(FXMLFlowView currentViewContext, ViewFlowContext flowContext) throws FXMLFlowException {
+    @Override public FXMLFlowView handle(FXMLFlowView currentViewContext, ViewFlowContext flowContext, FXMLFlowHandler flowHandler) throws FXMLFlowException {
         try {
-            viewContext = ViewFactory.getInstance().createByControllerInViewFlow(controllerClass, flowContext);
+            viewContext = ViewFactory.getInstance().createByControllerInViewFlow(controllerClass, flowContext, null, flowHandler);
             previousViewContext = currentViewContext;
             return this;
         } catch (FxmlLoadException e) {
@@ -50,11 +50,6 @@ public class FXMLFlowView implements FXMLFlowNode {
         return this;
     }
     
-    public FXMLFlowView withBackAction(String actionId) {
-        addAction(actionId, new FXMLFlowBack(this));
-        return this;
-    }
-
     public FXMLFlowView withFinishFlowAction(String actionId) {
         //TODO!!!
         return this;
@@ -68,7 +63,7 @@ public class FXMLFlowView implements FXMLFlowNode {
     private void addAction(String actionId, FXMLFlowNode node) {
         flowMap.put(actionId, node);
     }
-
+    
     public FXMLFlowNode getActionById(String actionId) {
         return flowMap.get(actionId);
     }

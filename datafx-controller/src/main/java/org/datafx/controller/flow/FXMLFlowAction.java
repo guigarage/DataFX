@@ -15,7 +15,7 @@ public class FXMLFlowAction implements FXMLFlowNode {
         return runnable;
     }
 
-    @Override public FXMLFlowView handle(FXMLFlowView currentViewContext, ViewFlowContext flowContext) {
+    @Override public FXMLFlowView handle(FXMLFlowView currentViewContext, ViewFlowContext flowContext, FXMLFlowHandler flowHandler) {
         runnable.run();
         return currentViewContext;
     }
