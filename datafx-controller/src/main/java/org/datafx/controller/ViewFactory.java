@@ -40,20 +40,45 @@ public class ViewFactory {
     }
 
     public ViewContext createByController(final Class<?> controllerClass) throws FxmlLoadException {
-        return createByControllerInViewFlow(controllerClass, new ViewFlowContext());
+        return createByController(controllerClass, null);
     }
 
+    public ViewContext createByController(final Class<?> controllerClass, String fxmlName) throws FxmlLoadException {
+        return createByControllerInViewFlow(controllerClass, new ViewFlowContext(), fxmlName);
+    }
+
+    
     public ViewContext createByControllerInViewFlow(final Class<?> controllerClass, ViewFlowContext viewFlowContext)
             throws FxmlLoadException {
+    	return createByControllerInViewFlow(controllerClass, viewFlowContext, null);
+    }
+    
+    public ViewContext createByControllerInViewFlow(final Class<?> controllerClass, ViewFlowContext viewFlowContext, String fxmlName)
+            throws FxmlLoadException {
+    	String foundFxmlName = null;
         Node viewNode = null;
-        FXMLController controllerAnnotation = (FXMLController) controllerClass.getAnnotation(FXMLController.class);
-        if (controllerAnnotation == null) {
-            throw new FxmlLoadException("No FXMLController Annotation present!");
+        
+        if(controllerClass.getName().endsWith("Controller")) {
+        	foundFxmlName = controllerClass.getName().substring(0, controllerClass.getName().length() - "Controller".length());
         }
+        
+        FXMLController controllerAnnotation = (FXMLController) controllerClass.getAnnotation(FXMLController.class);
+        if (controllerAnnotation != null) {
+        	foundFxmlName = controllerAnnotation.value();
+        }
+        
+        if(fxmlName != null) {
+        	foundFxmlName = fxmlName;
+        }
+        
+        if(foundFxmlName == null) {
+        	throw new FxmlLoadException("No FXML File specified!");
+        }
+        
         try {
             // 1. Create an instance of the Controller
             final Object controller = controllerClass.newInstance();
-            FXMLLoader fxmlLoader = new FXMLLoader(controllerClass.getResource(controllerAnnotation.value()));
+            FXMLLoader fxmlLoader = new FXMLLoader(controllerClass.getResource(foundFxmlName));
             fxmlLoader.setController(controller);
             fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
 
