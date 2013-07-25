@@ -12,8 +12,6 @@ public class FXMLFlowView implements FXMLFlowNode {
 
     private Class<?> controllerClass;
 
-    private FXMLFlowView previousViewContext;
-
     private Map<String, FXMLFlowNode> flowMap;
 
     private ViewContext viewContext;
@@ -23,18 +21,13 @@ public class FXMLFlowView implements FXMLFlowNode {
         flowMap = new HashMap<>();
     }
 
-    @Override public FXMLFlowView handle(FXMLFlowView currentViewContext, ViewFlowContext flowContext, FXMLFlowHandler flowHandler) throws FXMLFlowException {
+    @Override public FXMLFlowView handle(FXMLFlowView currentFlowView, ViewFlowContext flowContext, FXMLFlowHandler flowHandler) throws FXMLFlowException {
         try {
             viewContext = ViewFactory.getInstance().createByControllerInViewFlow(controllerClass, flowContext, null, flowHandler);
-            previousViewContext = currentViewContext;
             return this;
         } catch (FxmlLoadException e) {
             throw new FXMLFlowException(e);
         }
-    }
-
-    public FXMLFlowView getPreviousViewContext() {
-        return previousViewContext;
     }
 
     public static FXMLFlowView create(Class<?> controllerClass) {
@@ -55,8 +48,8 @@ public class FXMLFlowView implements FXMLFlowNode {
         return this;
     }
 
-    public FXMLFlowView withRunAction(String actionId, Runnable runnable) {
-        addAction(actionId, new FXMLFlowAction(runnable));
+    public FXMLFlowView withRunAction(String actionId, Class<? extends Runnable> runnableClass) {
+        addAction(actionId, new FXMLFlowAction(runnableClass));
         return this;
     }
     

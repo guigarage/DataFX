@@ -11,12 +11,11 @@ public class ViewFlowContext {
 
     private String id = UUID.randomUUID().toString();
 
-    private WeakReferenceQueue<ViewContext> registeredContexts;
+    private ViewContext currentViewContext;
     
     private Map<String, Object> registeredObjects;
     
     public ViewFlowContext() {
-        registeredContexts = new WeakReferenceQueue<>();
         registeredObjects = new HashMap<>();
     }
     
@@ -24,14 +23,13 @@ public class ViewFlowContext {
         return id;
     }
     
-    protected void registerContext(ViewContext context) {
-        registeredContexts.add(context);
-    }
+    public void setCurrentViewContext(ViewContext currentViewContext) {
+		this.currentViewContext = currentViewContext;
+	}
     
-    @SuppressWarnings("unchecked")
-    public Iterator<ViewContext> getViewContextIterator() {
-        return (Iterator<ViewContext>) registeredContexts.iterator();
-    }
+    public ViewContext getCurrentViewContext() {
+		return currentViewContext;
+	}
     
     public void register(String key, Object value) {
         registeredObjects.put(key, value);

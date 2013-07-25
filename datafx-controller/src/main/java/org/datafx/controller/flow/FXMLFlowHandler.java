@@ -6,6 +6,9 @@ import org.datafx.controller.ViewFlowContext;
 public class FXMLFlowHandler {
 
     private FXMLFlowView currentView;
+    
+    private FXMLFlowView startView;
+
 
     private FXMLFlowContainer container;
 
@@ -13,7 +16,7 @@ public class FXMLFlowHandler {
     
     public FXMLFlowHandler(FXMLFlowView startView, FXMLFlowContainer container, ViewFlowContext flowContext) {
         this.container = container;
-        this.currentView = startView;
+        this.startView = startView;
         this.flowContext = flowContext;
         flowContext.register(this);
     }
@@ -23,7 +26,7 @@ public class FXMLFlowHandler {
     }
     
     public ViewContext start() throws FXMLFlowException {
-        return handle(currentView);
+        return handle(startView);
     }
 
     public ViewContext handle(String actionId) throws FXMLFlowException {
@@ -31,12 +34,17 @@ public class FXMLFlowHandler {
     }
 
     private ViewContext handle(FXMLFlowNode node) throws FXMLFlowException {
+    	FXMLFlowView oldViewContext = currentView;
         currentView = node.handle(currentView, flowContext, this);
-        updateViewInContainer();
-        return currentView.getViewContext();
-    }
-    
-    private void updateViewInContainer() {
+        
+        if(oldViewContext != null) {
+        	ViewContext lastViewContext = oldViewContext.getViewContext();
+        	if(lastViewContext != null) {
+        		lastViewContext.destroy();
+        	}
+        }
+        flowContext.setCurrentViewContext(currentView.getViewContext());
         container.setView(currentView.getViewContext());
+        return currentView.getViewContext();
     }
 }

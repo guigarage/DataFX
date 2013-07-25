@@ -6,19 +6,15 @@ import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.datafx.controller.cdi.DependencyInjection;
 import org.datafx.controller.flow.FXMLFlowContainer;
@@ -73,8 +69,90 @@ public class ViewFactory {
 			final Class<?> controllerClass, ViewFlowContext viewFlowContext,
 			String fxmlName, FXMLFlowHandler flowHandler)
 			throws FxmlLoadException {
+		try {
+			// 1. Create an instance of the Controller
+			final Object controller = controllerClass.newInstance();
+			
+			// 2. load the FXML and make sure the @FXML annotations are injected
+			Node viewNode = (Node) createLoader(controller, fxmlName).load();
+			ViewContext context = new ViewContext(viewNode, viewFlowContext);
+			context.register("controller", controller);
+			// 3. Resolve the @Inject points in the Controller and call
+			// @PostConstruct
+			injectContexts(controller, context);
+
+			if (flowHandler != null) {
+				injectFlow(controller, flowHandler);
+			}
+
+			if (runtime != null) {
+				runtime.resolve(controller, context);
+			}
+
+			for (final Method method : controller.getClass().getMethods()) {
+				if (method.isAnnotationPresent(PostConstruct.class)) {
+					method.invoke(controller);
+				}
+			}
+			return context;
+		} catch (Exception e) {
+			throw new FxmlLoadException(e);
+		}
+	}
+
+	public Node createSubView(Class<?> controllerClass, ViewContext context) throws FxmlLoadException {
+		return createSubView(controllerClass, null, context);
+	}
+	
+	public Node createSubView(Class<?> controllerClass, String fxmlName, ViewContext context) throws FxmlLoadException {
+		try {
+			// 1. Create an instance of the Controller
+			final Object controller = controllerClass.newInstance();
+			
+			// 2. load the FXML and make sure the @FXML annotations are injected
+			Node viewNode = (Node) createLoader(controller, fxmlName).load();
+
+			// 3. Resolve the @Inject points in the Controller and call
+			// @PostConstruct
+			injectContexts(controller, context);
+
+			for (final Method method : controller.getClass().getMethods()) {
+				if (method.isAnnotationPresent(PostConstruct.class)) {
+					method.invoke(controller);
+				}
+			}
+			return viewNode;
+		} catch (Exception e) {
+			throw new FxmlLoadException(e);
+		}
+	}
+	
+	private FXMLLoader createLoader(final Object controller, String fxmlName) throws FxmlLoadException {
+		Class<?> controllerClass = controller.getClass();
+		String foundFxmlName = getFxmlName(controllerClass);
+		if (fxmlName != null) {
+			foundFxmlName = fxmlName;
+		}
+		if (foundFxmlName == null) {
+			throw new FxmlLoadException("No FXML File specified!");
+		}
+		
+		
+		FXMLLoader fxmlLoader = new FXMLLoader(
+				controllerClass.getResource(foundFxmlName));
+		fxmlLoader.setController(controller);
+		fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+
+			@Override
+			public Object call(Class<?> arg0) {
+				return controller;
+			}
+		});
+		return fxmlLoader;
+	}
+	
+	private String getFxmlName(Class<?> controllerClass) {
 		String foundFxmlName = null;
-		Node viewNode = null;
 
 		if (controllerClass.getSimpleName().endsWith("Controller")) {
 			String nameByController = controllerClass.getSimpleName()
@@ -93,75 +171,9 @@ public class ViewFactory {
 		if (controllerAnnotation != null) {
 			foundFxmlName = controllerAnnotation.value();
 		}
-
-		if (fxmlName != null) {
-			foundFxmlName = fxmlName;
-		}
-
-		if (foundFxmlName == null) {
-			throw new FxmlLoadException("No FXML File specified!");
-		}
-
-		try {
-			// 1. Create an instance of the Controller
-			final Object controller = controllerClass.newInstance();
-			FXMLLoader fxmlLoader = new FXMLLoader(
-					controllerClass.getResource(foundFxmlName));
-			fxmlLoader.setController(controller);
-			fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-
-				@Override
-				public Object call(Class<?> arg0) {
-					return controller;
-				}
-			});
-			// 2. load the FXML and make sure the @FXML annotations are injected
-			viewNode = (Node) fxmlLoader.load();
-			ViewContext context = new ViewContext(viewNode, viewFlowContext);
-			// 3. Resolve the @Inject points in the Controller and call
-			// @PostConstruct
-			injectContexts(controller, context);
-
-			if (flowHandler != null) {
-				injectFlow(controller, flowHandler);
-			}
-
-			if (runtime != null) {
-				runtime.resolve(controller, context);
-			}
-
-			for (final Method method : controller.getClass().getMethods()) {
-				if (method.isAnnotationPresent(PostConstruct.class)) {
-					method.invoke(controller);
-				}
-				// TODO: HACK!!!!!!!!!
-				if (method.isAnnotationPresent(PreDestroy.class)) {
-					viewNode.parentProperty().addListener(
-							new ChangeListener<Parent>() {
-
-								@Override
-								public void changed(
-										ObservableValue<? extends Parent> observable,
-										Parent oldValue, Parent newValue) {
-									if (oldValue != null && newValue == null) {
-										try {
-											method.invoke(controller);
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-									}
-								}
-							});
-				}
-
-			}
-
-			return context;
-		} catch (Exception e) {
-			throw new FxmlLoadException(e);
-		}
+		return foundFxmlName;
 	}
-
+	
 	private void injectFlow(final Object controller, final FXMLFlowHandler flowHandler) {
 		Class<? extends Object> cls = controller.getClass();
 		Field[] fields = cls.getDeclaredFields();
@@ -239,6 +251,12 @@ public class ViewFactory {
 		return false;
 	}
 
+	public <T> T createInstanceWithInjections(Class<T> cls, ViewContext context) throws InstantiationException, IllegalAccessException {
+		T instance = cls.newInstance();
+		injectContexts(instance, context);
+		return instance;
+	}
+	
 	private void injectContexts(final Object bean, final ViewContext context) {
 		Class<? extends Object> cls = bean.getClass();
 		Field[] fields = cls.getDeclaredFields();
@@ -295,6 +313,12 @@ public class ViewFactory {
 		}
 	}
 
+	public static ViewContext startFlowInContainer(FXMLFlowView view,
+			final FXMLFlowContainer container, ViewFlowContext flowContext)
+			throws FXMLFlowException {
+		return new FXMLFlowHandler(view, container, flowContext).start();
+	}
+	
 	public static ViewContext startFlowInPane(FXMLFlowView view,
 			final Pane pane, ViewFlowContext flowContext)
 			throws FXMLFlowException {
@@ -311,7 +335,7 @@ public class ViewFactory {
 
 			}
 		};
-		return new FXMLFlowHandler(view, container, flowContext).start();
+		return startFlowInContainer(view, container, flowContext);
 	}
 
 	public static ViewContext startFlowInPane(FXMLFlowView view, final Pane pane)

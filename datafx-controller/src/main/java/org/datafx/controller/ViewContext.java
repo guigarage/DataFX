@@ -1,8 +1,12 @@
 package org.datafx.controller;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.annotation.PreDestroy;
 
 import javafx.scene.Node;
 
@@ -23,7 +27,6 @@ public class ViewContext {
     public ViewContext(Node rootNode, ViewFlowContext viewFlowContext) {
         this.viewFlowContext = viewFlowContext;
         this.rootNode = rootNode;
-        viewFlowContext.registerContext(this);
         registeredObjects = new HashMap<>();
     }
     
@@ -58,5 +61,24 @@ public class ViewContext {
     
     public ApplicationContext getApplicationContext() {
         return ApplicationContext.getInstance();
+    }
+    
+    public void destroy() {
+    	Object controller = getRegisteredObject("controller");
+		if(controller != null) {
+			for (final Method method : controller.getClass().getMethods()) {
+				if (method.isAnnotationPresent(PreDestroy.class)) {
+					try {
+						method.invoke(controller);
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
     }
 }
