@@ -13,10 +13,9 @@ import javafx.util.Callback;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.datafx.controller.CDIRuntime;
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.FxmlLoadException;
-import org.datafx.controller.ViewContext;
+import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.util.FxmlLoadException;
 
 public class DependencyInjection implements CDIRuntime {
 

@@ -1,7 +1,7 @@
 package org.datafx.controller.flow;
 
-import org.datafx.controller.ViewContext;
-import org.datafx.controller.ViewFlowContext;
+import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.context.ViewFlowContext;
 
 public class FXMLFlowHandler {
 

@@ -6,7 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import org.datafx.controller.ViewFactory;
-import org.datafx.controller.ViewFlowContext;
+import org.datafx.controller.context.ViewFlowContext;
 import org.datafx.controller.demo.action.DeleteAction;
 import org.datafx.controller.demo.controller.DetailViewController;
 import org.datafx.controller.demo.controller.MasterViewController;

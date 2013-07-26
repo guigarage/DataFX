@@ -1,4 +1,4 @@
-package org.datafx.controller;
+package org.datafx.controller.context;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,4 +1,6 @@
-package org.datafx.controller;
+package org.datafx.controller.cdi;
+
+import org.datafx.controller.context.ViewContext;
 
 public interface CDIRuntime {
 

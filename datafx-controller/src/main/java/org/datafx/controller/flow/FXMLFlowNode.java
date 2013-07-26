@@ -1,6 +1,6 @@
 package org.datafx.controller.flow;
 
-import org.datafx.controller.ViewFlowContext;
+import org.datafx.controller.context.ViewFlowContext;
 
 
 public interface FXMLFlowNode {

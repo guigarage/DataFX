@@ -1,4 +1,4 @@
-package org.datafx.controller;
+package org.datafx.controller.context;
 
 import java.util.HashMap;
 import java.util.Map;

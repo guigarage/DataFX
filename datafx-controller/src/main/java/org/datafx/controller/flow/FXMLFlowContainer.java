@@ -1,6 +1,6 @@
 package org.datafx.controller.flow;
 
-import org.datafx.controller.ViewContext;
+import org.datafx.controller.context.ViewContext;
 
 public interface FXMLFlowContainer {
 

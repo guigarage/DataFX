@@ -8,8 +8,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.FXMLViewContext;
-import org.datafx.controller.ViewContext;
+import org.datafx.controller.context.FXMLViewContext;
+import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.demo.data.DataModel;
 import org.datafx.controller.flow.FlowAction;
 

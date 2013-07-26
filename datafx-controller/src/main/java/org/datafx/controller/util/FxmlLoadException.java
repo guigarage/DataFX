@@ -1,4 +1,4 @@
-package org.datafx.controller;
+package org.datafx.controller.util;
 
 public class FxmlLoadException extends Exception{
 
