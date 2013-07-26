@@ -116,6 +116,8 @@ public class ViewFactory {
 			// @PostConstruct
 			injectContexts(controller, context);
 
+			//TODO: We need to register the sub-controller in the context cause it can have a PreDestroy....
+			
 			for (final Method method : controller.getClass().getMethods()) {
 				if (method.isAnnotationPresent(PostConstruct.class)) {
 					method.invoke(controller);

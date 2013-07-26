@@ -1,5 +1,6 @@
 package org.datafx.controller.demo.controller;
 
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -10,7 +11,6 @@ import javax.annotation.PreDestroy;
 import org.datafx.controller.FXMLViewFlowContext;
 import org.datafx.controller.ViewFlowContext;
 import org.datafx.controller.demo.data.DataModel;
-import org.datafx.controller.demo.data.ImageObject;
 import org.datafx.controller.flow.FlowAction;
 
 public class MasterViewController {
@@ -19,7 +19,7 @@ public class MasterViewController {
     private ViewFlowContext context;
     
     @FXML
-    private ListView<ImageObject> myList;
+    private ListView<StringProperty> myList;
     
     @FXML
     @FlowAction("delete")
@@ -32,7 +32,7 @@ public class MasterViewController {
     @PostConstruct
     public void init() {
     	DataModel model = context.getRegisteredObject(DataModel.class);
-        myList.setItems(model.getImages());
+        myList.setItems(model.getNames());
         myList.getSelectionModel().select(model.selectedIndex().get());
         model.selectedIndex().bind(myList.getSelectionModel().selectedIndexProperty());
     }

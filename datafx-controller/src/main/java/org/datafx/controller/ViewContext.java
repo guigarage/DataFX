@@ -64,6 +64,7 @@ public class ViewContext {
     }
     
     public void destroy() {
+    	//TODO: All managed Object should be checked for a pre destroy....
     	Object controller = getRegisteredObject("controller");
 		if(controller != null) {
 			for (final Method method : controller.getClass().getMethods()) {

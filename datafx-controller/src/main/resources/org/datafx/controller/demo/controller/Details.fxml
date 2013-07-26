@@ -9,8 +9,7 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
   <children>
-    <ImageView fx:id="myImageView" fitHeight="150.0" fitWidth="200.0" layoutX="41.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
-    <TextField fx:id="myTextfield" layoutX="41.0" layoutY="235.0" prefWidth="200.0" />
-    <Button id="myImageView" fx:id="backButton" layoutX="61.0" layoutY="275.0" mnemonicParsing="false" text="Button" />
+    <TextField fx:id="myTextfield" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.topAnchor="12.0" />
+    <Button id="myImageView" fx:id="backButton" mnemonicParsing="false" text="back" AnchorPane.leftAnchor="12.0" AnchorPane.topAnchor="36.0" />
   </children>
 </AnchorPane>

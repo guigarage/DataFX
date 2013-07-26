@@ -8,7 +8,7 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="397.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
   <children>
-    <ListView fx:id="myList" layoutX="32.0" layoutY="27.0" prefHeight="359.0" prefWidth="200.0" />
+    <ListView fx:id="myList" prefHeight="359.0" prefWidth="200.0" AnchorPane.leftAnchor="32.0" AnchorPane.topAnchor="32.0" />
     <Button fx:id="deleteButton" layoutX="288.0" layoutY="27.0" mnemonicParsing="false" text="delete" />
     <Button fx:id="showDetailsButton" layoutX="288.0" layoutY="62.0" mnemonicParsing="false" text="show details" />
   </children>

@@ -3,9 +3,9 @@ package org.datafx.controller.demo.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.FXMLViewContext;
@@ -20,9 +20,6 @@ public class DetailViewController {
     private ViewContext context;
     
     @FXML
-    private ImageView myImageView;
-    
-    @FXML
     private TextField myTextfield;
     
     @FXML
@@ -32,7 +29,12 @@ public class DetailViewController {
     @PostConstruct
     public void init() {
     	DataModel model = context.getViewFlowContext().getRegisteredObject(DataModel.class);
-        myImageView.setImage(model.getSelected().getImage());
-        myTextfield.setText(model.getSelected().getTitle());
+    	myTextfield.textProperty().bindBidirectional(model.getSelected());
+    }
+    
+    @PreDestroy
+    public void destroy() {
+    	DataModel model = context.getRegisteredObject(DataModel.class);
+    	model.getSelected().unbind();
     }
 }
