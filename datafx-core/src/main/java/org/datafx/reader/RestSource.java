@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -147,6 +146,9 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
                 for (Map.Entry<String, List<String>> entryList : getFormParams().entrySet()) {
                     String key = entryList.getKey();
                     for (String val : entryList.getValue()) {
+                        if (val == null ) {
+                            throw new IllegalArgumentException ("Values in form parameters can't be null -- was null for key "+key);
+                        }
                         if (!first) {
                             dataString = dataString + "&";
                         } else {
@@ -305,7 +307,7 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
     public void writeBack() {
         try {
             createInputStream();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
