@@ -10,7 +10,7 @@ import javax.annotation.PreDestroy;
 
 import javafx.scene.Node;
 
-public class ViewContext {
+public class ViewContext<U> {
 
     private ViewFlowContext viewFlowContext;
     
@@ -20,15 +20,22 @@ public class ViewContext {
     
     private Map<String, Object> registeredObjects;
     
-    public ViewContext(Node rootNode) {
-        this(rootNode, new ViewFlowContext());
+    private U controller;
+    
+    public ViewContext(Node rootNode, U controller) {
+        this(rootNode, new ViewFlowContext(), controller);
     }
     
-    public ViewContext(Node rootNode, ViewFlowContext viewFlowContext) {
+    public ViewContext(Node rootNode, ViewFlowContext viewFlowContext, U controller) {
         this.viewFlowContext = viewFlowContext;
         this.rootNode = rootNode;
         registeredObjects = new HashMap<>();
+        this.controller = controller;
     }
+    
+    public U getController() {
+		return controller;
+	}
     
     public String getId() {
         return id;

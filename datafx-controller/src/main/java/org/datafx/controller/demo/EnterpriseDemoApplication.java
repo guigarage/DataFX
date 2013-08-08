@@ -24,7 +24,7 @@ public class EnterpriseDemoApplication extends Application {
 		ViewFactory.startFlowInPane(createFlow(),
 				pane, flowContext);
 		Scene myScene = new Scene(pane);
-
+		
 		stage.setScene(myScene);
 		stage.show();
 	}

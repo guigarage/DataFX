@@ -17,7 +17,7 @@ import org.datafx.controller.flow.FlowAction;
 public class DetailViewController {
 
     @FXMLViewContext
-    private ViewContext context;
+    private ViewContext<DetailViewController> context;
     
     @FXML
     private TextField myTextfield;

@@ -48,43 +48,43 @@ public class ViewFactory {
 		return instance;
 	}
 
-	public ViewContext createByController(final Class<?> controllerClass)
+	public <T> ViewContext<T> createByController(final Class<T> controllerClass)
 			throws FxmlLoadException {
 		return createByController(controllerClass, null);
 	}
 
-	public ViewContext createByController(final Class<?> controllerClass,
+	public <T> ViewContext<T> createByController(final Class<T> controllerClass,
 			String fxmlName) throws FxmlLoadException {
 		return createByControllerInViewFlow(controllerClass,
 				new ViewFlowContext(), fxmlName);
 	}
 
-	public ViewContext createByControllerInViewFlow(
-			final Class<?> controllerClass, ViewFlowContext viewFlowContext)
+	public <T> ViewContext<T> createByControllerInViewFlow(
+			final Class<T> controllerClass, ViewFlowContext viewFlowContext)
 			throws FxmlLoadException {
 		return createByControllerInViewFlow(controllerClass, viewFlowContext,
 				null);
 	}
 
-	public ViewContext createByControllerInViewFlow(
-			final Class<?> controllerClass, ViewFlowContext viewFlowContext,
+	public <T> ViewContext<T> createByControllerInViewFlow(
+			final Class<T> controllerClass, ViewFlowContext viewFlowContext,
 			String fxmlName) throws FxmlLoadException {
 		return createByControllerInViewFlow(controllerClass, viewFlowContext,
 				fxmlName, null);
 	}
 
-	public ViewContext createByControllerInViewFlow(
-			final Class<?> controllerClass, ViewFlowContext viewFlowContext,
+	public <T> ViewContext<T> createByControllerInViewFlow(
+			final Class<T> controllerClass, ViewFlowContext viewFlowContext,
 			String fxmlName, FXMLFlowHandler flowHandler)
 			throws FxmlLoadException {
 		try {
 			// 1. Create an instance of the Controller
-			final Object controller = controllerClass.newInstance();
+			final T controller = controllerClass.newInstance();
 			
 			// 2. load the FXML and make sure the @FXML annotations are injected
 			Node viewNode = (Node) createLoader(controller, fxmlName).load();
-			ViewContext context = new ViewContext(viewNode, viewFlowContext);
-			context.register("controller", controller);
+			ViewContext<T> context = new ViewContext<>(viewNode, viewFlowContext, controller);
+			context.register(controller);
 			// 3. Resolve the @Inject points in the Controller and call
 			// @PostConstruct
 			injectContexts(controller, context);
