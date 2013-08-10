@@ -52,6 +52,11 @@ public class FXMLFlowHandler {
     	return this;
     }
     
+    public FXMLFlowHandler withGlobalRunAction(String actionId, Class<? extends Runnable> actionClass) {
+    	addGlobalAction(actionId, new FXMLFlowAction(actionClass));
+    	return this;
+    }
+    
     public void addGlobalAction(String actionId, FXMLFlowNode node) {
     	globalFlowMap.put(actionId, node);
     }
