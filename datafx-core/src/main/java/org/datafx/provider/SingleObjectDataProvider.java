@@ -34,6 +34,8 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
     private Executor executor;
     private final DataReader<T> reader;
     private WriteBackHandler<T> writeBackHandler;
+    private static final Logger LOGGER = Logger.getLogger(SingleObjectDataProvider.class.getName());
+
     public SingleObjectDataProvider(DataReader<T> reader) {
         this(reader, null);
     }
@@ -86,7 +88,9 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                     public void handle(WorkerStateEvent arg0) {
                         T value = null;
                         try {
+                            LOGGER.fine("get the value of the task");
                             value = task.get();
+                            LOGGER.fine("task returned value "+value);
                         } catch (InterruptedException e) {
                             // Execution of the task was not working. So we do
                             // not need
@@ -98,6 +102,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                             // to update the property
                             return;
                         }
+                        LOGGER.log(Level.FINER, "I will set the value of {0} to {1}", new Object[]{objectProperty, value});
                         objectProperty.set(value);
                         if (writeBackHandler != null) {
                             checkProperties(value);
@@ -115,6 +120,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
             @Override
             protected T call() throws Exception {
                 T entry = reader.get();
+                LOGGER.log(Level.FINE, "reader did read entry {0}", entry);
                 return entry;
             }
         };
