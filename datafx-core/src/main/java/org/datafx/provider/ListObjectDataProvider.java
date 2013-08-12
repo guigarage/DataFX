@@ -273,7 +273,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                         observable.addListener(new InvalidationListener() {
                             @Override
                             public void invalidated(final Observable o) {
-
+                                
                                 Service service = new Service() {
                                     @Override
                                     protected Task createTask() {
