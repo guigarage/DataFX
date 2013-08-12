@@ -44,8 +44,8 @@
 	</properties>
 
 	<scm>
-		<connection>scm:hg:https://hg.java.net/hg/datafx~datafx2/datafx-core</connection>
-		<developerConnection>scm:hg:https://hg.java.net/hg/datafx~datafx2/datafx-core</developerConnection>
+		<connection>scm:hg:https://hg.java.net/hg/datafx~datafx2</connection>
+		<developerConnection>scm:hg:https://hg.java.net/hg/datafx~datafx2</developerConnection>
 		<url>https://hg.java.net/hg/datafx~datafx2</url>
 	</scm>
 
