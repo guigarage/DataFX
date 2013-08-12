@@ -46,7 +46,7 @@
 	<scm>
 		<connection>scm:hg:https://hg.java.net/hg/datafx~datafx2/datafx-core</connection>
 		<developerConnection>scm:hg:https://hg.java.net/hg/datafx~datafx2/datafx-core</developerConnection>
-		<url>https://hg.java.net/hg/datafx~datafx2/datafx-core</url>
+		<url>https://hg.java.net/hg/datafx~datafx2</url>
 	</scm>
 
 	<profiles>
