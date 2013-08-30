@@ -36,7 +36,7 @@ import org.datafx.writer.WriteTransient;
  *
  * @author johan
  */
-public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>>,
+public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
         WriteBackProvider<T>, WriteBackListProvider<T> {
 
     private ObservableList<T> resultList;
@@ -45,12 +45,12 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     private WriteBackHandler<T> writeBackHandler;
     private WriteBackHandler<T> entryAddedHandler;
 
-    public ListObjectDataProvider(DataReader<T> reader) {
+    public ListDataProvider(DataReader<T> reader) {
         this(reader, null, null);
     }
 
     /**
-     * Create a ListObjectDataProvider with a given Executor and an existing
+     * Create a ListDataProvider with a given Executor and an existing
      * ListProperty
      *
      * @param reader
@@ -60,7 +60,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
      * rather than an ObservableList since we override the getData() method,
      * which should return ObservableValue<T>
      */
-    public ListObjectDataProvider(DataReader<T> reader, Executor executor, ObservableList<T> existingList) {
+    public ListDataProvider(DataReader<T> reader, Executor executor, ObservableList<T> existingList) {
         this.reader = reader;
         this.executor = executor;
         if (existingList != null) {
@@ -73,10 +73,10 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
     /**
      * This is a convenience method, allowing ObservableList instances (no
      * ListProperties) to be synchronized with the result of the
-     * ListObjectDataProvider.
+     * ListDataProvider.
      *
      * @param ol The ObservableList instance that should be synchronized with
-     * the data retrieved by this ListObjectDataProvider. Note that this
+     * the data retrieved by this ListDataProvider. Note that this
      * ObservableList will be cleared when calling this method -- as there is no
      * data retrieved yet.
      */
@@ -262,9 +262,9 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                                 Observable answer = (Observable) f;
                                 return answer;
                             } catch (IllegalArgumentException ex) {
-                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IllegalAccessException ex) {
-                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             return null;
                         }
@@ -298,7 +298,7 @@ public class ListObjectDataProvider<T> implements DataProvider<ObservableList<T>
                     }
 
                 } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

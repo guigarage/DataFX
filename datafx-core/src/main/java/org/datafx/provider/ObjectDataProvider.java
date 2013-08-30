@@ -26,19 +26,19 @@ import org.datafx.writer.WriteBackProvider;
  *
  * @author johan
  */
-public class SingleObjectDataProvider<T> implements DataProvider<T>,
+public class ObjectDataProvider<T> implements DataProvider<T>,
         WriteBackProvider<T>{
     private ObjectProperty<T> objectProperty;
     private Executor executor;
     private final DataReader<T> reader;
     private WriteBackHandler<T> writeBackHandler;
-    private static final Logger LOGGER = Logger.getLogger(SingleObjectDataProvider.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ObjectDataProvider.class.getName());
 
-    public SingleObjectDataProvider(DataReader<T> reader) {
+    public ObjectDataProvider(DataReader<T> reader) {
         this(reader, null);
     }
 
-    public SingleObjectDataProvider(DataReader<T> reader, Executor executor) {
+    public ObjectDataProvider(DataReader<T> reader, Executor executor) {
         this.reader = reader;
         this.executor = executor;
         this.objectProperty = new SimpleObjectProperty<T>();
@@ -151,9 +151,9 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                                 Observable answer = (Observable) f;
                                 return answer;
                             } catch (IllegalArgumentException ex) {
-                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (IllegalAccessException ex) {
-                                Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             return null;
                         }
@@ -185,7 +185,7 @@ public class SingleObjectDataProvider<T> implements DataProvider<T>,
                     }
 
                 } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(SingleObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
