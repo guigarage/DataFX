@@ -26,7 +26,8 @@ public abstract class PublishingTask<T> extends Task<ObservableList<T>> {
         return publishedValues;
     }
 
-    @Override protected final ObservableList<T> call() throws Exception {
+    @Override 
+    protected final ObservableList<T> call() throws Exception {
         callTask();
         return publishedValues;
     }

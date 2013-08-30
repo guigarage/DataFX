@@ -28,8 +28,6 @@ import org.datafx.writer.WriteBackProvider;
  */
 public class SingleObjectDataProvider<T> implements DataProvider<T>,
         WriteBackProvider<T>{
-    // we can't make this final since the result objectproperty can be set via setResultObjectProperty.
-
     private ObjectProperty<T> objectProperty;
     private Executor executor;
     private final DataReader<T> reader;
