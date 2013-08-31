@@ -1,0 +1,7 @@
+derby.log
+target/*
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$
