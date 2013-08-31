@@ -66,6 +66,7 @@
 						<version>2.7</version>
 						<configuration>
 							<quiet>true</quiet>
+                <additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
 						<executions>
 							<execution>
