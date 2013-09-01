@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import org.datafx.provider.ListObjectDataProvider;
+import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.RestSource;
 import org.datafx.reader.converter.XmlConverter;
 
@@ -54,7 +54,7 @@ public class RestSample {
             XmlConverter converter = new XmlConverter("item", Tweet.class);
             RestSource dr = new RestSource("http://search.twitter.com", converter);
             dr.setPath("search.rss?q=javafx");
-            ListObjectDataProvider<Tweet> sodp = new ListObjectDataProvider(dr);
+            ListDataProvider<Tweet> sodp = new ListDataProvider(dr);
             sodp.retrieve();
 
             final ListProperty<Tweet> op = sodp.getData();

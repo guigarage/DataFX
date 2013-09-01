@@ -15,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import org.datafx.provider.ListObjectDataProvider;
+import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.FileSource;
 import org.datafx.reader.converter.XmlConverter;
 
@@ -54,7 +54,7 @@ public class FileXmlListSample {
 			URL resource = this.getClass().getResource("manybooks.xml");
             XmlConverter<Book> converter = new XmlConverter<Book>("book", Book.class);
 			FileSource<Book> dr = new FileSource<Book>(new File(resource.getFile()),converter);
-			ListObjectDataProvider<Book> sodp = new ListObjectDataProvider<Book>(dr);
+			ListDataProvider<Book> sodp = new ListDataProvider<Book>(dr);
 			sodp.retrieve();
 		
 			final ListProperty<Book> op = sodp.getData();

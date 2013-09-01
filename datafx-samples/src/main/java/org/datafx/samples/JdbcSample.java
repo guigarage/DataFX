@@ -28,7 +28,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.datafx.provider.ListObjectDataProvider;
+import org.datafx.provider.ListDataProvider;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.JdbcSource;
 import org.datafx.reader.WritableDataReader;
@@ -84,7 +84,7 @@ public class JdbcSample {
                 
             };
             DataReader<Person> dr = new JdbcSource(dbURL, converter, "PERSON", "firstName", "lastName", "country");
-            ListObjectDataProvider<Person> lodp = new ListObjectDataProvider(dr);
+            ListDataProvider<Person> lodp = new ListDataProvider(dr);
             ObservableList<Person> myList = FXCollections.observableArrayList();
             lodp.setResultObservableList(myList);
             lodp.setWriteBackHandler(new WriteBackHandler<Person>() {

@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import org.datafx.provider.SingleObjectDataProvider;
+import org.datafx.provider.ObjectDataProvider;
 import org.datafx.reader.FileSource;
 
 /**
@@ -50,7 +50,7 @@ class FileXmlSingleSample {
 		try {
 			URL resource = this.getClass().getResource("singlebook.xml");
 			FileSource<Book> dr = new FileSource<Book>(new File(resource.getFile()));
-			SingleObjectDataProvider<Book> sodp = new SingleObjectDataProvider<Book>(dr);
+			ObjectDataProvider<Book> sodp = new ObjectDataProvider<Book>(dr);
 			sodp.retrieve();
 			final Label title = new Label("HELLO");
 			final ObjectProperty<Book> op = sodp.getData();
