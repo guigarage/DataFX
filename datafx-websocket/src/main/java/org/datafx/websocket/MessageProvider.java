@@ -3,13 +3,13 @@ package org.datafx.websocket;
 import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.datafx.provider.ListObjectDataProvider;
+import org.datafx.provider.ListDataProvider;
 
 /**
  *
  * @author johan
  */
-public class MessageProvider extends ListObjectDataProvider<String> {
+public class MessageProvider extends ListDataProvider<String> {
 
     
     private final WebSocketReader reader;
