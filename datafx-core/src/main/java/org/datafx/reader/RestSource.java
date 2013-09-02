@@ -221,14 +221,19 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     }
 
     /**
-     * @param queryParams the queryParams to set
+     * @param queryParams the queryParams to set. If null, this call is ignored
      */
     public void setQueryParams(Map<String, String> queryParams) {
-        this.queryParams = queryParams;
+        if (queryParams != null) {
+            this.queryParams = queryParams;
+        }
     }
 
     private String createQueryString() {
         StringBuilder queryString = null;
+        if (queryParams.size() == 0) {
+            return null;
+        }
         for (Entry<String, String> entry : queryParams.entrySet()) {
             if (queryString == null) {
                 queryString = new StringBuilder(entry.getKey()).append("=").append(entry.getValue());
