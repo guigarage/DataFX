@@ -45,6 +45,8 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
     private WriteBackHandler<T> writeBackHandler;
     private WriteBackHandler<T> entryAddedHandler;
 
+    public ListDataProvider() {}
+    
     public ListDataProvider(DataReader<T> reader) {
         this(reader, null, null);
     }
@@ -84,11 +86,11 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
         this.resultList = ol;
     }
 
-    public void setReader(DataReader<T> reader) {
+    public void setDataReader(DataReader<T> reader) {
         this.reader = reader;
     }
 
-    public DataReader<T> getReader() {
+    public DataReader<T> getDataReader() {
         return reader;
     }
 
@@ -203,8 +205,8 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
         PublishingTask<T> answer = new PublishingTask<T>(myResult) {
             @Override
             protected void callTask() throws Exception {
-                while (getReader().next()) {
-                    final T entry = getReader().get();
+                while (getDataReader().next()) {
+                    final T entry = getDataReader().get();
                     publish(entry);
                     if (writeBackHandler != null) {
                         checkProperties(entry);

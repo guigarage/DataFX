@@ -30,10 +30,13 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
         WriteBackProvider<T>{
     private ObjectProperty<T> objectProperty;
     private Executor executor;
-    private final DataReader<T> reader;
+    private DataReader<T> reader;
     private WriteBackHandler<T> writeBackHandler;
     private static final Logger LOGGER = Logger.getLogger(ObjectDataProvider.class.getName());
 
+    public ObjectDataProvider () {  
+    }
+    
     public ObjectDataProvider(DataReader<T> reader) {
         this(reader, null);
     }
@@ -44,6 +47,15 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
         this.objectProperty = new SimpleObjectProperty<T>();
     }
 
+    /**
+     * Set the DataReader that contains the data that will be provided by this
+     * ObjectDataProvider
+     * @param reader 
+     */
+    public void setDataReader (DataReader<T> reader) {
+        this.reader = reader;
+    }
+    
     /**
      * Sets the ObjectProperty that contains the result of the data retrieval.
      * This method should not be called once the
