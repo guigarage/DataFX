@@ -22,60 +22,55 @@ import org.datafx.reader.converter.InputStreamConverter;
  *
  * @author johan
  */
-public class RestSource <T> extends InputStreamDataReader<T> implements WritableDataReader<T>{
-    
- //   private InputStreamConverter<T> converter;
+public class RestSource<T> extends InputStreamDataReader<T> implements WritableDataReader<T> {
+
+    //   private InputStreamConverter<T> converter;
     private String host;
     // path should never be null. We check on this in all methods that can change the path.
     private String path = "";
-    private String urlBase;
+    //  private String urlBase;
     private String consumerKey;
     private String consumerSecret;
     private boolean requestMade;
     private Map<String, String> requestProperties;
-    private Map<String, String> queryParams = new HashMap<String, String>();
+    private Map<String, String> queryParams = new HashMap<>();
     private MultiValuedMap formParams = new MultiValuedMap();
     private String dataString;
     private String requestMethod = "GET";
-    private StringBuilder queryString;
- //   private InputStream is;
-    
-    public RestSource(String host,InputStreamConverter<T> converter) {
+  //  private StringBuilder queryString;
+    //   private InputStream is;
+
+    public RestSource() {
+    }
+
+    public RestSource(String host, InputStreamConverter<T> converter) {
         super(converter);
         this.host = host;
         //this.converter= converter;
     }
-    
-    /**
-     * Append the provided path segment to the path
-     * @param p
-     * @return 
-     */
-    public RestSource path (String p) {
-        this.path = this.path + "/"+ p;
-        
-        return this;
+
+    public void setHost(String host) {
+        this.host = host;
     }
-    
+
     /**
-     * Explicitly sets the path for this resource. 
+     * Explicitly sets the path for this resource.
+     *
      * @param path the path. If null, the path will be the empty String
      */
     public void setPath(String path) {
         if (path == null) {
             this.path = "";
-        }
-        else {
+        } else {
             if (path.startsWith("/")) {
                 this.path = path;
-            }
-            else {
-                this.path = "/"+path;
+            } else {
+                this.path = "/" + path;
             }
         }
     }
-    
-    private synchronized void createRequest () {
+
+    private synchronized void createRequest() {
         try {
             if (requestMade) {
                 return;
@@ -99,19 +94,21 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
         }
     }
 
-    @Override public boolean next() {
+    @Override
+    public boolean next() {
         if (!requestMade) {
             createRequest();
         }
         return super.next();
     }
-    
-     public InputStream createInputStream() throws IOException  {
-         String urlBase = host + path;
+
+    public InputStream createInputStream() throws IOException {
+        String urlBase = host + path;
         try {
-            
+
             String request = urlBase;
-             if (queryString != null) {
+            String queryString = createQueryString();
+            if (queryString != null) {
                 request = request + "?" + queryString;
             }
             URL url = new URL(request);
@@ -122,7 +119,7 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
                     MultiValuedMap allParams = new MultiValuedMap();
                     allParams.putMap(getQueryParams());
                     allParams.putAll(getFormParams());
-                     String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
+                    String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
                     connection.addRequestProperty("Authorization", header);
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
@@ -140,29 +137,29 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
             }
             if ((getFormParams() != null) && (getFormParams().size() > 0)) {
                 if (dataString == null) {
-                    dataString="";
+                    dataString = "";
                 }
                 boolean first = true;
                 for (Map.Entry<String, List<String>> entryList : getFormParams().entrySet()) {
                     String key = entryList.getKey();
                     for (String val : entryList.getValue()) {
-                        if (val == null ) {
-                            throw new IllegalArgumentException ("Values in form parameters can't be null -- was null for key "+key);
+                        if (val == null) {
+                            throw new IllegalArgumentException("Values in form parameters can't be null -- was null for key " + key);
                         }
                         if (!first) {
                             dataString = dataString + "&";
                         } else {
                             first = false;
                         }
-                        String eval =URLEncoder.encode(val, "UTF-8"); 
+                        String eval = URLEncoder.encode(val, "UTF-8");
                         dataString = dataString + key + "=" + eval;
                     }
                 }
- 
+
             }
             if (getDataString() != null) {
                 connection.setDoOutput(true);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());             
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
                 outputStreamWriter.write(getDataString());
                 outputStreamWriter.close();
             }
@@ -170,7 +167,7 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
             InputStream is = connection.getInputStream();
             return is;
         } catch (IOException ex) {
-            throw new IOException("Can't read data from "+urlBase, ex);
+            throw new IOException("Can't read data from " + urlBase, ex);
         }
     }
 
@@ -227,19 +224,19 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
      * @param queryParams the queryParams to set
      */
     public void setQueryParams(Map<String, String> queryParams) {
-       for (Entry<String,String> entry: queryParams.entrySet()) {
-           queryParam(entry.getKey(), entry.getValue());
-       }
+        this.queryParams = queryParams;
     }
-    
-    public RestSource queryParam(String key, String value) {
-        this.queryParams.put(key, value); 
-        if (queryString == null) {
-            queryString = new StringBuilder(key).append("=").append(value);
-        } else {
-            queryString.append("&").append(key).append("=").append(value);
+
+    private String createQueryString() {
+        StringBuilder queryString = null;
+        for (Entry<String, String> entry : queryParams.entrySet()) {
+            if (queryString == null) {
+                queryString = new StringBuilder(entry.getKey()).append("=").append(entry.getValue());
+            } else {
+                queryString.append("&").append(entry.getKey()).append("=").append(entry.getValue());
+            }
         }
-        return this;
+        return queryString.toString();
     }
 
     /**
@@ -253,13 +250,13 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
      * @param formParams the formParams to set
      */
     public void setFormParams(Map<String, String> p) {
-        
+
         this.formParams = new MultiValuedMap();
-        for (Map.Entry<String, String> entry: p.entrySet()) {
+        for (Map.Entry<String, String> entry : p.entrySet()) {
             this.formParams.put(entry.getKey(), entry.getValue());
         }
     }
-    
+
     public void setFormParams(MultiValuedMap formParams) {
         this.formParams = formParams;
     }
@@ -291,17 +288,6 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
     public void setRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
     }
-    
-    // fluent methods
-    public RestSource consumerKey (String key) {
-        setConsumerKey(key);
-        return this;
-    }
-    
-    public RestSource consumerSecret (String secret) {
-        setConsumerSecret(secret);
-        return this;
-    }
 
     @Override
     public void writeBack() {
@@ -311,6 +297,4 @@ public class RestSource <T> extends InputStreamDataReader<T> implements Writable
             Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    
 }

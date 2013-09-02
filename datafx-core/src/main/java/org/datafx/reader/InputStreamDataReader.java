@@ -14,7 +14,9 @@ import org.datafx.reader.converter.InputStreamConverter;
 public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
 
     private InputStream is;
-    private final InputStreamConverter<T> converter;
+    private InputStreamConverter<T> converter;
+    
+    public InputStreamDataReader () {}
     
     public InputStreamDataReader(final InputStreamConverter<T> converter) {
         this.converter = converter;
@@ -25,9 +27,14 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
         setInputStream(is);
     }
 
+    public void setConverter (InputStreamConverter<T> converter) {
+        this.converter = converter;
+    }
+    
     public InputStreamConverter<T> getConverter() {
         return this.converter;
     }
+    
     public void setInputStream(InputStream is) {
         this.is = is;
         if (converter != null) {
