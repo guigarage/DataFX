@@ -48,8 +48,8 @@
                 				<goal>jar</goal>
             				</goals>
             				<configuration>
-                				<additionalparam>-Xbladoclint:none</additionalparam>
-              <failOnError>false</failOnError>
+                				<additionalparam>-Xdoclint:none</additionalparam>
+                                                <failOnError>false</failOnError>
             				</configuration>
         				</execution>
     				</executions>
