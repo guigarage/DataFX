@@ -37,6 +37,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     private MultiValuedMap formParams = new MultiValuedMap();
     private String dataString;
     private String requestMethod = "GET";
+    private int timeout = -1;
   //  private StringBuilder queryString;
     //   private InputStream is;
 
@@ -129,6 +130,10 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
             }
             if (getRequestMethod() != null) {
                 ((HttpURLConnection) connection).setRequestMethod(getRequestMethod());
+            }
+            if (timeout > -1) {
+                connection.setReadTimeout(timeout);
+                connection.setConnectTimeout(timeout);
             }
             if (getQueryParams() != null) {
                 for (Map.Entry<String, String> requestProperty : getQueryParams().entrySet()) {
@@ -301,5 +306,13 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
         } catch (Exception ex) {
             Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 }

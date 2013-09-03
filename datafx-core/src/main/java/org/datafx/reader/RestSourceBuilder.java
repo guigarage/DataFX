@@ -70,6 +70,11 @@ public final class RestSourceBuilder<T> {
         return this;
     }
     
+    public RestSourceBuilder timeout(int to) {
+        restSource.setTimeout(to);
+        return this;
+    }
+    
     public RestSource build () {
         restSource.setQueryParams(queryParams);
         restSource.setFormParams(formParams);
