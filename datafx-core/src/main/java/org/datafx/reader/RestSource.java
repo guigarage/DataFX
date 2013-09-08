@@ -33,7 +33,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     private String consumerSecret;
     private boolean requestMade;
     private Map<String, String> requestProperties;
-    private Map<String, String> queryParams = new HashMap<>();
+    private Map<String, String> queryParams = new HashMap<String, String>();
     private MultiValuedMap formParams = new MultiValuedMap();
     private String dataString;
     private String requestMethod = "GET";
