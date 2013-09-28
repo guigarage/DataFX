@@ -18,6 +18,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
+import org.datafx.reader.ServerSentEventReader;
 import org.datafx.reader.WritableDataReader;
 import org.datafx.writer.WriteBackHandler;
 import org.datafx.writer.WriteBackProvider;
@@ -35,6 +36,7 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
     private static final Logger LOGGER = Logger.getLogger(ObjectDataProvider.class.getName());
 
     public ObjectDataProvider () {  
+        this (null, null);
     }
     
     public ObjectDataProvider(DataReader<T> reader) {
@@ -117,7 +119,10 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
                         if (writeBackHandler != null) {
                             checkProperties(value);
                         }
-                      
+                        if (reader instanceof ServerSentEventReader){
+                            handleKeepReading ((ServerSentEventReader)reader);
+//                            createKeepReadingTask((ServerSentEventReader)reader);
+                        }
                     }
                 });
                 return task;
@@ -125,6 +130,38 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
         };
     }
      
+    private void handleKeepReading (final ServerSentEventReader reader) {
+        Service retriever = createKeepReadingService(reader);
+           if (executor != null && executor instanceof ObservableExecutor) {
+             ((ObservableExecutor) executor).submit(retriever);
+        } else {
+            if (executor != null) {
+                retriever.setExecutor(executor);
+            }
+            retriever.start();
+        }
+    }
+    
+    private Service createKeepReadingService (final ServerSentEventReader reader) {
+        return new Service() {
+
+            @Override
+            protected Task createTask() {
+                return createKeepReadingTask(reader);
+            }
+        };
+    }
+    private Task createKeepReadingTask(final ServerSentEventReader reader) {
+        Task answer = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                reader.keepReading();
+                return null;
+            }
+        };
+        return answer;
+    }
+    
     protected Task<T> createReceiverTask(final DataReader<T> reader) {
         Task<T> answer = new Task<T>() {
             @Override

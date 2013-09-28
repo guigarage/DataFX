@@ -21,7 +21,10 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
     private final Class<T> clazz;
     Iterator<JsonNode> iterator;
 
-    //  private InputStream inputStream;
+    public JsonConverter (Class<T> clazz) {
+        this (null, clazz);
+    }
+    
     public JsonConverter(String tag, Class<T> clazz) {
         this.tag = tag;
         this.clazz = clazz;
@@ -30,7 +33,6 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
     @Override
     public void initialize(InputStream input) {
         try {
-            //    this.inputStream = input;
             MappingJsonFactory mappingJsonFactory = new MappingJsonFactory();
             JsonParser jp = mappingJsonFactory.createJsonParser(input);
             rootNode = jp.readValueAsTree();
@@ -40,6 +42,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                     iterator = cNode.iterator();
                 }
                 else {
+                    System.err.println("Couldn't find a rootnode for tag "+tag+", rootNode = "+rootNode);
                     // we were looking for a tag, but couldn't find one. 
                     // TODO: does this mean we should throw an exception, or will we use the children on the root node instead?
                 }

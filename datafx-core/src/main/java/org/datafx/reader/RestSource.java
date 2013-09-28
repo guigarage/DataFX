@@ -31,7 +31,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     //  private String urlBase;
     private String consumerKey;
     private String consumerSecret;
-    private boolean requestMade;
+    protected boolean requestMade;
     private Map<String, String> requestProperties;
     private Map<String, String> queryParams = new HashMap<String, String>();
     private MultiValuedMap formParams = new MultiValuedMap();
@@ -71,7 +71,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
         }
     }
 
-    private synchronized void createRequest() {
+    protected synchronized void createRequest() {
         try {
             if (requestMade) {
                 return;

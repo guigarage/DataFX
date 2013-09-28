@@ -9,9 +9,9 @@ import org.datafx.reader.converter.InputStreamConverter;
  * Builder class for creating an {@link RestSource}.
  * @author johan
  */
-public final class RestSourceBuilder<T> {
+public  class RestSourceBuilder<T> {
     
-    private final RestSource<T> restSource;
+    protected  RestSource<T> restSource;
     private String path = "";
     private Map<String, String> queryParams = new HashMap<>();
     private MultiValuedMap formParams = new MultiValuedMap();
@@ -20,7 +20,7 @@ public final class RestSourceBuilder<T> {
         return new RestSourceBuilder();
     }
     
-    private RestSourceBuilder() {
+    protected RestSourceBuilder() {
         this.restSource = new RestSource();
     }
     

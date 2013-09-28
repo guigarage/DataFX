@@ -42,6 +42,10 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
         }
     }
 
+    public InputStream getInputStream() {
+        return this.is;
+    }
+    
     @Override public T get() {
         return converter.get();
     }
