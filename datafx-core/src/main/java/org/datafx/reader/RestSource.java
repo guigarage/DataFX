@@ -114,7 +114,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
             }
             URL url = new URL(request);
 
-            URLConnection connection = url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             if (getConsumerKey() != null) {
                 try {
                     MultiValuedMap allParams = new MultiValuedMap();
@@ -129,7 +129,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
                 }
             }
             if (getRequestMethod() != null) {
-                ((HttpURLConnection) connection).setRequestMethod(getRequestMethod());
+                connection.setRequestMethod(getRequestMethod());
             }
             if (timeout > -1) {
                 connection.setReadTimeout(timeout);
@@ -164,6 +164,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
             }
             if (getDataString() != null) {
                 connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
                 outputStreamWriter.write(getDataString());
                 outputStreamWriter.close();
