@@ -43,11 +43,4 @@ public class DefaultFlowContainer implements FXMLFlowContainer {
 		pane.getChildren().clear();
 		pane.getChildren().add(context.getRootNode());
 	}
-
-	@Override
-	public void flowFinished() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

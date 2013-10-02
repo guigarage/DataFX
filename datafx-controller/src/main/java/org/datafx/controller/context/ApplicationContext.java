@@ -84,6 +84,10 @@ public class ApplicationContext extends AbstractContext {
 	private ApplicationContext() {
 	}
 
+	/**
+	 * Returns the single instance of the application context (singleton)
+	 * @return single instance of the application context
+	 */
 	public static synchronized ApplicationContext getInstance() {
 		if (instance == null) {
 			instance = new ApplicationContext();

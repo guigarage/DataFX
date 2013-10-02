@@ -35,55 +35,48 @@ import javax.annotation.PreDestroy;
 
 public class ViewContext<U> extends AbstractContext {
 
-    private ViewFlowContext viewFlowContext;
-    
-    private Node rootNode;
-    
-    private U controller;
-    
-    public ViewContext(Node rootNode, U controller) {
-        this(rootNode, new ViewFlowContext(), controller);
-    }
-    
-    public ViewContext(Node rootNode, ViewFlowContext viewFlowContext, U controller) {
-        this.viewFlowContext = viewFlowContext;
-        this.rootNode = rootNode;
-        this.controller = controller;
-    }
-    
-    public U getController() {
+	private ViewFlowContext viewFlowContext;
+
+	private Node rootNode;
+
+	private U controller;
+
+	public ViewContext(Node rootNode, U controller) {
+		this(rootNode, new ViewFlowContext(), controller);
+	}
+
+	public ViewContext(Node rootNode, ViewFlowContext viewFlowContext,
+			U controller) {
+		this.viewFlowContext = viewFlowContext;
+		this.rootNode = rootNode;
+		this.controller = controller;
+	}
+
+	public U getController() {
 		return controller;
 	}
-    
-    public Node getRootNode() {
-        return rootNode;
-    }
-    
-    public ViewFlowContext getViewFlowContext() {
-        return viewFlowContext;
-    }
-    
-    public ApplicationContext getApplicationContext() {
-        return ApplicationContext.getInstance();
-    }
-    
-    public void destroy() {
-    	//TODO: All managed Object should be checked for a pre destroy....
-    	Object controller = getRegisteredObject("controller");
-		if(controller != null) {
+
+	public Node getRootNode() {
+		return rootNode;
+	}
+
+	public ViewFlowContext getViewFlowContext() {
+		return viewFlowContext;
+	}
+
+	public ApplicationContext getApplicationContext() {
+		return ApplicationContext.getInstance();
+	}
+
+	public void destroy() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		// TODO: All managed Object should be checked for a pre destroy....
+		Object controller = getRegisteredObject("controller");
+		if (controller != null) {
 			for (final Method method : controller.getClass().getMethods()) {
 				if (method.isAnnotationPresent(PreDestroy.class)) {
-					try {
-						method.invoke(controller);
-					} catch (IllegalAccessException e) {
-						e.printStackTrace();
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (InvocationTargetException e) {
-						e.printStackTrace();
-					}
+					method.invoke(controller);
 				}
 			}
 		}
-    }
+	}
 }

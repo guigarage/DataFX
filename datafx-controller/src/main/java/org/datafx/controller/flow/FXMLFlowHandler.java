@@ -102,7 +102,11 @@ public class FXMLFlowHandler {
         if(oldViewContext != null) {
         	ViewContext lastViewContext = oldViewContext.getViewContext();
         	if(lastViewContext != null) {
+        		try {
         		lastViewContext.destroy();
+        		} catch (Exception e) {
+        			throw new FXMLFlowException("Last ViewContext can't be destroyed!", e);
+        		}
         	}
         }
         flowContext.setCurrentViewContext(currentView.getViewContext());

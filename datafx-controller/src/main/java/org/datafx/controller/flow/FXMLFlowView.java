@@ -69,11 +69,6 @@ public class FXMLFlowView implements FXMLFlowNode {
         return this;
     }
     
-    public FXMLFlowView withFinishFlowAction(String actionId) {
-        //TODO!!!
-        return this;
-    }
-
     public FXMLFlowView withRunAction(String actionId, Class<? extends Runnable> runnableClass) {
         addAction(actionId, new FXMLFlowAction(runnableClass));
         return this;

@@ -42,8 +42,6 @@ import javafx.util.Callback;
 
 import javax.annotation.PostConstruct;
 
-import org.datafx.controller.cdi.CDIRuntime;
-import org.datafx.controller.cdi.DependencyInjection;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.FXMLApplicationContext;
 import org.datafx.controller.context.FXMLViewContext;

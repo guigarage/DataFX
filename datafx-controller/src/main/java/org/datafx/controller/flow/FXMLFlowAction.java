@@ -29,7 +29,6 @@ package org.datafx.controller.flow;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewFlowContext;
 
-
 public class FXMLFlowAction implements FXMLFlowNode {
 
     private Class<? extends Runnable> runnableClass;
