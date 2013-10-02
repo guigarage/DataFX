@@ -26,23 +26,90 @@
  */
 package org.datafx.controller.context;
 
+/**
+ * <p>
+ * The flow context is the context for a defined flow. A flow is a linked map of
+ * different views. By using the context you can easily share your datamodel in
+ * all views of a flow.
+ * </p>
+ * <p>
+ * How to use a context<br/>
+ * A context has a defined life time and can hold the data model of your
+ * aplication or of a part of your application. To do so you can easily register
+ * objects to your context:<br/>
+ * </p>
+ * <p>
+ * DataModel model = ... <br/>
+ * context.register(model);<br/>
+ * <br/>
+ * In your controller: <br/>
+ * DataModel model = context.getRegisteredObject(DataModel.class);
+ * </p>
+ * <p>
+ * If you need more than one instance of a class in your context you can simple
+ * register the by using string based keys:
+ * </p>
+ * <p>
+ * DataModel model1 = ... <br/>
+ * DataModel model2 = ... <br/>
+ * context.register("firstModel", model);<br/>
+ * context.register("secondModel", model);<br/>
+ * <br/>
+ * In your controller: <br/>
+ * DataModel firstModel = context.getRegisteredObject("firstModel");
+ * </p>
+ * <p>
+ * A context can simple used in a controller by injecting the context. DataFX
+ * provides annotations to inject all different context types:
+ * </p>
+ * <p>
+ * 
+ * "@FXMLApplicationContext" <br/>
+ * ApplicationContext myApplicationContext;<br/>
+ * </p>
+ * <p>
+ * By doing so you can easily access all your data in your controller and share
+ * data between different controllers.
+ * </p>
+ * 
+ * @author hendrikebbers
+ * 
+ */
+public class ViewFlowContext extends AbstractContext {
 
-public class ViewFlowContext extends AbstractContext{
+	private ViewContext<?> currentViewContext;
 
-    private ViewContext<?> currentViewContext;
-        
-    public ViewFlowContext() {
-    }
-        
-    public <T> void setCurrentViewContext(ViewContext<T> currentViewContext) {
+	/**
+	 * Default constructor
+	 */
+	public ViewFlowContext() {
+	}
+
+	/**
+	 * Sets the context of the current view in the flow of this context.
+	 * Normally an application will cal this method. The flow API manages all
+	 * contexts.
+	 * 
+	 * @param currentViewContext
+	 */
+	public <T> void setCurrentViewContext(ViewContext<T> currentViewContext) {
 		this.currentViewContext = currentViewContext;
 	}
-    
-    public ViewContext<?> getCurrentViewContext() {
+
+	/**
+	 * Returns the context of the current view of the flow.
+	 * @return the view context
+	 */
+	public ViewContext<?> getCurrentViewContext() {
 		return currentViewContext;
 	}
-    
-    public ApplicationContext getApplicationContext() {
-        return ApplicationContext.getInstance();
-    }
+
+	/**
+	 * Returns the global application context
+	 * 
+	 * @return application context
+	 */
+	public ApplicationContext getApplicationContext() {
+		return ApplicationContext.getInstance();
+	}
 }

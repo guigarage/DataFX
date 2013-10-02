@@ -32,6 +32,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * <p>
  * Annotation for a FXML controller. This annotation will define the FXML-file
  * this controller is made for. You don't need to use this annotation because
  * the API is designed using a convention over configuration approach: If you
@@ -39,6 +40,29 @@ import java.lang.annotation.Target;
  * controller in the same package and the controller API will use this
  * controller for the fxml. To create a controller/view pair you need to use the
  * {@link #ViewFactory}.
+ * </p>
+ * <p>
+ * An example of a simple controller:
+ * </p>
+ * <pre>
+ * <code>
+ * {@literal @}FXMLController("Details.fxml")
+ * public class DetailViewController {
+ *
+ * 	{@literal @}FXML
+ *  private TextField myTextfield;
+ *   
+ *	{@literal @}FXML
+ *  private Button backButton;
+ *   
+ *  {@literal @}PostConstruct
+ *  public void init() {
+ *  	myTextfield.setText("Hello!");
+ *  }
+ * }
+ * </code>
+ * </pre>
+ * </p>
  * 
  * @author hendrikebbers
  * 

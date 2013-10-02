@@ -131,22 +131,51 @@ public class ViewContext<U> extends AbstractContext {
 		this.controller = controller;
 	}
 
+	/**
+	 * Returns the controller of the MVC view that is wrapped by this context.
+	 * 
+	 * @return the controller
+	 */
 	public U getController() {
 		return controller;
 	}
 
+	/**
+	 * Returns the JavaFX view node of the MVC view that is wrapped by this
+	 * context.
+	 * 
+	 * @return the view node
+	 */
 	public Node getRootNode() {
 		return rootNode;
 	}
 
+	/**
+	 * Returns the parent flow context.
+	 * 
+	 * @return the flow context
+	 */
 	public ViewFlowContext getViewFlowContext() {
 		return viewFlowContext;
 	}
 
+	/**
+	 * Returns the global application context
+	 * 
+	 * @return application context
+	 */
 	public ApplicationContext getApplicationContext() {
 		return ApplicationContext.getInstance();
 	}
 
+	/**
+	 * Destroyes the context. This will be called by the flow API if a view is
+	 * closed. Normally an application should never call this.
+	 * 
+	 * @throws IllegalAccessException if the context can't be destroyed
+	 * @throws IllegalArgumentException if the context can't be destroyed
+	 * @throws InvocationTargetException if the context can't be destroyed
+	 */
 	public void destroy() throws IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 		// TODO: All managed Object should be checked for a pre destroy....
