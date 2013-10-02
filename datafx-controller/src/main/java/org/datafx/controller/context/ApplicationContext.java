@@ -26,47 +26,68 @@
  */
 package org.datafx.controller.context;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
-public class ApplicationContext {
-    
-    private static ApplicationContext instance;
-    
-    private String id = UUID.randomUUID().toString();
-    
-    private Map<String, Object> registeredObjects;
-    
-    private ApplicationContext() {
-        registeredObjects = new HashMap<>();
-    }
-    
-    public String getId() {
-        return id;
-    }
-    
-    public void register(String key, Object value) {
-        registeredObjects.put(key, value);
-    }
-    
-    public Object getRegisteredObject(String key) {
-        return registeredObjects.get(key);
-    }
-    
-    @SuppressWarnings("unchecked")
-	public <T> T getRegisteredObject(Class<T> cls) {
-        return (T) registeredObjects.get(cls.toString());
-    }
-    
-    public void register(Object value) {
-        registeredObjects.put(value.getClass().toString(), value);
-    }
-    
-    public static synchronized ApplicationContext getInstance() {
-        if(instance == null) {
-            instance = new ApplicationContext();
-        }
-        return instance;
-    }
+/**
+ * <p>
+ * The application context is the context with the longest life time. For each
+ * application there is exactly one application context. Because of thois the
+ * context is designed as a singleton. You can access the context by using the
+ * {@link #getInstance()} method.
+ * </p>
+ * <p>
+ * How to use a context<br/>
+ * A context has a defined life time and can hold the data model of your
+ * aplication or of a part of your application. To do so you can easily register
+ * objects to your context:<br/>
+ * </p>
+ * <p>
+ * DataModel model = ... <br/>
+ * context.register(model);<br/>
+ * <br/>
+ * In your controller: <br/>
+ * DataModel model = context.getRegisteredObject(DataModel.class);
+ * </p>
+ * <p>
+ * If you need more than one instance of a class in your context you can simple
+ * register the by using string based keys:
+ * </p>
+ * <p>
+ * DataModel model1 = ... <br/>
+ * DataModel model2 = ... <br/>
+ * context.register("firstModel", model);<br/>
+ * context.register("secondModel", model);<br/>
+ * <br/>
+ * In your controller: <br/>
+ * DataModel firstModel = context.getRegisteredObject("firstModel");
+ * </p>
+ * <p>
+ * A context can simple used in a controller by injecting the context. DataFX
+ * provides annotations to inject all different context types:
+ * </p>
+ * <p>
+ * 
+ * "@FXMLApplicationContext" <br/>
+ * ApplicationContext myApplicationContext;<br/>
+ * </p>
+ * <p>
+ * By doing so you can easily access all your data in your controller and share
+ * data between different controllers.
+ * </p>
+ * 
+ * @author hendrikebbers
+ * 
+ */
+public class ApplicationContext extends AbstractContext {
+
+	private static ApplicationContext instance;
+
+	private ApplicationContext() {
+	}
+
+	public static synchronized ApplicationContext getInstance() {
+		if (instance == null) {
+			instance = new ApplicationContext();
+		}
+		return instance;
+	}
 }

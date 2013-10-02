@@ -26,22 +26,46 @@
  */
 package org.datafx.controller.util;
 
+/**
+ * This Exception will by thrown by the {@link #ViewFactory} if a FXML file can't be loaded.
+ * @author hendrikebbers
+ *
+ */
 public class FxmlLoadException extends Exception{
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default constructor
+     */
     public FxmlLoadException() {
         super();
     }
 
+    /**
+     * Creates a new FxmlLoadException with a message
+     *
+     * @param   message   the detail message.
+     */
     public FxmlLoadException(String message) {
         super(message);
     }
 
+    /**
+     * Creates a new FxmlLoadException with a message and a cause
+     * 
+     * @param message the detail message.
+     * @param cause the cause
+     */
     public FxmlLoadException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Creates a new FxmlLoadException with a cause
+     * 
+     * @param cause the cause
+     */
     public FxmlLoadException(Throwable cause) {
         super(cause);
     }

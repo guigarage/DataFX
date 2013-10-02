@@ -58,21 +58,50 @@ import org.datafx.controller.flow.FlowAction;
 import org.datafx.controller.util.FxmlLoadException;
 
 /**
- * 
+ * <p>
+ * Main Class to create MVC based views that use the DataFX controller and flow
+ * APIs. By using this class you can simple create a view by only using the
+ * class of the controller, for example. The class is designed as a singleton.
+ * Here is a short example how to create a view:
+ * </p>
+ * <p>
+ * ViewContext<MyController> context
+ * ViewFactory.getInstance().createByController(MyController.class);<br/>
+ * context.getRootNode();<br/>
+ * context.getController();<br/>
+ * </p>
+ * <p>
+ * The factory always returns a {@link #ViewContext}. This context is a wrapper
+ * around the controller and the view (JavaFX node) that is created by the FXML
+ * file (see {@link #FXMLController} for more information).
+ * </p>
+ * <p>
+ * If you want to create a flow you only need a {@link #FlowViewContext} and the
+ * factory will create the initial view with all flow actions and links for you:
+ * </p>
+ * <p>
+ * ViewContext<MyController> context
+ * ViewFactory.getInstance().createByControllerInViewFlow(MyController.class,
+ * myFlowContext);<br/>
+ * context.getRootNode();<br/>
+ * context.getController();<br/>
+ * </p>
  * 
  * @author hendrikebbers
- *
+ * 
  */
 public class ViewFactory {
-
-	private CDIRuntime runtime;
 
 	private static ViewFactory instance;
 
 	private ViewFactory() {
-		runtime = DependencyInjection.getInstance();
 	}
 
+	/**
+	 * Returns the single instance of the ViewFactory class (singleton pattern)
+	 * 
+	 * @return the ViewFactory singleton
+	 */
 	public static synchronized ViewFactory getInstance() {
 		if (instance == null) {
 			instance = new ViewFactory();
@@ -80,17 +109,80 @@ public class ViewFactory {
 		return instance;
 	}
 
+	/**
+	 * Creates a new MVC based view by using the given controller class. The
+	 * class needs a default constructor (no parameters) and a
+	 * {@link #FXMLController} annotation to link to the fxml file. You can skip
+	 * the annotation if you want to use the controller API conventions. By
+	 * doing so the fxml files has to be in the package as the controller and
+	 * must fit to a naming convention (see {@link #FXMLController} for more
+	 * informations). The method returns a {@link #ViewContext}. This is a
+	 * wrapper around the view (view-node and controller) and can be used to
+	 * register your datamodel to the view. The doc of {@link #ViewContext} will
+	 * provide more information about this topic.
+	 * 
+	 * @param controllerClass
+	 *            the class of the controller.
+	 * @return a ViewContext that encapsulate the complete MVC
+	 * @throws FxmlLoadException
+	 *             if the fxml file can not be loaded
+	 */
 	public <T> ViewContext<T> createByController(final Class<T> controllerClass)
 			throws FxmlLoadException {
 		return createByController(controllerClass, null);
 	}
 
-	public <T> ViewContext<T> createByController(final Class<T> controllerClass,
-			String fxmlName) throws FxmlLoadException {
+	/**
+	 * Creates a new MVC based view by using the given controller class. The
+	 * class needs a default constructor (no parameters) and a
+	 * {@link #FXMLController} annotation to link to the fxml file. You can skip
+	 * the annotation if you want to use the controller API conventions. By
+	 * doing so the fxml files has to be in the package as the controller and
+	 * must fit to a naming convention (see {@link #FXMLController} for more
+	 * informations). The method returns a {@link #ViewContext}. This is a
+	 * wrapper around the view (view-node and controller) and can be used to
+	 * register your datamodel to the view. The doc of {@link #ViewContext} will
+	 * provide more information about this topic. By using this method you can
+	 * overwrite the path to your fxml file.
+	 * 
+	 * @param controllerClass
+	 *            the class of the controller.
+	 * @param fxmlName
+	 *            path to the fxml file that will be used for the generated MVC
+	 *            context
+	 * @return a ViewContext that encapsulate the complete MVC
+	 * @throws FxmlLoadException
+	 *             if the fxml file can not be loaded
+	 */
+	public <T> ViewContext<T> createByController(
+			final Class<T> controllerClass, String fxmlName)
+			throws FxmlLoadException {
 		return createByControllerInViewFlow(controllerClass,
 				new ViewFlowContext(), fxmlName);
 	}
 
+	/**
+	 * Creates a new MVC based view by using the given controller class. The
+	 * class needs a default constructor (no parameters) and a
+	 * {@link #FXMLController} annotation to link to the fxml file. You can skip
+	 * the annotation if you want to use the controller API conventions. By
+	 * doing so the fxml files has to be in the package as the controller and
+	 * must fit to a naming convention (see {@link #FXMLController} for more
+	 * informations). The method returns a {@link #ViewContext}. This is a
+	 * wrapper around the view (view-node and controller) and can be used to
+	 * register your datamodel to the view. The doc of {@link #ViewContext} will
+	 * provide more information about this topic. By using this method you can
+	 * use a predefined {@link #ViewFlowContext}. The created
+	 * {@link #ViewContext} will be part of this flow context.
+	 * 
+	 * @param controllerClass
+	 *            the class of the controller.
+	 * @param viewFlowContext
+	 *            a predefined flow context
+	 * @return a ViewContext that encapsulate the complete MVC
+	 * @throws FxmlLoadException
+	 *             if the fxml file can not be loaded
+	 */
 	public <T> ViewContext<T> createByControllerInViewFlow(
 			final Class<T> controllerClass, ViewFlowContext viewFlowContext)
 			throws FxmlLoadException {
@@ -98,6 +190,31 @@ public class ViewFactory {
 				null);
 	}
 
+	/**
+	 * Creates a new MVC based view by using the given controller class. The
+	 * class needs a default constructor (no parameters) and a
+	 * {@link #FXMLController} annotation to link to the fxml file. You can skip
+	 * the annotation if you want to use the controller API conventions. By
+	 * doing so the fxml files has to be in the package as the controller and
+	 * must fit to a naming convention (see {@link #FXMLController} for more
+	 * informations). The method returns a {@link #ViewContext}. This is a
+	 * wrapper around the view (view-node and controller) and can be used to
+	 * register your datamodel to the view. The doc of {@link #ViewContext} will
+	 * provide more information about this topic. By using this method you can
+	 * use a predefined {@link #ViewFlowContext} and overwrite the fxml path.
+	 * The created {@link #ViewContext} will be part of the given flow context.
+	 * 
+	 * @param controllerClass
+	 *            the class of the controller.
+	 * @param viewFlowContext
+	 *            a predefined flow context
+	 * @param fxmlName
+	 *            path to the fxml file that will be used for the generated MVC
+	 *            context
+	 * @return a ViewContext that encapsulate the complete MVC
+	 * @throws FxmlLoadException
+	 *             if the fxml file can not be loaded
+	 */
 	public <T> ViewContext<T> createByControllerInViewFlow(
 			final Class<T> controllerClass, ViewFlowContext viewFlowContext,
 			String fxmlName) throws FxmlLoadException {
@@ -112,10 +229,11 @@ public class ViewFactory {
 		try {
 			// 1. Create an instance of the Controller
 			final T controller = controllerClass.newInstance();
-			
+
 			// 2. load the FXML and make sure the @FXML annotations are injected
 			Node viewNode = (Node) createLoader(controller, fxmlName).load();
-			ViewContext<T> context = new ViewContext<>(viewNode, viewFlowContext, controller);
+			ViewContext<T> context = new ViewContext<>(viewNode,
+					viewFlowContext, controller);
 			context.register(controller);
 			// 3. Resolve the @Inject points in the Controller and call
 			// @PostConstruct
@@ -123,10 +241,6 @@ public class ViewFactory {
 
 			if (flowHandler != null) {
 				injectFlow(controller, flowHandler);
-			}
-
-			if (runtime != null) {
-				runtime.resolve(controller, context);
 			}
 
 			for (final Method method : controller.getClass().getMethods()) {
@@ -140,15 +254,17 @@ public class ViewFactory {
 		}
 	}
 
-	public Node createSubView(Class<?> controllerClass, ViewContext context) throws FxmlLoadException {
+	public Node createSubView(Class<?> controllerClass, ViewContext context)
+			throws FxmlLoadException {
 		return createSubView(controllerClass, null, context);
 	}
-	
-	public Node createSubView(Class<?> controllerClass, String fxmlName, ViewContext context) throws FxmlLoadException {
+
+	public Node createSubView(Class<?> controllerClass, String fxmlName,
+			ViewContext context) throws FxmlLoadException {
 		try {
 			// 1. Create an instance of the Controller
 			final Object controller = controllerClass.newInstance();
-			
+
 			// 2. load the FXML and make sure the @FXML annotations are injected
 			Node viewNode = (Node) createLoader(controller, fxmlName).load();
 
@@ -156,8 +272,9 @@ public class ViewFactory {
 			// @PostConstruct
 			injectContexts(controller, context);
 
-			//TODO: We need to register the sub-controller in the context cause it can have a PreDestroy....
-			
+			// TODO: We need to register the sub-controller in the context cause
+			// it can have a PreDestroy....
+
 			for (final Method method : controller.getClass().getMethods()) {
 				if (method.isAnnotationPresent(PostConstruct.class)) {
 					method.invoke(controller);
@@ -168,8 +285,9 @@ public class ViewFactory {
 			throw new FxmlLoadException(e);
 		}
 	}
-	
-	private FXMLLoader createLoader(final Object controller, String fxmlName) throws FxmlLoadException {
+
+	private FXMLLoader createLoader(final Object controller, String fxmlName)
+			throws FxmlLoadException {
 		Class<?> controllerClass = controller.getClass();
 		String foundFxmlName = getFxmlName(controllerClass);
 		if (fxmlName != null) {
@@ -178,8 +296,7 @@ public class ViewFactory {
 		if (foundFxmlName == null) {
 			throw new FxmlLoadException("No FXML File specified!");
 		}
-		
-		
+
 		FXMLLoader fxmlLoader = new FXMLLoader(
 				controllerClass.getResource(foundFxmlName));
 		fxmlLoader.setController(controller);
@@ -192,7 +309,7 @@ public class ViewFactory {
 		});
 		return fxmlLoader;
 	}
-	
+
 	private String getFxmlName(Class<?> controllerClass) {
 		String foundFxmlName = null;
 
@@ -215,28 +332,30 @@ public class ViewFactory {
 		}
 		return foundFxmlName;
 	}
-	
-	private void injectFlow(final Object controller, final FXMLFlowHandler flowHandler) {
+
+	private void injectFlow(final Object controller,
+			final FXMLFlowHandler flowHandler) {
 		Class<? extends Object> cls = controller.getClass();
 		Field[] fields = cls.getDeclaredFields();
 		for (final Field field : fields) {
 			if (field.isAnnotationPresent(FlowAction.class)) {
 				final FlowAction action = field.getAnnotation(FlowAction.class);
 				Object content = getPrivileged(field, controller);
-				if(content != null) {
-					if(content instanceof Button) {
-						((Button) content).setOnAction(new EventHandler<ActionEvent>() {
-							
-							@Override
-							public void handle(ActionEvent event) {
-								try {
-									flowHandler.handle(action.value());
-								} catch (FXMLFlowException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						});
+				if (content != null) {
+					if (content instanceof Button) {
+						((Button) content)
+								.setOnAction(new EventHandler<ActionEvent>() {
+
+									@Override
+									public void handle(ActionEvent event) {
+										try {
+											flowHandler.handle(action.value());
+										} catch (FXMLFlowException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+								});
 					}
 				}
 			}
@@ -262,7 +381,7 @@ public class ViewFactory {
 			}
 		});
 	}
-	
+
 	private Object getPrivileged(final Field field, final Object bean) {
 		return AccessController.doPrivileged(new PrivilegedAction<Object>() {
 			@Override
@@ -293,12 +412,13 @@ public class ViewFactory {
 		return false;
 	}
 
-	public <T> T createInstanceWithInjections(Class<T> cls, ViewContext context) throws InstantiationException, IllegalAccessException {
+	public <T> T createInstanceWithInjections(Class<T> cls, ViewContext context)
+			throws InstantiationException, IllegalAccessException {
 		T instance = cls.newInstance();
 		injectContexts(instance, context);
 		return instance;
 	}
-	
+
 	private void injectContexts(final Object bean, final ViewContext context) {
 		Class<? extends Object> cls = bean.getClass();
 		Field[] fields = cls.getDeclaredFields();
@@ -330,27 +450,6 @@ public class ViewFactory {
 							"Can not set FXMLViewFlowContext to field of type "
 									+ type + " (" + field + ")");
 				}
-			} else {
-				// TODO: CHECK FOR RECURSION
-				// AccessController.doPrivileged(new PrivilegedAction<Void>() {
-				// @Override public Void run() {
-				// boolean wasAccessible = field.isAccessible();
-				// try {
-				// field.setAccessible(true);
-				// Object fieldData = field.get(bean);
-				// if (fieldData != null) {
-				// injectContexts(field, context);
-				// }
-				// return null; // return nothing...
-				// } catch (IllegalArgumentException | IllegalAccessException
-				// ex) {
-				// throw new IllegalStateException("Cannot set field: " + field,
-				// ex);
-				// } finally {
-				// field.setAccessible(wasAccessible);
-				// }
-				// }
-				// });
 			}
 		}
 	}
@@ -360,7 +459,7 @@ public class ViewFactory {
 			throws FXMLFlowException {
 		return new FXMLFlowHandler(view, container, flowContext).start();
 	}
-	
+
 	public static ViewContext startFlowInPane(FXMLFlowView view,
 			final Pane pane, ViewFlowContext flowContext)
 			throws FXMLFlowException {

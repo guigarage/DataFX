@@ -31,7 +31,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(value={ElementType.FIELD})
+/**
+ * Use this Annotation to inject the {@link #ViewContext} in a controller
+ * instance or a flow action.
+ * 
+ * @author hendrikebbers
+ * 
+ */
+@Target(value = { ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FXMLViewContext {
 

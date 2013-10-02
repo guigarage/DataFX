@@ -31,8 +31,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation for a FXML controller. This annotation will define the FXML-file
+ * this controller is made for. You don't need to use this annotation because
+ * the API is designed using a convention over configuration approach: If you
+ * have a fxml file "master.fxml" you can create a MasterController.java
+ * controller in the same package and the controller API will use this
+ * controller for the fxml. To create a controller/view pair you need to use the
+ * {@link #ViewFactory}.
+ * 
+ * @author hendrikebbers
+ * 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface FXMLController {
-    String value();
+	
+	/**
+	 * Defines the name of the fxml files that should be used with the annotated controller.
+	 * @return name of the fxml file
+	 */
+	String value();
 }

@@ -28,23 +28,16 @@ package org.datafx.controller.context;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.annotation.PreDestroy;
 
 import javafx.scene.Node;
 
-public class ViewContext<U> {
+import javax.annotation.PreDestroy;
+
+public class ViewContext<U> extends AbstractContext {
 
     private ViewFlowContext viewFlowContext;
     
     private Node rootNode;
-    
-    private String id = UUID.randomUUID().toString();
-    
-    private Map<String, Object> registeredObjects;
     
     private U controller;
     
@@ -55,7 +48,6 @@ public class ViewContext<U> {
     public ViewContext(Node rootNode, ViewFlowContext viewFlowContext, U controller) {
         this.viewFlowContext = viewFlowContext;
         this.rootNode = rootNode;
-        registeredObjects = new HashMap<>();
         this.controller = controller;
     }
     
@@ -63,33 +55,12 @@ public class ViewContext<U> {
 		return controller;
 	}
     
-    public String getId() {
-        return id;
-    }
-    
     public Node getRootNode() {
         return rootNode;
     }
     
     public ViewFlowContext getViewFlowContext() {
         return viewFlowContext;
-    }
-    
-    public void register(String key, Object value) {
-        registeredObjects.put(key, value);
-    }
-    
-    public Object getRegisteredObject(String key) {
-        return registeredObjects.get(key);
-    }
-    
-    @SuppressWarnings("unchecked")
-	public <T> T getRegisteredObject(Class<T> cls) {
-        return (T) registeredObjects.get(cls.toString());
-    }
-    
-    public void register(Object value) {
-        registeredObjects.put(value.getClass().toString(), value);
     }
     
     public ApplicationContext getApplicationContext() {
