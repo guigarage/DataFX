@@ -33,6 +33,62 @@ import javafx.scene.Node;
 
 import javax.annotation.PreDestroy;
 
+/**
+ * <p>
+ * The view context is the context with a life time of one view. For each view
+ * there is exactly one ViewContext. By using the {@link #ViewFactory} to create
+ * MVC views a ViewContext will be automatically created.<br/>
+ * Example:
+ * </p>
+ * <p>
+ * ViewContext<MyController> context =
+ * ViewFactory.getInstance().createByController(MyController.class);<br/>
+ * </p>
+ * <p>
+ * How to use a context<br/>
+ * A context has a defined life time and can hold the data model of your
+ * aplication or of a part of your application. To do so you can easily register
+ * objects to your context:<br/>
+ * </p>
+ * <p>
+ * DataModel model = ... <br/>
+ * context.register(model);<br/>
+ * <br/>
+ * In your controller: <br/>
+ * DataModel model = context.getRegisteredObject(DataModel.class);
+ * </p>
+ * <p>
+ * If you need more than one instance of a class in your context you can simple
+ * register the by using string based keys:
+ * </p>
+ * <p>
+ * DataModel model1 = ... <br/>
+ * DataModel model2 = ... <br/>
+ * context.register("firstModel", model);<br/>
+ * context.register("secondModel", model);<br/>
+ * <br/>
+ * In your controller: <br/>
+ * DataModel firstModel = context.getRegisteredObject("firstModel");
+ * </p>
+ * <p>
+ * A context can simple used in a controller by injecting the context. DataFX
+ * provides annotations to inject all different context types:
+ * </p>
+ * <p>
+ * 
+ * "@FXMLApplicationContext" <br/>
+ * ApplicationContext myApplicationContext;<br/>
+ * </p>
+ * <p>
+ * By doing so you can easily access all your data in your controller and share
+ * data between different controllers.
+ * </p>
+ * 
+ * @author hendrikebbers
+ * 
+ * @param <U>
+ *            Controller class of the MVC view that is defined in this context
+ */
 public class ViewContext<U> extends AbstractContext {
 
 	private ViewFlowContext viewFlowContext;
@@ -41,10 +97,33 @@ public class ViewContext<U> extends AbstractContext {
 
 	private U controller;
 
+	/**
+	 * Create a new ViewCOntext for a (view-){@link #Node} and a controller.
+	 * Normally this constructor is used by the {@link #ViewFactory} and should
+	 * not be used in application code.
+	 * 
+	 * @param rootNode
+	 *            the (view-)node
+	 * @param controller
+	 *            the controller
+	 */
 	public ViewContext(Node rootNode, U controller) {
 		this(rootNode, new ViewFlowContext(), controller);
 	}
 
+	/**
+	 * Create a new ViewCOntext for a (view-){@link #Node} and a controller. The
+	 * used will be added to the given {@link #ViewFlowContext} Normally this
+	 * constructor is used by the {@link #ViewFactory} and should not be used in
+	 * application code.
+	 * 
+	 * @param rootNode
+	 *            the (view-)node
+	 * @param viewFlowContext
+	 *            the flow context
+	 * @param controller
+	 *            the controller
+	 */
 	public ViewContext(Node rootNode, ViewFlowContext viewFlowContext,
 			U controller) {
 		this.viewFlowContext = viewFlowContext;
@@ -68,7 +147,8 @@ public class ViewContext<U> extends AbstractContext {
 		return ApplicationContext.getInstance();
 	}
 
-	public void destroy() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void destroy() throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
 		// TODO: All managed Object should be checked for a pre destroy....
 		Object controller = getRegisteredObject("controller");
 		if (controller != null) {

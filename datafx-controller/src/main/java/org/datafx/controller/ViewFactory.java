@@ -63,8 +63,7 @@ import org.datafx.controller.util.FxmlLoadException;
  * Here is a short example how to create a view:
  * </p>
  * <p>
- * ViewContext<MyController> context
- * ViewFactory.getInstance().createByController(MyController.class);<br/>
+ * ViewContext<MyController> context = ViewFactory.getInstance().createByController(MyController.class);<br/>
  * context.getRootNode();<br/>
  * context.getController();<br/>
  * </p>
