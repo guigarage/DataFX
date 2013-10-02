@@ -1,4 +1,4 @@
-package org.datafx.controller.demo.data;
+package org.datafx.samples.masterdetail.data;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

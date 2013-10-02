@@ -1,4 +1,4 @@
-package org.datafx.controller.demo.controller;
+package org.datafx.samples.masterdetail.controller;
 
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -10,8 +10,8 @@ import javax.annotation.PreDestroy;
 
 import org.datafx.controller.context.FXMLViewFlowContext;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.demo.data.DataModel;
 import org.datafx.controller.flow.FlowAction;
+import org.datafx.samples.masterdetail.data.DataModel;
 
 public class MasterViewController {
 

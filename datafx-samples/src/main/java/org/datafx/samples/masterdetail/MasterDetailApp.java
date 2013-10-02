@@ -1,4 +1,4 @@
-package org.datafx.controller.demo;
+package org.datafx.samples.masterdetail;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -7,13 +7,13 @@ import javafx.stage.Stage;
 
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.demo.action.DeleteAction;
-import org.datafx.controller.demo.controller.DetailViewController;
-import org.datafx.controller.demo.controller.MasterViewController;
-import org.datafx.controller.demo.data.DataModel;
 import org.datafx.controller.flow.FXMLFlowView;
+import org.datafx.samples.masterdetail.action.DeleteAction;
+import org.datafx.samples.masterdetail.controller.DetailViewController;
+import org.datafx.samples.masterdetail.controller.MasterViewController;
+import org.datafx.samples.masterdetail.data.DataModel;
 
-public class EnterpriseDemoApplication extends Application {
+public class MasterDetailApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {

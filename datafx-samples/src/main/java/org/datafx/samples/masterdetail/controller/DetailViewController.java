@@ -1,4 +1,4 @@
-package org.datafx.controller.demo.controller;
+package org.datafx.samples.masterdetail.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,8 +10,8 @@ import javax.annotation.PreDestroy;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.FXMLViewContext;
 import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.demo.data.DataModel;
 import org.datafx.controller.flow.FlowAction;
+import org.datafx.samples.masterdetail.data.DataModel;
 
 @FXMLController("Details.fxml")
 public class DetailViewController {
