@@ -468,10 +468,6 @@ public class ViewFactory {
 				pane.getChildren().add(context.getRootNode());
 			}
 
-			@Override
-			public void flowFinished() {
-
-			}
 		};
 		return startFlowInContainer(view, container, flowContext);
 	}
