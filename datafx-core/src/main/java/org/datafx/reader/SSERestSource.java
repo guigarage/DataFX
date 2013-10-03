@@ -15,7 +15,9 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WritableListValue;
 import javafx.beans.value.WritableValue;
+import javafx.collections.ObservableList;
 import org.datafx.provider.ObjectDataProvider;
 
 /**
@@ -27,6 +29,7 @@ public class SSERestSource<T> extends RestSource<T> implements ServerSentEventRe
     private BufferedReader br;
     private T answer;
     private Map<String, Field> observableFields = new HashMap<>();
+    private Map<String, Field> observableListFields = new HashMap<>();
 
     @Override
     public T get() {
@@ -73,7 +76,7 @@ public class SSERestSource<T> extends RestSource<T> implements ServerSentEventRe
     }
 
     private void updateFields(final T newValues) {
-        for (final Field field : observableFields.values()) {
+            for (final Field field : observableFields.values()) {
             try {
                 AccessController.doPrivileged(new PrivilegedAction() {
                     @Override
@@ -84,14 +87,17 @@ public class SSERestSource<T> extends RestSource<T> implements ServerSentEventRe
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    obs.setValue(val.getValue());
+                                    try {
+                                        obs.setValue(val.getValue());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
 
-                        } catch (IllegalArgumentException ex) {
+                        } catch (Exception ex) {
                             Logger.getLogger(SSERestSource.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalAccessException ex) {
-                            Logger.getLogger(SSERestSource.class.getName()).log(Level.SEVERE, null, ex);
+                            ex.printStackTrace();
                         }
                         return null;
                     }
@@ -103,6 +109,40 @@ public class SSERestSource<T> extends RestSource<T> implements ServerSentEventRe
                 Logger.getLogger(SSERestSource.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        for (final Field field : observableListFields.values()) {
+            try {
+                AccessController.doPrivileged(new PrivilegedAction() {
+                    @Override
+                    public Object run() {
+                        try {
+                            final ObservableList val = (ObservableList) field.get(newValues);
+                            final ObservableList obs = (ObservableList) field.get(answer);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        obs.setAll(val);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                        } catch (Exception ex) {
+                            Logger.getLogger(SSERestSource.class.getName()).log(Level.SEVERE, null, ex);
+                            ex.printStackTrace();
+                        }
+                        return null;
+                    }
+                });
+
+
+
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(SSERestSource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     }
 
     private void checkObservableFields(final T target) {
@@ -110,12 +150,11 @@ public class SSERestSource<T> extends RestSource<T> implements ServerSentEventRe
         Field[] fields = c.getDeclaredFields();
         for (final Field field : fields) {
             Class clazz = field.getType();
-            if (Observable.class.isAssignableFrom(clazz)) {
+            if (ObservableValue.class.isAssignableFrom(clazz)) {
                 try {
                     Observable observable = AccessController.doPrivileged(new PrivilegedAction<Observable>() {
                         public Observable run() {
                             try {
-
                                 field.setAccessible(true);
                                 Object f = field.get(target);
                                 Observable answer = (Observable) f;
@@ -137,6 +176,34 @@ public class SSERestSource<T> extends RestSource<T> implements ServerSentEventRe
 
             }
 
+              if (ObservableList.class.isAssignableFrom(clazz)) {
+                try {
+                    ObservableList observableList = AccessController.doPrivileged(new PrivilegedAction<ObservableList>() {
+                        public ObservableList run() {
+                            try {
+                                field.setAccessible(true);
+                                Object f = field.get(target);
+                                ObservableList answer = (ObservableList) f;
+                                return answer;
+                            } catch (IllegalArgumentException ex) {
+                                Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalAccessException ex) {
+                                Logger.getLogger(ObjectDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            return null;
+                        }
+                    });
+                    if (observableList != null) {
+                        observableListFields.put(field.getName(), field);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            
+            
         }
     }
 }
