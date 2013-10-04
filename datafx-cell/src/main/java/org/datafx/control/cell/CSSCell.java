@@ -39,7 +39,7 @@ class CSSCell {
 
         StyleManager sm = StyleManager.getInstance();
         for (int i = 0; i < states.size(); i++) {
-            mask |= sm.getPseudoclassMask(states.get(i));
+//TODO port me            mask |= sm.getPseudoclassMask(states.get(i));
         }
         return mask;
     }

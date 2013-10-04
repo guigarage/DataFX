@@ -100,10 +100,11 @@ public abstract class CSSTableRow<S> extends TableRow<S> {
      * that order does not matter.
      */
     protected final void stateChanged(String state, String... states) {
-        impl_pseudoClassStateChanged(state);
-        for (String s : states) {
-            impl_pseudoClassStateChanged(s);
-        }
+        // TODO port me
+//        impl_pseudoClassStateChanged(state);
+//        for (String s : states) {
+//            impl_pseudoClassStateChanged(s);
+//        }
     }
 
     /**
@@ -111,9 +112,10 @@ public abstract class CSSTableRow<S> extends TableRow<S> {
      * @deprecated This is an internal API that is not intended for use
      * and will be removed in the next version.
      */
-    @Deprecated @Override public long impl_getPseudoClassState() {
-        List<String> states = new ArrayList<String>();
-        getCssState(states);
-        return CSSCell.getPseudoClassState(getScene(), super.impl_getPseudoClassState(), states);
-    }
+    // TODO port me
+//    @Deprecated @Override public long impl_getPseudoClassState() {
+//        List<String> states = new ArrayList<String>();
+//        getCssState(states);
+//        return CSSCell.getPseudoClassState(getScene(), super.impl_getPseudoClassState(), states);
+//    }
 }

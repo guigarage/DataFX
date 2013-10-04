@@ -106,10 +106,10 @@ public class CSSListCell<T> extends ListCell<T> {
      * that order does not matter.
      */
     protected final void stateChanged(String state, String... states) {
-        impl_pseudoClassStateChanged(state);
-        for (String s : states) {
-            impl_pseudoClassStateChanged(s);
-        }
+//        impl_pseudoClassStateChanged(state);
+//        for (String s : states) {
+//            impl_pseudoClassStateChanged(s);
+//        }
     }
 
     /**
@@ -117,10 +117,10 @@ public class CSSListCell<T> extends ListCell<T> {
      * @deprecated This is an internal API that is not intended for use
      * and will be removed in the next version.
      */
-    @Deprecated @Override public long impl_getPseudoClassState() {
-        List<String> states = new ArrayList<String>();
-        getCssState(states);
-
-        return CSSCell.getPseudoClassState(getScene(), super.impl_getPseudoClassState(), states);
-    }
+//    @Deprecated @Override public long impl_getPseudoClassState() {
+//        List<String> states = new ArrayList<String>();
+//        getCssState(states);
+//
+//        return CSSCell.getPseudoClassState(getScene(), super.impl_getPseudoClassState(), states);
+//    }
 }
