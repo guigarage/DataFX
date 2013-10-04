@@ -61,8 +61,8 @@
 	</properties>
 
 	<scm>
-		<connection>scm:hg:https://hg.java.net/hg/datafx~datafx2/datafx-controller</connection>
-		<developerConnection>scm:hg:https://hg.java.net/hg/datafx~datafx2/datafx-controller</developerConnection>
+		<connection>scm:hg:https://bitbucket.org/datafx/datafx</connection>
+		<developerConnection>scm:hg:https://bitbucket.org/datafx/datafx</developerConnection>
 		<url>https://bitbucket.org/datafx/datafx/overview</url>
 	</scm>
 
