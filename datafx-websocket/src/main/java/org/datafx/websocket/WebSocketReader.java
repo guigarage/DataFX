@@ -1,5 +1,6 @@
 package org.datafx.websocket;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -11,12 +12,13 @@ import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import org.datafx.reader.DataReader;
+import org.datafx.reader.converter.InputStreamConverter;
 
 /**
  *
  * @author johan
  */
-public class WebSocketReader implements DataReader<String> {//, WritableDataReader<T> {
+public class WebSocketReader<T> implements DataReader<T> {//, WritableDataReader<T> {
     
     private String address;
     private boolean connected = false;
@@ -24,10 +26,15 @@ public class WebSocketReader implements DataReader<String> {//, WritableDataRead
     private final Object availableLock = new Object();
     private boolean closed = false;
     private Session session;
+    private InputStreamConverter converter;
     
     public WebSocketReader (String address) {
         this.address = address;
         DataFXEndpoint.parent = this; // TODO refactor this
+    }
+    
+    public void setConverter (InputStreamConverter converter) {
+        this.converter = converter;
     }
     
     private void connectEndpoint () {
@@ -50,7 +57,7 @@ public class WebSocketReader implements DataReader<String> {//, WritableDataRead
         System.out.println("WebSocketReader was notified new data");
     }
     
-    public String get() {
+    public T get() {
         System.out.println("WebSocketReader in get...");
         synchronized (this.availableLock) {
             if (!connected) {
@@ -62,13 +69,19 @@ public class WebSocketReader implements DataReader<String> {//, WritableDataRead
                 System.out.println("WebSocketReader waits for available data...");
                 try {
                     this.availableLock.wait();
-                } catch (InterruptedException ex) {
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                     Logger.getLogger(WebSocketReader.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
         System.out.println("WebSocketReader GOT available data...");
-        return this.availableData.remove(0);
+        String msg = this.availableData.remove(0);
+        if (converter != null) {
+            converter.initialize(new ByteArrayInputStream(msg.getBytes()));
+           return (T) converter.get();
+        }
+        return (T) msg;
     }
 
     public boolean next() {

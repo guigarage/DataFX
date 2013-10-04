@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.datafx.websocket;
 
 import javax.websocket.Endpoint;
@@ -19,9 +15,11 @@ public class DataFXEndpoint extends Endpoint implements MessageHandler.Whole<Str
     
     @Override
     public void onOpen(Session session, EndpointConfig config) {
+        System.out.println("Endpoint is open now");
         session.addMessageHandler(this);
     }
 
+    @Override
     public void onMessage(String message) {
         System.out.println("DataFXEndpoint got a message!!");
         parent.addAvailableData(message);

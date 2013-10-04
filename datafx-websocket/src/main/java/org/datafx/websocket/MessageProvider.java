@@ -9,7 +9,7 @@ import org.datafx.provider.ListDataProvider;
  *
  * @author johan
  */
-public class MessageProvider extends ListDataProvider<String> {
+public class MessageProvider<T> extends ListDataProvider<T> {
 
     
     private final WebSocketReader reader;
