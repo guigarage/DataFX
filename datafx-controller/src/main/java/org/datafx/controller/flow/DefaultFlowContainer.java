@@ -30,7 +30,7 @@ import javafx.scene.layout.StackPane;
 
 import org.datafx.controller.context.ViewContext;
 
-public class DefaultFlowContainer implements FXMLFlowContainer {
+public class DefaultFlowContainer implements FlowContainer {
 
 	private StackPane pane;
 	
@@ -39,7 +39,7 @@ public class DefaultFlowContainer implements FXMLFlowContainer {
 	}
 	
 	@Override
-	public void setView(ViewContext context) {
+	public <T> void setView(ViewContext<T> context) {
 		pane.getChildren().clear();
 		pane.getChildren().add(context.getRootNode());
 	}

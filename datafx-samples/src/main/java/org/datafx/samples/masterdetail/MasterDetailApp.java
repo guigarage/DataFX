@@ -7,7 +7,9 @@ import javafx.stage.Stage;
 
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.flow.FXMLFlowView;
+import org.datafx.controller.flow.DefaultFlowContainer;
+import org.datafx.controller.flow.Flow;
+import org.datafx.controller.flow.FlowView;
 import org.datafx.samples.masterdetail.action.DeleteAction;
 import org.datafx.samples.masterdetail.controller.DetailViewController;
 import org.datafx.samples.masterdetail.controller.MasterViewController;
@@ -21,25 +23,23 @@ public class MasterDetailApp extends Application {
 		flowContext.register(new DataModel());
 
 		StackPane pane = new StackPane();
-		ViewFactory.startFlowInPane(createFlow(),
-				pane, flowContext);
-		Scene myScene = new Scene(pane);
 		
+		DefaultFlowContainer flowContainer = new DefaultFlowContainer(pane);
+
+		Flow flow = new Flow(MasterViewController.class)
+				.withLink(MasterViewController.class, "showDetails",
+						DetailViewController.class)
+				.withLink(DetailViewController.class, "back",
+						MasterViewController.class)
+				.withTaskAction(MasterViewController.class, "delete",
+						DeleteAction.class);
+
+		flow.createHandler(flowContext).start(flowContainer);
+		
+		Scene myScene = new Scene(pane);
+
 		stage.setScene(myScene);
 		stage.show();
-	}
-
-	public FXMLFlowView createFlow() {
-		FXMLFlowView detailView = FXMLFlowView
-				.create(DetailViewController.class);
-		
-		FXMLFlowView masterView = FXMLFlowView.create(
-				MasterViewController.class).withChangeViewAction("showDetails",
-				detailView).withRunAction("delete", DeleteAction.class);
-		
-		detailView.withChangeViewAction("back", masterView);
-		
-		return masterView;
 	}
 
 	public static void main(String[] args) {

@@ -24,11 +24,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.flow;
+package org.datafx.controller.flow.action;
 
-import org.datafx.controller.context.ViewContext;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface FXMLFlowContainer {
+@Target(value={ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface FXMLFlowAction {
 
-    public void setView(ViewContext context);
+    public abstract String value();
 }

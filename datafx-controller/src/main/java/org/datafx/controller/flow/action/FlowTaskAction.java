@@ -24,11 +24,26 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.flow;
+package org.datafx.controller.flow.action;
 
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.ViewFactory;
+import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.FlowHandler;
 
-public interface FXMLFlowNode {
+public class FlowTaskAction implements FlowAction {
 
-    public FXMLFlowView handle(FXMLFlowView currentFlowView, ViewFlowContext flowContext, FXMLFlowHandler flowHandler) throws FXMLFlowException;
+    private Class<? extends Runnable> runnableClass;
+    
+    public FlowTaskAction(Class<? extends Runnable> runnableClass) {
+        this.runnableClass = runnableClass;
+    }
+    
+    @Override public void handle(FlowHandler flowHandler, String actionId) throws FlowException{
+		try {
+			Runnable runnable = ViewFactory.getInstance().createInstanceWithInjections(runnableClass, flowHandler.getCurrentViewContext());
+			runnable.run();
+		} catch (Exception e) {
+			throw new FlowException(e);
+		}
+    }
 }

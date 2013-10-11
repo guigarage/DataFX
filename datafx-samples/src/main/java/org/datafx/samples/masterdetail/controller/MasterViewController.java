@@ -10,8 +10,9 @@ import javax.annotation.PreDestroy;
 
 import org.datafx.controller.context.FXMLViewFlowContext;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.flow.FlowAction;
+import org.datafx.controller.flow.action.FXMLFlowAction;
 import org.datafx.samples.masterdetail.data.DataModel;
+
 
 public class MasterViewController {
 
@@ -22,11 +23,11 @@ public class MasterViewController {
     private ListView<StringProperty> myList;
     
     @FXML
-    @FlowAction("delete")
+    @FXMLFlowAction("delete")
     private Button deleteButton;
     
     @FXML
-    @FlowAction("showDetails")
+    @FXMLFlowAction("showDetails")
     private Button showDetailsButton;
     
     @PostConstruct
