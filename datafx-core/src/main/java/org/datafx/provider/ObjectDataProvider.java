@@ -94,6 +94,7 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
         return new Service<T>() {
             @Override
             protected Task<T> createTask() {
+                LOGGER.fine("create Receiver task");
                 final Task<T> task = createReceiverTask(reader);
                 task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
@@ -102,7 +103,7 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
                         try {
                             LOGGER.fine("get the value of the task");
                             value = task.get();
-                            LOGGER.fine("task returned value "+value);
+                            LOGGER.log(Level.FINE, "task returned value {0}", value);
                         } catch (InterruptedException e) {
                             // Execution of the task was not working. So we do
                             // not need
@@ -167,7 +168,7 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
             @Override
             protected T call() throws Exception {
                 T entry = reader.get();
-                LOGGER.log(Level.FINE, "reader did read entry {0}", entry);
+                LOGGER.log(Level.FINE, "Reader did read entry {0}", entry);
                 return entry;
             }
         };

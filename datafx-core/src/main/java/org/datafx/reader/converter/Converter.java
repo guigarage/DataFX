@@ -26,11 +26,42 @@
  */
 package org.datafx.reader.converter;
 
+/**
+ * A Converter is responsible for converting raw data (obtained from a data source)
+ * into one or more Java objects.
+ * <p>
+ * Converters are used by implementations of {@link org.datafx.reader.DataReader}.
+ * <br/>
+ * A converter instance is typically created by the application code, and passed to
+ * the datareader.
+ * @author johan
+ * @param <T> The format of the raw data, e.g. an {@link java.io.InputStream}, 
+ * a {@link java.sql.ResultSet}.
+ * @param <U> The type of the converted objects.
+ */
 public interface Converter<T, U> {
     
+    /**
+     * Initialize the raw data. In many cases, some initialization is required on
+     * the raw data before the conversion to one or more objects can be performed.
+     * In the case of an {@link XmlConverter}, for example, the DOM-model is created
+     * in this method.
+     * @param input the raw input.
+     */
     public void initialize(T input);
     
+    /**
+     * Get the next available data entity in the desired type
+     * @return the next available data
+     */
     public U get();
     
+    /**
+     * Indicate whether or not more data can be expected from this converter. 
+     * It is up to the implementation to detect if we can deliver more data entities
+     * or not. If this method returns <code>false</code> a call to {@link get()} 
+     * will fail.
+     * @return true if more data can be obtained from this converter, false otherwise
+     */
     public boolean next();
 }
