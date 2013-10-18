@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -37,9 +39,10 @@ import org.datafx.writer.WriteTransient;
  * @author johan
  */
 public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
-        WriteBackProvider<T>, WriteBackListProvider<T> {
+    WriteBackProvider<T>, WriteBackListProvider<T> {
 
-    private ObservableList<T> resultList;
+    private ListProperty<T> listWrapper = new SimpleListProperty<>();
+    private ObservableList<T> observableList;
     private DataReader<T> reader;
     private Executor executor;
     private WriteBackHandler<T> writeBackHandler;
@@ -66,10 +69,11 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
         this.reader = reader;
         this.executor = executor;
         if (existingList != null) {
-            this.resultList = existingList;
+            this.observableList = existingList;
         } else {
-            this.resultList = FXCollections.<T>observableArrayList();// = new SimpleListProperty<T>(FXCollections.<T>observableArrayList());
+            this.observableList = FXCollections.<T>observableArrayList();// = new SimpleListProperty<T>(FXCollections.<T>observableArrayList());
         }
+        this.listWrapper.setValue(observableList);
     }
 
     /**
@@ -83,7 +87,8 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
      * data retrieved yet.
      */
     public void setResultObservableList(final ObservableList<T> ol) {
-        this.resultList = ol;
+        this.observableList = ol;
+        this.listWrapper.setValue(this.observableList);
     }
 
     public void setDataReader(DataReader<T> reader) {
@@ -95,7 +100,7 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
     }
 
     public Worker<ObservableList<T>> retrieve() {
-        final Service<ObservableList<T>> retriever = createService(resultList);
+        final Service<ObservableList<T>> retriever = createService(observableList);
         retriever.setOnFailed(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent arg0) {
@@ -235,7 +240,7 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
      */
     @Override
     public ListProperty<T> getData() {
-        return new SimpleListProperty<T>(resultList);
+        return (ListProperty<T>) listWrapper;
     }
 
     @Override
@@ -305,4 +310,10 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
             }
         }
     }
+
+    @Override
+    public void setResultProperty(Property<ObservableList<T>> result) {
+        this.listWrapper = (ListProperty<T>) result;
+    }
+
 }

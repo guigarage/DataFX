@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -65,10 +66,14 @@ public class ObjectDataProvider<T> implements DataProvider<T>,
      *
      * @param result
      */
+    @Override
+    public void setResultProperty(Property<T> result) {
+        setResultObjectProperty((ObjectProperty<T>) result);
+    }
+
     public void setResultObjectProperty(ObjectProperty<T> result) {
         this.objectProperty = result;
     }
-
     @Override
     public Worker<T> retrieve() {
         final Service<T> retriever = createService(objectProperty);
