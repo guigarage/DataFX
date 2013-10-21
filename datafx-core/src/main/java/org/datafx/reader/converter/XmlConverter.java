@@ -42,7 +42,11 @@ import org.xml.sax.SAXException;
 
 /**
  *
+ * A Converter implementation that converts a
+ * {@link java.io.InputStream} into one or more instances of a java class
+ * with type T.
  * @author johan
+ * @param <T> The type of the converted objects.
  */
 public class XmlConverter<T> extends InputStreamConverter<T> {
 

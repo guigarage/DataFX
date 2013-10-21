@@ -35,11 +35,11 @@ package org.datafx.reader.converter;
  * A converter instance is typically created by the application code, and passed to
  * the datareader.
  * @author johan
- * @param <T> The format of the raw data, e.g. an {@link java.io.InputStream}, 
+ * @param <U> The format of the raw data, e.g. an {@link java.io.InputStream}, 
  * a {@link java.sql.ResultSet}.
- * @param <U> The type of the converted objects.
+ * @param <T> The type of the converted objects.
  */
-public interface Converter<T, U> {
+public interface Converter<U, T> {
     
     /**
      * Initialize the raw data. In many cases, some initialization is required on
@@ -48,13 +48,13 @@ public interface Converter<T, U> {
      * in this method.
      * @param input the raw input.
      */
-    public void initialize(T input);
+    public void initialize(U input);
     
     /**
      * Get the next available data entity in the desired type
      * @return the next available data
      */
-    public U get();
+    public T get();
     
     /**
      * Indicate whether or not more data can be expected from this converter. 

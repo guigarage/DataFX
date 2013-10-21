@@ -28,10 +28,15 @@ package org.datafx.reader.converter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-
+/**
+ * A Converter implementation that translates a {@link java.sql.ResultSet} 
+ * into objects of type T.
+ * The {@link #convertOneRow(java.sql.ResultSet)} method should be implemented
+ * by consumers of this class.
+ * @author johan
+ * @param <T> The type of the converted objects.
+ */
 public abstract class JdbcConverter<T> implements Converter<ResultSet, T> {
 
     protected ResultSet resultSet;
@@ -53,6 +58,12 @@ public abstract class JdbcConverter<T> implements Converter<ResultSet, T> {
         return entry;
     }
     
+    /**
+     * Implementation-specific conversion between a resultSet and a java object 
+     * of type T.
+     * @param resultSet the resultset, obtained by the JDBC call.
+     * @return 
+     */
     public abstract T convertOneRow (ResultSet resultSet);
     
     @Override
