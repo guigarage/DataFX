@@ -73,8 +73,8 @@ public interface DataProvider<T> {
 
     /**
      * Starts to retrieve the data in a background thread and returns the Worker for
-     * monitoring. The Worker has the generic type T. So you can access the loaded data by the
-     * Worker once it's finished.
+     * monitoring. The Worker has the generic type T. 
+     * The incoming data can be observed using the {@link Worker.valueProperty()} property
      *
      * @return Worker that retrieves the data
      * 
