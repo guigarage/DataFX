@@ -130,9 +130,10 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(inputStream);
+            
             childNodes = doc.getElementsByTagName(tag);
             totalNodes = childNodes.getLength();
-            System.out.println("childodes = "+childNodes+" and length = "+totalNodes);
+            System.out.println("childnodes for tag "+tag+"= "+childNodes+" and length = "+totalNodes);
             currentNode = 0;
             domCreated = true;
         } catch (ParserConfigurationException ex) {

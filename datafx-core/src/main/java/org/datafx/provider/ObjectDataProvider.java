@@ -179,7 +179,8 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
             @Override
             protected T call() throws Exception {
                 T entry = reader.get();
-                LOGGER.log(Level.FINE, "Reader did read entry {0}", entry);
+                objectProperty.set(entry);
+                LOGGER.log(Level.FINE, "[datafx] Reader did read entry {0}", entry);
                 return entry;
             }
         };
@@ -190,29 +191,37 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
         return new Service<T>() {
             @Override
             protected Task<T> createTask() {
-                LOGGER.fine("create Receiver task");
+                LOGGER.fine("[datafx] create Receiver task");
                 final Task<T> task = createReceiverTask(reader);
+                
                 task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                     @Override
                     public void handle(WorkerStateEvent arg0) {
                         T value = null;
                         try {
-                            LOGGER.fine("get the value of the task");
+                            LOGGER.fine("[datafx] get the value of the task");
+                            String tn = Thread.currentThread().getName();
+                            System.out.println("Threadname = "+tn);
+                            Thread.dumpStack();
                             value = task.get();
-                            LOGGER.log(Level.FINE, "task returned value {0}", value);
+                            LOGGER.log(Level.FINE, "[datafx] task returned value {0}", value);
                         } catch (InterruptedException e) {
+                            e.printStackTrace();
                             // Execution of the task was not working. So we do
                             // not need
                             // to update the property
                             return;
                         } catch (ExecutionException e) {
+                            e.printStackTrace();
                             // Execution of the task was not working. So we do
                             // not need
                             // to update the property
                             return;
                         }
-                        LOGGER.log(Level.FINER, "I will set the value of {0} to {1}", new Object[]{objectProperty, value});
+                        LOGGER.log(Level.FINER, "[datafx] I will set the value of {0} to {1}", new Object[]{objectProperty, value});
                         objectProperty.set(value);
+                        System.out.println("DONE settting value");
+                        LOGGER.log(Level.FINER, "Do we have a writeBackHandler? {0}", writeBackHandler);
                         if (writeBackHandler != null) {
                             checkProperties(value);
                         }
