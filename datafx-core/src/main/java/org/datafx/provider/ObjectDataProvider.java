@@ -207,9 +207,6 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
                         T value = null;
                         try {
                             LOGGER.fine("[datafx] get the value of the task");
-                            String tn = Thread.currentThread().getName();
-                            System.out.println("Threadname = "+tn);
-                            Thread.dumpStack();
                             value = task.get();
                             LOGGER.log(Level.FINE, "[datafx] task returned value {0}", value);
                         } catch (InterruptedException e) {
