@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
@@ -178,8 +179,14 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
         Task<T> answer = new Task<T>() {
             @Override
             protected T call() throws Exception {
-                T entry = reader.get();
-                objectProperty.set(entry);
+                final T entry = reader.get();
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        objectProperty.set(entry);
+                    }
+                });
                 LOGGER.log(Level.FINE, "[datafx] Reader did read entry {0}", entry);
                 return entry;
             }
@@ -219,7 +226,7 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
                             return;
                         }
                         LOGGER.log(Level.FINER, "[datafx] I will set the value of {0} to {1}", new Object[]{objectProperty, value});
-                        objectProperty.set(value);
+                     //   objectProperty.set(value);
                         System.out.println("DONE settting value");
                         LOGGER.log(Level.FINER, "Do we have a writeBackHandler? {0}", writeBackHandler);
                         if (writeBackHandler != null) {
