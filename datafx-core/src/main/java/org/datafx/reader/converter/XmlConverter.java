@@ -119,7 +119,8 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         return currentNode < totalNodes;
     }
 
-    @Override public synchronized void initialize(InputStream is) {
+    @Override 
+    public synchronized void initialize(InputStream is) {
         this.inputStream = is;
         
         if (clazz == null) {
@@ -127,13 +128,17 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         }
 
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(inputStream);
-            
-            childNodes = doc.getElementsByTagName(tag);
-            totalNodes = childNodes.getLength();
-            System.out.println("childnodes for tag "+tag+"= "+childNodes+" and length = "+totalNodes);
+            if (tag != null) {
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                Document doc = db.parse(inputStream);
+
+                childNodes = doc.getElementsByTagName(tag);
+                totalNodes = childNodes.getLength();
+                System.out.println("childnodes for tag " + tag + "= " + childNodes + " and length = " + totalNodes);
+            } else {
+                totalNodes = 1;
+            }
             currentNode = 0;
             domCreated = true;
         } catch (ParserConfigurationException ex) {
