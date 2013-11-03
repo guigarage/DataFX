@@ -35,6 +35,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.datafx.provider.ObjectDataProvider;
 
 /**
  *
@@ -50,6 +51,8 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
     private final String tag;
     private final Class<T> clazz;
     Iterator<JsonNode> iterator;
+    private static final Logger LOGGER = Logger.getLogger(JsonConverter.class.getName());
+
 
     /**
      * Create a JsonConverter that will generate instances of the specified class.
@@ -96,10 +99,12 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
 
     @Override
     public T get() { // if no tag is specified, we assume it is a single item
+        LOGGER.log(Level.FINER, "getting json data, tag = {0}", tag);
         if (tag == null) {
             try {
                 ObjectMapper om = new ObjectMapper();
                 Object o = om.readValue(rootNode, clazz);
+                LOGGER.finer("did read Object "+o);
                 final T entry = (T) o;
                 return entry;
             } catch (IOException ex) {
