@@ -36,7 +36,6 @@ package org.datafx.reader;
  * when the last piece of data has arrived.
  * 
  * @param <T> the type of Java Objects that should be returned by this DataReader
- * @author johan
  */
 public interface DataReader<T> {
 	/**

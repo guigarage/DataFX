@@ -1,3 +1,29 @@
+/**
+ * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ *     * Neither the name of DataFX, the website javafxdata.org, nor the
+ * names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.datafx.provider;
 
 import java.lang.reflect.Field;
@@ -30,7 +56,8 @@ import org.datafx.writer.WriteBackProvider;
  * The ObjectDataProvider is an implementation of {@link DataProvider} that allows
  * the retrieval and parsing of data that is represented as a single Java instance.
  * In case a list of entities are expected to be retrieved, a {@link ListDataProvider}
- * should be used.
+ * should be used. Instances of this class are typically used to populate Observable
+ * objects.
  * <p>
  * This class requires a {@link org.datafx.reader.DataReader} that either can be passed
  * with the constructor or using the {@link #setDataReader(org.datafx.reader.DataReader) } 
@@ -38,9 +65,18 @@ import org.datafx.writer.WriteBackProvider;
  * <br/>
  * No external data will be retrieved until the {@link #retrieve()} method is called.
  * <p>
- * Developers that prefer the builder approache can choose to use the 
+ * Developers that prefer the builder approach can choose to use the 
  * {@link ObjectDataProviderBuilder} class to create an
  * instance of ObjectDataProvider.
+ * <p>
+ * Example:<br/>
+ * <pre>
+ *   XmlConverter xmlConverter = new XmlConverter(MyEntity.class);
+ *   RestSource restSource = new RestSource(HOST, xmlConverter);
+ *   restSource.setPath("somepath");
+ *   ObjectDataProvider<MyEntity> sodp = new ObjectDataProvider(restSource);
+ *   sodp.setResultObjectProperty(model.myActiveEntity());
+ * </pre>
  * @author johan
  */
 public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider<T>{
