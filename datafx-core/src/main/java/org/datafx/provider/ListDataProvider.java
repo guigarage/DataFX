@@ -100,7 +100,9 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
     private WriteBackHandler<T> writeBackHandler;
     private WriteBackHandler<T> entryAddedHandler;
 
-    public ListDataProvider() {}
+    public ListDataProvider() {
+        this (null, null, null);
+    }
     
     public ListDataProvider(DataReader<T> reader) {
         this(reader, null, null);
@@ -110,8 +112,8 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
      * Create a ListDataProvider with a given Executor and an existing
      * ListProperty
      *
-     * @param reader
-     * @param executor
+     * @param reader the DataReader that will obtain the real data
+     * @param executor an Executor that will make the (asynchronous) call.
      * @param existingList the ListProperty that will be populated with the
      * retrieved data. Note that in the past, we had to use a ListProperty
      * rather than an ObservableList since we override the getData() method,
