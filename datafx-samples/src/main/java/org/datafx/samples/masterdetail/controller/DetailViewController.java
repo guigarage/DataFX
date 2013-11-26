@@ -10,8 +10,9 @@ import javax.annotation.PreDestroy;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.FXMLViewContext;
 import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.flow.FlowAction;
+import org.datafx.controller.flow.action.FXMLFlowAction;
 import org.datafx.samples.masterdetail.data.DataModel;
+
 
 @FXMLController("Details.fxml")
 public class DetailViewController {
@@ -23,7 +24,7 @@ public class DetailViewController {
     private TextField myTextfield;
     
     @FXML
-    @FlowAction("back")
+    @FXMLFlowAction("back")
     private Button backButton;
         
     @PostConstruct

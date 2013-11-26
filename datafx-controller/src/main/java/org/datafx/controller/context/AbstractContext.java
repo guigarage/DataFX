@@ -1,5 +1,6 @@
 package org.datafx.controller.context;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,6 +17,10 @@ public class AbstractContext {
 
 	private Map<String, Object> registeredObjects;
 
+	public AbstractContext() {
+		registeredObjects = new HashMap<String, Object>();
+	}
+	
 	/**
 	 * Returns the unique id of this context
 	 * 

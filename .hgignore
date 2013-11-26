@@ -5,3 +5,25 @@ target/*
 \.chg\..*$
 \.rej$
 \.conflict\~$
+syntax: glob
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/libraries/Maven__javax_websocket_javax_websocket_client_api_1_0.xml
+.idea/libraries/Maven__junit_junit_3_8_1.xml
+.idea/libraries/Maven__org_apache_derby_derby_10_6_2_1.xml
+.idea/libraries/Maven__org_codehaus_jackson_jackson_core_asl_1_9_9.xml
+.idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_9_9.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/workspace.xml
+datafx-cell/datafx-cell.iml
+datafx-controller/datafx-controller.iml
+datafx-core/datafx-core.iml
+datafx-parent.iml
+datafx-samples/datafx-samples.iml
+datafx-websocket/datafx-websocket.iml

@@ -48,12 +48,13 @@ import org.datafx.controller.context.FXMLViewContext;
 import org.datafx.controller.context.FXMLViewFlowContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.flow.FXMLFlowContainer;
-import org.datafx.controller.flow.FXMLFlowException;
-import org.datafx.controller.flow.FXMLFlowHandler;
-import org.datafx.controller.flow.FXMLFlowView;
-import org.datafx.controller.flow.FlowAction;
+import org.datafx.controller.flow.FlowContainer;
+import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.FlowHandler;
+import org.datafx.controller.flow.FlowView;
+import org.datafx.controller.flow.action.FXMLFlowAction;
 import org.datafx.controller.util.FxmlLoadException;
+
 
 /**
  * <p>
@@ -221,7 +222,7 @@ public class ViewFactory {
 
 	public <T> ViewContext<T> createByControllerInViewFlow(
 			final Class<T> controllerClass, ViewFlowContext viewFlowContext,
-			String fxmlName, FXMLFlowHandler flowHandler)
+			String fxmlName, FlowHandler flowHandler)
 			throws FxmlLoadException {
 		try {
 			// 1. Create an instance of the Controller
@@ -331,12 +332,12 @@ public class ViewFactory {
 	}
 
 	private void injectFlow(final Object controller,
-			final FXMLFlowHandler flowHandler) {
+			final FlowHandler flowHandler) {
 		Class<? extends Object> cls = controller.getClass();
 		Field[] fields = cls.getDeclaredFields();
 		for (final Field field : fields) {
-			if (field.isAnnotationPresent(FlowAction.class)) {
-				final FlowAction action = field.getAnnotation(FlowAction.class);
+			if (field.isAnnotationPresent(FXMLFlowAction.class)) {
+				final FXMLFlowAction action = field.getAnnotation(FXMLFlowAction.class);
 				Object content = getPrivileged(field, controller);
 				if (content != null) {
 					if (content instanceof Button) {
@@ -347,7 +348,7 @@ public class ViewFactory {
 									public void handle(ActionEvent event) {
 										try {
 											flowHandler.handle(action.value());
-										} catch (FXMLFlowException e) {
+										} catch (FlowException e) {
 											// TODO Auto-generated catch block
 											e.printStackTrace();
 										}
@@ -451,30 +452,31 @@ public class ViewFactory {
 		}
 	}
 
-	public static ViewContext startFlowInContainer(FXMLFlowView view,
-			final FXMLFlowContainer container, ViewFlowContext flowContext)
-			throws FXMLFlowException {
-		return new FXMLFlowHandler(view, container, flowContext).start();
-	}
-
-	public static ViewContext startFlowInPane(FXMLFlowView view,
-			final Pane pane, ViewFlowContext flowContext)
-			throws FXMLFlowException {
-		FXMLFlowContainer container = new FXMLFlowContainer() {
-
-			@Override
-			public void setView(ViewContext context) {
-				pane.getChildren().clear();
-				pane.getChildren().add(context.getRootNode());
-			}
-
-		};
-		return startFlowInContainer(view, container, flowContext);
-	}
-
-	public static ViewContext startFlowInPane(FXMLFlowView view, final Pane pane)
-			throws FXMLFlowException {
-		return startFlowInPane(view, pane, new ViewFlowContext());
-	}
+//	public static ViewContext startFlowInContainer(FlowView view,
+//			final FlowContainer container, ViewFlowContext flowContext)
+//			throws FlowException {
+//		FlowHandler handler = new FlowHandler(view, container, flowContext);
+//		
+//	}
+//
+//	public static ViewContext startFlowInPane(FlowView view,
+//			final Pane pane, ViewFlowContext flowContext)
+//			throws FlowException {
+//		FlowContainer container = new FlowContainer() {
+//
+//			@Override
+//			public void setView(ViewContext context) {
+//				pane.getChildren().clear();
+//				pane.getChildren().add(context.getRootNode());
+//			}
+//
+//		};
+//		return startFlowInContainer(view, container, flowContext);
+//	}
+//
+//	public static ViewContext startFlowInPane(FlowView view, final Pane pane)
+//			throws FlowException {
+//		return startFlowInPane(view, pane, new ViewFlowContext());
+//	}
 
 }

@@ -26,23 +26,23 @@
  */
 package org.datafx.controller.flow;
 
-public class FXMLFlowException extends Exception {
+public class FlowException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    public FXMLFlowException() {
+    public FlowException() {
         super();
     }
 
-    public FXMLFlowException(String message) {
+    public FlowException(String message) {
         super(message);
     }
 
-    public FXMLFlowException(String message, Throwable cause) {
+    public FlowException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public FXMLFlowException(Throwable cause) {
+    public FlowException(Throwable cause) {
         super(cause);
     }
 }

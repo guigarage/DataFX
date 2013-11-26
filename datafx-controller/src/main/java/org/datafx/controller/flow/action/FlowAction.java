@@ -24,16 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.flow;
+package org.datafx.controller.flow.action;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.FlowHandler;
 
-@Target(value={ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface FlowAction {
+public interface FlowAction {
 
-    public abstract String value();
+    public void handle(FlowHandler flowHandler, String actionId) throws FlowException;
 }
