@@ -26,10 +26,15 @@
  */
 package org.datafx.controller.flow;
 
+import javafx.beans.property.SimpleObjectProperty;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.flow.action.FlowAction;
+import org.datafx.controller.flow.action.*;
+import org.datafx.controller.flow.event.AfterFlowActionEvent;
+import org.datafx.controller.flow.event.AfterFlowActionHandler;
+import org.datafx.controller.flow.event.BeforeFlowActionEvent;
+import org.datafx.controller.flow.event.BeforeFlowActionHandler;
 import org.datafx.controller.util.FxmlLoadException;
 
 public class FlowHandler {
@@ -42,7 +47,12 @@ public class FlowHandler {
 
 	private Flow flow;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+    private SimpleObjectProperty<BeforeFlowActionHandler> beforeFlowActionHandler;
+
+    private SimpleObjectProperty<AfterFlowActionHandler> afterFlowActionHandler;
+
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	public FlowHandler(Flow flow, ViewFlowContext flowContext) {
 		this.flowContext = flowContext;
 		this.flow = flow;	
@@ -86,7 +96,13 @@ public class FlowHandler {
 	}
 	
 	public void handle(FlowAction action, String actionId) throws FlowException {
+        if(beforeFlowActionHandler != null && beforeFlowActionHandler.getValue() != null) {
+            beforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContext));
+        }
 		action.handle(this, actionId);
+        if(afterFlowActionHandler != null && afterFlowActionHandler.getValue() != null) {
+            afterFlowActionHandler.getValue().handle(new AfterFlowActionEvent(actionId, action, flowContext));
+        }
 	}
 
 	public <U> ViewContext<U> setNewView(FlowView<U> newView)
