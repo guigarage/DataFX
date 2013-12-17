@@ -26,24 +26,18 @@
  */
 package org.datafx.reader;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.datafx.reader.converter.JdbcConverter;
 import org.datafx.reader.converter.JdbcDataSourceUtil;
 
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- *
  * @author johan
  */
 public class JdbcSource<T> extends AbstractDataReader<T> implements WritableDataReader<T> {
 
-    private final String jdbcUrl;
     private final String sqlStatement;
     private final JdbcConverter<T> converter;
     private boolean connectionCreated;
@@ -51,18 +45,44 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
     private ResultSet resultSet;
     private boolean updateQuery = false;
 
+    private JdbcConnectionFactory connectionFactory;
+
     public JdbcSource(String jdbcUrl, JdbcConverter<T> converter, String table, String... cols) {
         this(jdbcUrl, JdbcDataSourceUtil.createSelectStatement(table, cols), converter);
     }
 
-    public JdbcSource(String jdbcUrl, String selectStatement,
-            JdbcConverter<T> converter) {
-        this.jdbcUrl = jdbcUrl;
+    public JdbcSource(final String jdbcUrl, String selectStatement,
+                      JdbcConverter<T> converter) {
+        this(new JdbcConnectionFactory() {
+            @Override
+            public Connection getConnection() throws SQLException {
+                return DriverManager.getConnection(jdbcUrl);
+            }
+        }, selectStatement, converter);
+    }
+
+    public JdbcSource(Connection connection, JdbcConverter<T> converter, String table, String... cols) {
+        this(connection, JdbcDataSourceUtil.createSelectStatement(table, cols), converter);
+    }
+
+    public JdbcSource(final Connection connection, String selectStatement,
+                      JdbcConverter<T> converter) {
+        this(new JdbcConnectionFactory() {
+            @Override
+            public Connection getConnection() throws SQLException {
+                return connection;
+            }
+        }, selectStatement, converter);
+    }
+
+    private JdbcSource(JdbcConnectionFactory connectionFactory, String selectStatement,
+                      JdbcConverter<T> converter) {
+        this.connectionFactory = connectionFactory;
         this.sqlStatement = selectStatement;
         this.converter = converter;
     }
-    
-    public void setUpdateQuery (boolean b) {
+
+    public void setUpdateQuery(boolean b) {
         this.updateQuery = b;
     }
 
@@ -72,7 +92,7 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
         }
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(jdbcUrl);
+            connection = connectionFactory.getConnection();
             Statement query;
             if (updateQuery) {
                 System.out.println("updatequery");
@@ -84,11 +104,10 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
             }
             if (updateQuery) {
                 query.executeUpdate(sqlStatement);
-            }
-            else {
-            resultSet = query.executeQuery(sqlStatement);
-            lastResult = resultSet.next();
-            converter.initialize(resultSet);
+            } else {
+                resultSet = query.executeQuery(sqlStatement);
+                lastResult = resultSet.next();
+                converter.initialize(resultSet);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,10 +115,14 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
         connectionCreated = true;
     }
 
+    private interface JdbcConnectionFactory {
+        Connection getConnection() throws SQLException;
+    }
+
     @Override
     public void writeBack() {
         try {
-            Connection connection = DriverManager.getConnection(jdbcUrl);
+            Connection connection = connectionFactory.getConnection();
             Statement query = connection.createStatement();
             query.executeUpdate(sqlStatement);
         } catch (SQLException ex) {
@@ -116,8 +139,7 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
         }
         if (converter != null) {
             return converter.get();
-        }
-        else {
+        } else {
             return null;
         }
     }
