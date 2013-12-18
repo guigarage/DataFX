@@ -30,103 +30,112 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewFlowContext;
-import org.datafx.controller.flow.action.*;
-import org.datafx.controller.flow.event.AfterFlowActionEvent;
-import org.datafx.controller.flow.event.AfterFlowActionHandler;
-import org.datafx.controller.flow.event.BeforeFlowActionEvent;
-import org.datafx.controller.flow.event.BeforeFlowActionHandler;
+import org.datafx.controller.flow.action.FlowAction;
+import org.datafx.controller.flow.event.*;
 import org.datafx.controller.util.FxmlLoadException;
+import org.datafx.controller.util.Veto;
+import org.datafx.controller.util.VetoException;
+import org.datafx.controller.util.VetoHandler;
 
 public class FlowHandler {
 
-	private FlowView<?> currentView;
-
-	private FlowContainer container;
-
-	private ViewFlowContext flowContext;
-
-	private Flow flow;
-
+    private FlowView<?> currentView;
+    private FlowContainer container;
+    private ViewFlowContext flowContext;
+    private Flow flow;
     private SimpleObjectProperty<BeforeFlowActionHandler> beforeFlowActionHandler;
-
     private SimpleObjectProperty<AfterFlowActionHandler> afterFlowActionHandler;
+    private SimpleObjectProperty<VetoableBeforeFlowActionHandler> vetoableBeforeFlowActionHandler;
 
+    private SimpleObjectProperty<VetoHandler> vetoHandler;
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public FlowHandler(Flow flow, ViewFlowContext flowContext) {
-		this.flowContext = flowContext;
-		this.flow = flow;	
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public FlowHandler(Flow flow, ViewFlowContext flowContext) {
+        this.flowContext = flowContext;
+        this.flow = flow;
+    }
 
-	public void start(FlowContainer container) throws FlowException {
-		this.container = container;
-		flowContext.register(this);
-		try {
-			FlowView<?> startView = new FlowView(ViewFactory.getInstance()
-					.createByControllerInViewFlow(
-							this.flow.getStartViewControllerClass(),
-							flowContext, null, this));
-			setNewView(startView);
-		} catch (FxmlLoadException e) {
-			throw new FlowException(e);
-		}
-	}
-	
-	public void handle(String actionId) throws FlowException {
-		FlowAction action = null;
-		if (currentView != null) {
-			action = currentView.getActionById(actionId);
-		}
-		if (action == null) {
-			action = flow.getGlobalActionById(actionId);
-		}
-		handle(action, actionId);
-	}
+    public void start(FlowContainer container) throws FlowException {
+        this.container = container;
+        flowContext.register(this);
+        try {
+            FlowView<?> startView = new FlowView(ViewFactory.getInstance()
+                    .createByControllerInViewFlow(
+                            this.flow.getStartViewControllerClass(),
+                            flowContext, null, this));
+            setNewView(startView);
+        } catch (FxmlLoadException e) {
+            throw new FlowException(e);
+        }
+    }
 
-	public ViewFlowContext getFlowContext() {
-		return flowContext;
-	}
+    public void handle(String actionId) throws FlowException, VetoException {
+        FlowAction action = null;
+        if (currentView != null) {
+            action = currentView.getActionById(actionId);
+        }
+        if (action == null) {
+            action = flow.getGlobalActionById(actionId);
+        }
+        handle(action, actionId);
+    }
 
-	public FlowView<?> getCurrentView() {
-		return currentView;
-	}
-	
-	public ViewContext<?> getCurrentViewContext() {
-		return currentView.getViewContext();
-	}
-	
-	public void handle(FlowAction action, String actionId) throws FlowException {
-        if(beforeFlowActionHandler != null && beforeFlowActionHandler.getValue() != null) {
+    public ViewFlowContext getFlowContext() {
+        return flowContext;
+    }
+
+    public FlowView<?> getCurrentView() {
+        return currentView;
+    }
+
+    public ViewContext<?> getCurrentViewContext() {
+        return currentView.getViewContext();
+    }
+
+    public void handle(FlowAction action, String actionId) throws FlowException, VetoException {
+        if (beforeFlowActionHandler != null && beforeFlowActionHandler.getValue() != null) {
             beforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContext));
         }
-		action.handle(this, actionId);
-        if(afterFlowActionHandler != null && afterFlowActionHandler.getValue() != null) {
+
+        if (vetoableBeforeFlowActionHandler != null && vetoableBeforeFlowActionHandler.getValue() != null) {
+            try {
+                vetoableBeforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContext));
+            } catch (Veto veto) {
+                if (vetoHandler != null && vetoHandler.getValue() != null) {
+                    vetoHandler.get().onVeto(veto);
+                }
+                throw new VetoException(veto);
+            }
+        }
+
+        action.handle(this, actionId);
+        if (afterFlowActionHandler != null && afterFlowActionHandler.getValue() != null) {
             afterFlowActionHandler.getValue().handle(new AfterFlowActionEvent(actionId, action, flowContext));
         }
-	}
+    }
 
-	public <U> ViewContext<U> setNewView(FlowView<U> newView)
-			throws FlowException {
+    public <U> ViewContext<U> setNewView(FlowView<U> newView)
+            throws FlowException {
 
-		flow.addActionsToView(newView);
+        flow.addActionsToView(newView);
 
-		FlowView<?> oldView = currentView;
+        FlowView<?> oldView = currentView;
 
-		if (oldView != null) {
-			ViewContext<?> lastViewContext = oldView.getViewContext();
-			if (lastViewContext != null) {
-				try {
-					lastViewContext.destroy();
-				} catch (Exception e) {
-					throw new FlowException(
-							"Last ViewContext can't be destroyed!", e);
-				}
-			}
-		}
+        if (oldView != null) {
+            ViewContext<?> lastViewContext = oldView.getViewContext();
+            if (lastViewContext != null) {
+                try {
+                    lastViewContext.destroy();
+                } catch (Exception e) {
+                    throw new FlowException(
+                            "Last ViewContext can't be destroyed!", e);
+                }
+            }
+        }
 
-		currentView = newView;
-		flowContext.setCurrentViewContext(currentView.getViewContext());
-		container.setView(currentView.getViewContext());
-		return newView.getViewContext();
-	}
+        currentView = newView;
+        flowContext.setCurrentViewContext(currentView.getViewContext());
+        container.setView(currentView.getViewContext());
+        return newView.getViewContext();
+    }
 }
