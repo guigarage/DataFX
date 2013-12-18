@@ -29,6 +29,8 @@ package org.datafx.controller.flow.action;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 
+import java.io.Serializable;
+
 public interface FlowAction {
 
     public void handle(FlowHandler flowHandler, String actionId) throws FlowException;

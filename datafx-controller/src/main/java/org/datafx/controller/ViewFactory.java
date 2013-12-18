@@ -50,6 +50,7 @@ import org.datafx.controller.context.ViewFlowContext;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.ViewConfiguration;
 import org.datafx.controller.util.FxmlLoadException;
 
@@ -364,7 +365,10 @@ public class ViewFactory {
 										} catch (FlowException e) {
 											// TODO Auto-generated catch block
 											e.printStackTrace();
-										}
+										} catch (VetoException e) {
+                                            // TODO Auto-generated catch block
+                                            e.printStackTrace();
+                                        }
 									}
 								});
 					}
