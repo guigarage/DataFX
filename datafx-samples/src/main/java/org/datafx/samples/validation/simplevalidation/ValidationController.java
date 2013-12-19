@@ -1,7 +1,5 @@
 package org.datafx.samples.validation.simplevalidation;
 
-import java.util.Set;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,6 +11,8 @@ import javax.validation.ConstraintViolation;
 
 import org.datafx.controller.validation.Validatable;
 import org.datafx.controller.validation.ValidatorFX;
+import org.datafx.controller.validation.event.ValidationFinishedEvent;
+import org.datafx.controller.validation.event.ValidationFinishedHandler;
 
 public class ValidationController {
 
@@ -26,26 +26,29 @@ public class ValidationController {
 	private TextArea descriptionField;
 	
 	@Validatable
-	private ValidateableDataModel model;
+	private ValidateableDataModel model = new ValidateableDataModel();
+	
+	private ValidatorFX<ValidationController> validator = new ValidatorFX<>(this);
 	
 	public void initialize() {
-		model = new ValidateableDataModel();
-		
 		nameField.textProperty().bindBidirectional(model.nameProperty());
 		descriptionField.textProperty().bindBidirectional(model.descriptionProperty());
+		
+		validator.setOnValidationFinished(new ValidationFinishedHandler() {
+			
+			@Override
+			public void handle(ValidationFinishedEvent event) {
+				for(ConstraintViolation<Object> violiation : event.getViolations()) {
+					System.out.println(violiation.getMessage());
+				}
+			}
+		});
 		
 		validateButton.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent arg0) {
-				ValidatorFX<ValidationController> validator = new ValidatorFX<>(ValidationController.this);
-				Set<ConstraintViolation<Object>> violations = validator.validateAllProperties();
-				if(violations != null && !violations.isEmpty()) {
-					System.out.println("Violation Error!");
-					for(ConstraintViolation<Object> violiation : violations) {
-						System.out.println(violiation.getMessage());
-					}
-				}
+				validator.validateAllProperties();
 			}
 		});
 	}

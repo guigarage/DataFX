@@ -9,13 +9,16 @@ public class ViolationVeto extends Veto {
 
 	private static final long serialVersionUID = 1L;
 
-	Set<ConstraintViolation<Object>> violations;
+	@SuppressWarnings("rawtypes")
+	Set<ConstraintViolation> violations;
 
-    public ViolationVeto(Set<ConstraintViolation<Object>> violations) {
+    @SuppressWarnings("rawtypes")
+	public ViolationVeto(Set<ConstraintViolation> violations) {
         this.violations = violations;
     }
 
-    public Set<ConstraintViolation<Object>> getViolations() {
+    @SuppressWarnings("rawtypes")
+	public Set<ConstraintViolation> getViolations() {
         return violations;
     }
 }

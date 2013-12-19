@@ -26,10 +26,11 @@ public class DefaultValidationListener<U> implements VetoableBeforeFlowActionHan
         return validator;
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public void handle(BeforeFlowActionEvent event) throws ViolationVeto {
         if (validateOnAction(event)) {
-            Set<ConstraintViolation<Object>> violations = validator.validateAllProperties(groups);
+            Set<ConstraintViolation> violations = validator.validateAllProperties(groups);
             if (violations != null && !violations.isEmpty()) {
                 if (vetoOnViolations(event, violations)) {
                     throw new ViolationVeto(violations);
@@ -42,7 +43,8 @@ public class DefaultValidationListener<U> implements VetoableBeforeFlowActionHan
         return true;
     }
 
-    protected boolean vetoOnViolations(BeforeFlowActionEvent event, Set<ConstraintViolation<Object>> violations) {
+    @SuppressWarnings("rawtypes")
+	protected boolean vetoOnViolations(BeforeFlowActionEvent event, Set<ConstraintViolation> violations) {
         return true;
     }
 }
