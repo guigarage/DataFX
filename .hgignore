@@ -27,3 +27,6 @@ datafx-core/datafx-core.iml
 datafx-parent.iml
 datafx-samples/datafx-samples.iml
 datafx-websocket/datafx-websocket.iml
+.project
+.classpath
+.settings
