@@ -6,7 +6,13 @@
 
     <constraint-definition annotation="javax.validation.constraints.NotNull">
         <validated-by include-existing-validators="true">
-            <value>org.datafx.controller.validation.NotNullObservableValueValidator</value>
+            <value>org.datafx.controller.validation.extensions.NotNullObservableValueValidator</value>
+        </validated-by>
+    </constraint-definition>
+    
+    <constraint-definition annotation="javax.validation.constraints.Null">
+        <validated-by include-existing-validators="true">
+            <value>org.datafx.controller.validation.extensions.NullObservableValueValidator</value>
         </validated-by>
     </constraint-definition>
 </constraint-mappings>

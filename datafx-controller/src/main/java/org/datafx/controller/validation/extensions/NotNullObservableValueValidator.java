@@ -6,13 +6,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotNull;
 
-public class NotNullObservableValueValidator implements ConstraintValidator<NotNull, ObservableValue<Object>> {
+@SuppressWarnings("rawtypes")
+public class NotNullObservableValueValidator implements ConstraintValidator<NotNull, ObservableValue> {
 
 	@Override
 	public void initialize(NotNull constraintAnnotation) {}
 
 	@Override
-	public boolean isValid(ObservableValue<Object> value,
+	public boolean isValid(ObservableValue value,
 			ConstraintValidatorContext context) {
 		if(value == null) {
 			return false;

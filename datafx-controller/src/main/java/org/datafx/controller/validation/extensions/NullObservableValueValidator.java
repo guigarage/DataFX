@@ -6,13 +6,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.Null;
 
-public class NullObservableValueValidator implements ConstraintValidator<Null, ObservableValue<Object>> {
+@SuppressWarnings("rawtypes")
+public class NullObservableValueValidator implements ConstraintValidator<Null, ObservableValue> {
 
 	@Override
 	public void initialize(Null constraintAnnotation) {}
 
 	@Override
-	public boolean isValid(ObservableValue<Object> value,
+	public boolean isValid(ObservableValue value,
 			ConstraintValidatorContext context) {
 		if(value == null) {
 			return true;

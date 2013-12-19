@@ -1,15 +1,17 @@
 package org.datafx.samples.validation.simplevalidation;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class ValidateableDataModel {
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
+public class ValidateableDataModel {
+	
+	@NotNull
 	private StringProperty name;
 	
+	@Null
 	private StringProperty description;
 
 	public StringProperty nameProperty() {
@@ -23,8 +25,6 @@ public class ValidateableDataModel {
 		nameProperty().set(name);
 	}
 
-	@NotNull
-	@Size(min=4, max=12)
 	public String getName() {
 		return nameProperty().get();
 	}
@@ -40,7 +40,6 @@ public class ValidateableDataModel {
 		descriptionProperty().set(description);
 	}
 	
-	@Size(max=256)
 	public String getDescription() {
 		return descriptionProperty().get();
 	}
