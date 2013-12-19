@@ -11,6 +11,7 @@ import javax.validation.Configuration;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.groups.Default;
 
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
@@ -44,7 +45,7 @@ public class ValidatorFX<U> {
         Set<ConstraintViolation> allViolations = FXCollections.observableSet();
         Field[] fields = controller.getClass().getDeclaredFields();
         for (final Field field : fields) {
-            if (field.isAnnotationPresent(Validatable.class)) {
+            if (isValidatableAndGroupMatching(field, groups)) {
                 Object content = ViewFactory.getPrivileged(field, controller);
                 Set<ConstraintViolation<Object>> violations = validate(content, groups);
                 allViolations.addAll(violations);
@@ -61,6 +62,16 @@ public class ValidatorFX<U> {
         return allViolations;
     }
 
+    private boolean isValidatableAndGroupMatching(Field field, Class<?>... groups) {
+    	Validatable validatable = field.getAnnotation(Validatable.class);
+    	 if (validatable == null) {
+    		 return false;
+    	 } else {
+    		 return true;
+    	 }
+    	 //TODO: Check groups, use Default.class
+    }
+    
     private <T> Set<ConstraintViolation<T>> validate(T property, Class<?>... groups) {
         return validator.validate(property, groups);
     }

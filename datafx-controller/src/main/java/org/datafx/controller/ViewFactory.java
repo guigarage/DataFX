@@ -47,6 +47,7 @@ import org.datafx.controller.context.FXMLViewContext;
 import org.datafx.controller.context.FXMLViewFlowContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.context.resource.AnnotatedResourceManager;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.FXMLFlowAction;
@@ -467,6 +468,7 @@ public class ViewFactory {
 				}
 			}
 		}
+		AnnotatedResourceManager.getInstance().create(context);
 	}
 
 //	public static ViewContext startFlowInContainer(FlowView view,

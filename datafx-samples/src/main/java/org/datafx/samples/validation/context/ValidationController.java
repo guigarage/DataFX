@@ -1,4 +1,4 @@
-package org.datafx.samples.validation.simplevalidation;
+package org.datafx.samples.validation.context;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -7,16 +7,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 
+import org.datafx.controller.FXMLController;
 import org.datafx.controller.validation.Validatable;
 import org.datafx.controller.validation.ValidatorFX;
+import org.datafx.controller.validation.context.Validator;
 import org.datafx.controller.validation.event.ValidationFinishedEvent;
 import org.datafx.controller.validation.event.ValidationFinishedHandler;
 import org.datafx.samples.validation.ValidateableDataModel;
 
+@FXMLController("view.fxml")
 public class ValidationController {
-
+	
 	@FXML
 	private Button validateButton;
 	
@@ -26,12 +30,14 @@ public class ValidationController {
 	@FXML
 	private TextArea descriptionField;
 	
-	@Validatable
+	@Validatable()
 	private ValidateableDataModel model = new ValidateableDataModel();
 	
-	private ValidatorFX<ValidationController> validator = new ValidatorFX<>(this);
+	@Validator
+	private ValidatorFX<ValidationController> validator;
 	
-	public void initialize() {
+	@PostConstruct
+	public void init() {
 		nameField.textProperty().bindBidirectional(model.nameProperty());
 		descriptionField.textProperty().bindBidirectional(model.descriptionProperty());
 		

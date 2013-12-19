@@ -1,4 +1,4 @@
-package org.datafx.samples.validation.simplevalidation;
+package org.datafx.samples.validation;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
