@@ -6,19 +6,21 @@ import org.datafx.controller.flow.event.AfterFlowActionEvent;
 
 import javax.validation.ConstraintViolation;
 
-public class ValidationViolationEvent extends Event {
+public class ValidationViolationEvent<T> extends Event {
 
-    public static final EventType<AfterFlowActionEvent> DEFAULT_EVENT_TYPE =
+	private static final long serialVersionUID = 1L;
+
+	public static final EventType<AfterFlowActionEvent> DEFAULT_EVENT_TYPE =
             new EventType<>("ValidationViolationEvent");
 
-    private ConstraintViolation violation;
+    private ConstraintViolation<T> violation;
 
-    public ValidationViolationEvent(ConstraintViolation violation) {
+    public ValidationViolationEvent(ConstraintViolation<T> violation) {
         super(DEFAULT_EVENT_TYPE);
         this.violation = violation;
     }
 
-    public ConstraintViolation getViolation() {
+    public ConstraintViolation<T> getViolation() {
         return violation;
     }
 }

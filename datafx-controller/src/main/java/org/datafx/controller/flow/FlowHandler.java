@@ -49,13 +49,13 @@ public class FlowHandler {
 
     private SimpleObjectProperty<VetoHandler> vetoHandler;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this.flowContext = flowContext;
         this.flow = flow;
     }
 
-    public void start(FlowContainer container) throws FlowException {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public void start(FlowContainer container) throws FlowException {
         this.container = container;
         flowContext.register(this);
         try {

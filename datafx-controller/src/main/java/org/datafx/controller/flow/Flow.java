@@ -35,7 +35,6 @@ public class Flow {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Flow withGlobalRunAction(String actionId,
 			Class<? extends Runnable> actionClass) {
 		addGlobalAction(actionId, new FlowTaskAction(actionClass));
@@ -60,7 +59,6 @@ public class Flow {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Flow withTaskAction(Class<?> controllerClass, String actionId,
 			Class<? extends Runnable> actionClass) {
 		addActionToView(controllerClass, actionId, new FlowTaskAction(

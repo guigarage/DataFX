@@ -7,7 +7,10 @@ import org.datafx.controller.flow.action.FlowAction;
 
 public class BeforeFlowActionEvent extends Event {
 
-    public static final EventType<AfterFlowActionEvent> DEFAULT_EVENT_TYPE =
+	private static final long serialVersionUID = 1L;
+
+
+	public static final EventType<AfterFlowActionEvent> DEFAULT_EVENT_TYPE =
             new EventType<>("BeforeFlowActionEvent");
 
 

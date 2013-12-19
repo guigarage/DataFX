@@ -7,7 +7,9 @@ import java.util.Set;
 
 public class ViolationVeto extends Veto {
 
-    Set<ConstraintViolation<Object>> violations;
+	private static final long serialVersionUID = 1L;
+
+	Set<ConstraintViolation<Object>> violations;
 
     public ViolationVeto(Set<ConstraintViolation<Object>> violations) {
         this.violations = violations;

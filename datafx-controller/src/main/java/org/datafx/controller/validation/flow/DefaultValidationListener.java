@@ -10,11 +10,11 @@ import java.util.Set;
 
 public class DefaultValidationListener<U> implements VetoableBeforeFlowActionHandler {
 
-    private ValidatorFX validator;
+    private ValidatorFX<U> validator;
     private Class<?>[] groups;
 
     public DefaultValidationListener(ViewContext<U> context, Class<?>... groups) {
-        this(new ValidatorFX(context), groups);
+        this(new ValidatorFX<>(context), groups);
     }
 
     public DefaultValidationListener(ValidatorFX<U> validator, Class<?>... groups) {
@@ -22,7 +22,7 @@ public class DefaultValidationListener<U> implements VetoableBeforeFlowActionHan
         this.groups = groups;
     }
 
-    public ValidatorFX getValidator() {
+    public ValidatorFX<U> getValidator() {
         return validator;
     }
 

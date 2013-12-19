@@ -2,7 +2,9 @@ package org.datafx.controller.util;
 
 public class VetoException extends Exception {
 
-    private Veto veto;
+	private static final long serialVersionUID = 1L;
+
+	private Veto veto;
 
     public VetoException(Veto veto) {
         this.veto = veto;
