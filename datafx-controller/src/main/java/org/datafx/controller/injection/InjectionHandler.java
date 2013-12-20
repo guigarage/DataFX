@@ -28,33 +28,33 @@ public class InjectionHandler<U> {
         this.viewContext = viewContext;
     }
 
-    private <T> void registerNewInstance(final Class<T> propertyClass, final AbstractContext context) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
+    private <T> T registerNewInstance(final Class<T> propertyClass, final AbstractContext context) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         T instance = propertyClass.newInstance();
         context.register(instance);
         injectAllSupportedFields(instance);
+        return instance;
     }
 
     public <T> T createProxy(final Class<T> propertyClass) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         final AbstractContext context = getContextForClass(propertyClass);
-        if (context.getRegisteredObject(propertyClass) == null) {
-            registerNewInstance(propertyClass, context);
+        T  registeredObject = context.getRegisteredObject(propertyClass);
+        if (registeredObject == null) {
+            registeredObject = registerNewInstance(propertyClass, context);
         }
+
+        final T innerObject =  registeredObject;
 
         ProxyFactory factory = new ProxyFactory();
         factory.setSuperclass(propertyClass);
-        factory.setFilter(
-                new MethodFilter() {
-                    @Override
-                    public boolean isHandled(Method method) {
-                        return true;
-                    }
-                }
-        );
+
 
         MethodHandler handler = new MethodHandler() {
             @Override
             public Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
-                T innerObject = context.getRegisteredObject(propertyClass);
+                AbstractContext context = getContextForClass(propertyClass);
+                if (context.getRegisteredObject(propertyClass) == null) {
+                    registerNewInstance(propertyClass, context);
+                }
                 return thisMethod.invoke(innerObject, args);
             }
         };

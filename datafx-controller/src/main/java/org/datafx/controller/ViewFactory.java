@@ -385,31 +385,4 @@ public class ViewFactory {
 		return false;
 	}
 
-//	public static ViewContext startFlowInContainer(FlowView view,
-//			final FlowContainer container, ViewFlowContext flowContext)
-//			throws FlowException {
-//		FlowHandler handler = new FlowHandler(view, container, flowContext);
-//		
-//	}
-//
-//	public static ViewContext startFlowInPane(FlowView view,
-//			final Pane pane, ViewFlowContext flowContext)
-//			throws FlowException {
-//		FlowContainer container = new FlowContainer() {
-//
-//			@Override
-//			public void setView(ViewContext context) {
-//				pane.getChildren().clear();
-//				pane.getChildren().add(context.getRootNode());
-//			}
-//
-//		};
-//		return startFlowInContainer(view, container, flowContext);
-//	}
-//
-//	public static ViewContext startFlowInPane(FlowView view, final Pane pane)
-//			throws FlowException {
-//		return startFlowInPane(view, pane, new ViewFlowContext());
-//	}
-
 }
