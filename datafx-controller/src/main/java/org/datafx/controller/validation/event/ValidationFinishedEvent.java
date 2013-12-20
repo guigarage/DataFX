@@ -9,7 +9,7 @@ import javax.validation.ConstraintViolation;
 
 import org.datafx.controller.flow.event.AfterFlowActionEvent;
 
-public class ValidationFinishedEvent extends Event {
+public class ValidationFinishedEvent<U> extends Event {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,16 +17,16 @@ public class ValidationFinishedEvent extends Event {
             new EventType<>("ValidationViolationEvent");
 
     @SuppressWarnings("rawtypes")
-	private Set<ConstraintViolation> violations;
+	private Set<ConstraintViolation<U>> violations;
 
     @SuppressWarnings("rawtypes")
-	public ValidationFinishedEvent(Set<ConstraintViolation> violations) {
+	public ValidationFinishedEvent(Set<ConstraintViolation<U>> violations) {
         super(DEFAULT_EVENT_TYPE);
         this.violations = violations;
     }
 
     @SuppressWarnings("rawtypes")
-	public Set<ConstraintViolation> getViolations() {
+	public Set<ConstraintViolation<U>> getViolations() {
 		return violations;
 	}
 }

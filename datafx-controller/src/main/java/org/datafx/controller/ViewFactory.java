@@ -378,7 +378,7 @@ public class ViewFactory {
 		}
 	}
 
-	private void setPrivileged(final Field field, final Object bean,
+    public static void setPrivileged(final Field field, final Object bean,
 			final Object value) {
 		AccessController.doPrivileged(new PrivilegedAction<Void>() {
 			@Override
@@ -435,7 +435,7 @@ public class ViewFactory {
 		return instance;
 	}
 
-	private void injectContexts(final Object bean, final ViewContext context) {
+	public void injectContexts(final Object bean, final ViewContext context) {
 		Class<? extends Object> cls = bean.getClass();
 		Field[] fields = cls.getDeclaredFields();
 		for (final Field field : fields) {

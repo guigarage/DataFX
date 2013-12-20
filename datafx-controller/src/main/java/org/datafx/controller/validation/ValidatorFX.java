@@ -69,6 +69,9 @@ public class ValidatorFX<U> {
     	 } else {
     		 return true;
     	 }
+
+        if(groups == null || )
+
     	 //TODO: Check groups, use Default.class
     }
     

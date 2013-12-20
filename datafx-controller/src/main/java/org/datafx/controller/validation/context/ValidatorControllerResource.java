@@ -10,7 +10,8 @@ public class ValidatorControllerResource implements AnnotatedControllerResourceT
 	@SuppressWarnings("unchecked")
 	@Override
 	public ValidatorFX create(Validator annotation, ViewContext<?> context) {
-		return new ValidatorFX(context);
+        ValidatorFX validator =  new ValidatorFX(context);
+		return validator;
 	}
 
 	@Override

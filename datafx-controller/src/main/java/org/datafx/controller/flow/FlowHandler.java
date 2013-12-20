@@ -93,6 +93,7 @@ public class FlowHandler {
     }
 
     public void handle(FlowAction action, String actionId) throws FlowException, VetoException {
+
         if (beforeFlowActionHandler != null && beforeFlowActionHandler.getValue() != null) {
             beforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContext));
         }

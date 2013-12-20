@@ -9,9 +9,9 @@ import javafx.scene.control.TextField;
 
 import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.validation.Validatable;
 import org.datafx.controller.validation.ValidatorFX;
 import org.datafx.controller.validation.context.Validator;
 import org.datafx.controller.validation.event.ValidationFinishedEvent;
@@ -30,7 +30,7 @@ public class ValidationController {
 	@FXML
 	private TextArea descriptionField;
 	
-	@Validatable()
+	@Valid
 	private ValidateableDataModel model = new ValidateableDataModel();
 	
 	@Validator
@@ -41,12 +41,12 @@ public class ValidationController {
 		nameField.textProperty().bindBidirectional(model.nameProperty());
 		descriptionField.textProperty().bindBidirectional(model.descriptionProperty());
 		
-		validator.setOnValidationFinished(new ValidationFinishedHandler() {
+		validator.setOnValidationFinished(new ValidationFinishedHandler<ValidationController>() {
 			
 			@Override
-			public void handle(ValidationFinishedEvent event) {
-				for(ConstraintViolation<Object> violiation : event.getViolations()) {
-					System.out.println(violiation.getMessage());
+			public void handle(ValidationFinishedEvent<ValidationController> event) {
+				for(ConstraintViolation<ValidationController> violation : event.getViolations()) {
+					System.out.println(violation.getMessage());
 				}
 			}
 		});
