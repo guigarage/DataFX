@@ -3,7 +3,7 @@ package org.datafx.controller.flow;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.action.FlowTaskAction;

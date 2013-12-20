@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 
 
@@ -58,6 +58,6 @@ public class FlowView<T> {
     }
     
     public ViewFlowContext getViewFlowContext() {
-        return getViewContext().getViewFlowContext();
+        return getViewContext().getRegisteredObject(ViewFlowContext.class);
     }
 }

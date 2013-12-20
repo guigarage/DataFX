@@ -2,7 +2,7 @@ package org.datafx.controller.flow.event;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 
 public class AfterFlowActionEvent extends Event {

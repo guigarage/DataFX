@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.context;
+package org.datafx.controller.flow.context;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

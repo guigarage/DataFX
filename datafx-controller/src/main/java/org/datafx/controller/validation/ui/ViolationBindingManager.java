@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import org.datafx.controller.ViewFactory;
+import org.datafx.controller.util.PrivilegedReflection;
 import org.datafx.controller.validation.event.ValidationFinishedEvent;
 import org.datafx.controller.validation.event.ValidationFinishedHandler;
 
@@ -24,7 +25,7 @@ public class ViolationBindingManager<U> implements ValidationFinishedHandler<U> 
         for (final Field field : fields) {
             if (field.isAnnotationPresent(ViolationBinding.class)) {
                 ViolationBinding violationBinding = field.getAnnotation(ViolationBinding.class);
-                Object value = ViewFactory.getPrivileged(field, controller);
+                Object value = PrivilegedReflection.getPrivileged(field, controller);
                 ViolationMapper mapper = createMapper(value, violationBinding.path(), violationBinding.useSubPaths());
                 if(mapper != null) {
                     bindings.add(mapper);

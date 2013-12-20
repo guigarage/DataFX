@@ -29,7 +29,8 @@ package org.datafx.controller.flow;
 import javafx.beans.property.SimpleObjectProperty;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.FlowActionHandler;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.event.*;
 import org.datafx.controller.util.FxmlLoadException;
@@ -52,6 +53,7 @@ public class FlowHandler {
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this.flowContext = flowContext;
         this.flow = flow;
+        flowContext.register(new FlowActionHandler(this));
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

@@ -1,1 +1,5 @@
 org.datafx.controller.validation.context.ValidatorControllerResource
+org.datafx.controller.context.resource.ApplicationContextResourceType
+org.datafx.controller.context.resource.ViewContextResourceType
+org.datafx.controller.flow.context.ViewFlowContextResourceType
+org.datafx.controller.flow.context.ActionHandlerResourceType
