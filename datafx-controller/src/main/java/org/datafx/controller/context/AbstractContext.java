@@ -63,10 +63,10 @@ public class AbstractContext {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getRegisteredObject(Class<T> cls) {
-		return (T) registeredObjects.get(cls.toString());
+		return (T) getRegisteredObject(cls.toString());
 	}
 
 	public void register(Object value) {
-		registeredObjects.put(value.getClass().toString(), value);
+        register(value.getClass().toString(), value);
 	}
 }

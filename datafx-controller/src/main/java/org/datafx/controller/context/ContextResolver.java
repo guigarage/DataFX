@@ -45,7 +45,7 @@ public class ContextResolver<U> {
                             //TODO: Custom Exception
                             throw new RuntimeException("TODO: double injection of field");
                         }
-                        PrivilegedReflection.setPrivileged(field, object, currentResourceType.getResource(field.getAnnotation(currentResourceType.getSupportedAnnotation()), context));
+                        PrivilegedReflection.setPrivileged(field, object, currentResourceType.getResource(field.getAnnotation(currentResourceType.getSupportedAnnotation()), field.getType(), context));
                         injected = true;
                     }
                 }

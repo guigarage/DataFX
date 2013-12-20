@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.FXMLViewContext;
@@ -28,10 +29,13 @@ public class DetailViewController {
     @FXML
     @FXMLFlowAction("back")
     private Button backButton;
-        
+
+    @Inject
+    private DataModel model;
+
     @PostConstruct
     public void init() {
-    	DataModel model = context.getRegisteredObject(DataModel.class);
+    	//DataModel model = context.getRegisteredObject(DataModel.class);
     	myTextfield.textProperty().bindBidirectional(model.getSelected());
     }
     

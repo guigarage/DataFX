@@ -8,7 +8,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 public class ViewFlowContextResourceType implements AnnotatedControllerResourceType<FXMLViewFlowContext, ViewFlowContext> {
 
     @Override
-    public ViewFlowContext getResource(FXMLViewFlowContext annotation, ViewContext<?> context) {
+    public ViewFlowContext getResource(FXMLViewFlowContext annotation, Class<ViewFlowContext> cls, ViewContext<?> context) {
         return context.getRegisteredObject(ViewFlowContext.class);
     }
 

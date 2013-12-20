@@ -6,7 +6,7 @@ import org.datafx.controller.context.ViewContext;
 public class ViewContextResourceType implements AnnotatedControllerResourceType<FXMLViewContext, ViewContext>{
 
     @Override
-    public ViewContext getResource(FXMLViewContext annotation, ViewContext<?> context) {
+    public ViewContext getResource(FXMLViewContext annotation, Class<ViewContext> cls, ViewContext<?> context) {
         return context;
     }
 

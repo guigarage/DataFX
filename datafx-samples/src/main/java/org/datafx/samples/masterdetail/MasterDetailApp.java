@@ -17,9 +17,6 @@ public class MasterDetailApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		ViewFlowContext flowContext = new ViewFlowContext();
-		flowContext.register(new DataModel());
-
 		StackPane pane = new StackPane();
 		
 		DefaultFlowContainer flowContainer = new DefaultFlowContainer(pane);
@@ -32,7 +29,7 @@ public class MasterDetailApp extends Application {
 				.withTaskAction(MasterViewController.class, "delete",
 						DeleteAction.class);
 
-		flow.createHandler(flowContext).start(flowContainer);
+		flow.createHandler().start(flowContainer);
 		
 		Scene myScene = new Scene(pane);
 
