@@ -12,7 +12,7 @@ public class FlowActionHandler {
                  this.handler = handler;
     }
 
-    public void handle(String actionId) throws FlowException, VetoException {
+    public void handle(String actionId) {
         this.handler.handle(actionId);
     }
 }

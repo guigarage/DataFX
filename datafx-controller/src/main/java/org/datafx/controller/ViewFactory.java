@@ -355,15 +355,8 @@ public class ViewFactory {
 
 									@Override
 									public void handle(ActionEvent event) {
-										try {
 											flowHandler.handle(action.value());
-										} catch (FlowException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										} catch (VetoException e) {
-                                            // TODO Auto-generated catch block
-                                            e.printStackTrace();
-                                        }
+
 									}
 								});
 					}

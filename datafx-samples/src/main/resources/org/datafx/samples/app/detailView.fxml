@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="313.0" prefWidth="361.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <bottom>
+    <HBox alignment="CENTER_RIGHT" prefHeight="-1.0" prefWidth="-1.0">
+      <children>
+        <Button fx:id="saveButton" mnemonicParsing="false" text="save" />
+      </children>
+      <padding>
+        <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" fx:id="x1" />
+      </padding>
+      <BorderPane.margin>
+        <Insets />
+      </BorderPane.margin>
+    </HBox>
+  </bottom>
+  <center>
+    <GridPane hgap="6.0" vgap="6.0" BorderPane.margin="$x1">
+      <children>
+        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="nameField" prefWidth="-1.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="BASELINE" />
+        <TextArea fx:id="notesTextArea" prefWidth="-1.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      </children>
+      <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="-1.0" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+      </rowConstraints>
+    </GridPane>
+  </center>
+  <top>
+    <Label fx:id="violationLabel" text="Violation" textFill="RED" visible="false" BorderPane.margin="$x1">
+      <font>
+        <Font name="System Bold" size="16.0" />
+      </font>
+    </Label>
+  </top>
+</BorderPane>

@@ -37,8 +37,16 @@ public class DefaultFlowContainer implements FlowContainer {
 	public DefaultFlowContainer(StackPane pane) {
 		this.pane = pane;
 	}
-	
-	@Override
+
+    public DefaultFlowContainer() {
+        this(new StackPane());
+    }
+
+    public StackPane getPane() {
+        return pane;
+    }
+
+    @Override
 	public <T> void setView(ViewContext<T> context) {
 		pane.getChildren().clear();
 		pane.getChildren().add(context.getRootNode());

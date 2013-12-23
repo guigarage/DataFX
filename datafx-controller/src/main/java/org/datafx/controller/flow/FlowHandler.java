@@ -71,7 +71,8 @@ public class FlowHandler {
         }
     }
 
-    public void handle(String actionId) throws FlowException, VetoException {
+    public void handle(String actionId) {
+        try {
         FlowAction action = null;
         if (currentView != null) {
             action = currentView.getActionById(actionId);
@@ -80,6 +81,10 @@ public class FlowHandler {
             action = flow.getGlobalActionById(actionId);
         }
         handle(action, actionId);
+        } catch (Exception e) {
+            //TODO: ExceptionHandler
+            e.printStackTrace();
+        }
     }
 
     public ViewFlowContext getFlowContext() {

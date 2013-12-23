@@ -51,13 +51,7 @@ public class MasterViewController {
             @Override
             public void handle(MouseEvent event) {
                if(event.getClickCount() >= 2) {
-                   try {
                        actionHandler.handle("showDetails");
-                   } catch (FlowException e) {
-                       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                   } catch (VetoException e) {
-                       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                   }
                }
             }
         });
