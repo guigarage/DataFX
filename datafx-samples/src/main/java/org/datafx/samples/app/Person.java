@@ -12,6 +12,14 @@ public class Person {
 
     private StringProperty notes;
 
+    public Person() {
+    }
+    
+    public Person (String name, String notes) {
+        setName(name);
+        setNotes(notes);
+    }
+    
     public String getName() {
         return nameProperty().get();
     }
@@ -23,7 +31,7 @@ public class Person {
         return name;
     }
 
-    public void setName(String name) {
+    public final void setName(String name) {
         this.nameProperty().set(name);
     }
 
@@ -38,7 +46,7 @@ public class Person {
         return notes;
     }
 
-    public void setNotes(String notes) {
+    public final void setNotes(String notes) {
         this.notesProperty().set(notes);
     }
 
