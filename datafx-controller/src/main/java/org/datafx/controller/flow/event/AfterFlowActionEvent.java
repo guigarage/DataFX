@@ -28,12 +28,14 @@ package org.datafx.controller.flow.event;
 
 import javafx.event.Event;
 import javafx.event.EventType;
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 
 public class AfterFlowActionEvent extends Event {
 
-    public static final EventType<AfterFlowActionEvent> DEFAULT_EVENT_TYPE =
+	private static final long serialVersionUID = 1L;
+
+	public static final EventType<AfterFlowActionEvent> DEFAULT_EVENT_TYPE =
             new EventType<>("AfterFlowActionEvent");
 
 

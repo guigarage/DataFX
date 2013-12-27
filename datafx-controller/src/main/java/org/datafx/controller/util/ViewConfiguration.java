@@ -26,13 +26,12 @@
  */
 package org.datafx.controller.util;
 
+import java.nio.charset.Charset;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.util.BuilderFactory;
-
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ResourceBundle;
 
 public class ViewConfiguration {
 

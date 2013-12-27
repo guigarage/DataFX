@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javafx.scene.Node;
+import org.datafx.controller.flow.context.ViewFlowContext;
 
 import javax.annotation.PreDestroy;
 
@@ -91,14 +92,14 @@ import javax.annotation.PreDestroy;
  */
 public class ViewContext<U> extends AbstractContext {
 
-	private ViewFlowContext viewFlowContext;
-
 	private Node rootNode;
 
 	private U controller;
 
+    private ContextResolver<U> resolver;
+
 	/**
-	 * Create a new ViewCOntext for a (view-){@link #Node} and a controller.
+	 * Create a new ViewContext for a (view-){@link #Node} and a controller.
 	 * Normally this constructor is used by the {@link #ViewFactory} and should
 	 * not be used in application code.
 	 * 
@@ -107,29 +108,23 @@ public class ViewContext<U> extends AbstractContext {
 	 * @param controller
 	 *            the controller
 	 */
-	public ViewContext(Node rootNode, U controller) {
-		this(rootNode, new ViewFlowContext(), controller);
+	public ViewContext(Node rootNode, U controller, Object... resources) {
+		this.rootNode = rootNode;
+        this.controller = controller;
+
+        if(resources != null) {
+            for(Object resource : resources) {
+                register(resource);
+            }
+        }
 	}
 
-	/**
-	 * Create a new ViewCOntext for a (view-){@link #Node} and a controller. The
-	 * used will be added to the given {@link #ViewFlowContext} Normally this
-	 * constructor is used by the {@link #ViewFactory} and should not be used in
-	 * application code.
-	 * 
-	 * @param rootNode
-	 *            the (view-)node
-	 * @param viewFlowContext
-	 *            the flow context
-	 * @param controller
-	 *            the controller
-	 */
-	public ViewContext(Node rootNode, ViewFlowContext viewFlowContext,
-			U controller) {
-		this.viewFlowContext = viewFlowContext;
-		this.rootNode = rootNode;
-		this.controller = controller;
-	}
+    public ContextResolver<U> getResolver() {
+        if(resolver == null) {
+            resolver = new ContextResolver<U>(this);
+        }
+        return resolver;
+    }
 
 	/**
 	 * Returns the controller of the MVC view that is wrapped by this context.
@@ -148,15 +143,6 @@ public class ViewContext<U> extends AbstractContext {
 	 */
 	public Node getRootNode() {
 		return rootNode;
-	}
-
-	/**
-	 * Returns the parent flow context.
-	 * 
-	 * @return the flow context
-	 */
-	public ViewFlowContext getViewFlowContext() {
-		return viewFlowContext;
 	}
 
 	/**

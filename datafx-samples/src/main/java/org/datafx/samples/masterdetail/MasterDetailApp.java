@@ -31,11 +31,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import org.datafx.controller.ViewFactory;
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
-import org.datafx.controller.flow.FlowView;
 import org.datafx.samples.masterdetail.action.DeleteAction;
 import org.datafx.samples.masterdetail.controller.DetailViewController;
 import org.datafx.samples.masterdetail.controller.MasterViewController;
@@ -45,9 +43,6 @@ public class MasterDetailApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		ViewFlowContext flowContext = new ViewFlowContext();
-		flowContext.register(new DataModel());
-
 		StackPane pane = new StackPane();
 		
 		DefaultFlowContainer flowContainer = new DefaultFlowContainer(pane);
@@ -60,7 +55,7 @@ public class MasterDetailApp extends Application {
 				.withTaskAction(MasterViewController.class, "delete",
 						DeleteAction.class);
 
-		flow.createHandler(flowContext).start(flowContainer);
+		flow.createHandler().start(flowContainer);
 		
 		Scene myScene = new Scene(pane);
 

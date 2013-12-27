@@ -29,8 +29,6 @@ package org.datafx.controller;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,15 +39,13 @@ import javafx.util.Callback;
 
 import javax.annotation.PostConstruct;
 
-import org.datafx.controller.context.ApplicationContext;
-import org.datafx.controller.context.FXMLApplicationContext;
-import org.datafx.controller.context.FXMLViewContext;
-import org.datafx.controller.context.FXMLViewFlowContext;
 import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.context.ViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.util.PrivilegedReflection;
+import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.ViewConfiguration;
 import org.datafx.controller.util.FxmlLoadException;
 
@@ -236,11 +232,11 @@ public class ViewFactory {
             // 2. load the FXML and make sure the @FXML annotations are injected
             Node viewNode = (Node) createLoader(controller, fxmlName, viewConfiguration).load();
             ViewContext<T> context = new ViewContext<>(viewNode,
-                    viewFlowContext, controller);
+                     controller, viewFlowContext);
             context.register(controller);
             // 3. Resolve the @Inject points in the Controller and call
             // @PostConstruct
-            injectContexts(controller, context);
+            context.getResolver().injectResources(controller);
 
             if (flowHandler != null) {
                 injectFlow(controller, flowHandler);
@@ -278,7 +274,7 @@ public class ViewFactory {
 
 			// 3. Resolve the @Inject points in the Controller and call
 			// @PostConstruct
-			injectContexts(controller, context);
+            context.getResolver().injectResources(controller);
 
 			// TODO: We need to register the sub-controller in the context cause
 			// it can have a PreDestroy....
@@ -351,7 +347,7 @@ public class ViewFactory {
 		for (final Field field : fields) {
 			if (field.isAnnotationPresent(FXMLFlowAction.class)) {
 				final FXMLFlowAction action = field.getAnnotation(FXMLFlowAction.class);
-				Object content = getPrivileged(field, controller);
+				Object content = PrivilegedReflection.getPrivileged(field, controller);
 				if (content != null) {
 					if (content instanceof Button) {
 						((Button) content)
@@ -359,12 +355,8 @@ public class ViewFactory {
 
 									@Override
 									public void handle(ActionEvent event) {
-										try {
 											flowHandler.handle(action.value());
-										} catch (FlowException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
+
 									}
 								});
 					}
@@ -373,43 +365,6 @@ public class ViewFactory {
 		}
 	}
 
-	private void setPrivileged(final Field field, final Object bean,
-			final Object value) {
-		AccessController.doPrivileged(new PrivilegedAction<Void>() {
-			@Override
-			public Void run() {
-				boolean wasAccessible = field.isAccessible();
-				try {
-					field.setAccessible(true);
-					field.set(bean, value);
-					return null; // return nothing...
-				} catch (IllegalArgumentException | IllegalAccessException ex) {
-					throw new IllegalStateException("Cannot set field: "
-							+ field, ex);
-				} finally {
-					field.setAccessible(wasAccessible);
-				}
-			}
-		});
-	}
-
-	public static Object getPrivileged(final Field field, final Object bean) {
-		return AccessController.doPrivileged(new PrivilegedAction<Object>() {
-			@Override
-			public Object run() {
-				boolean wasAccessible = field.isAccessible();
-				try {
-					field.setAccessible(true);
-					return field.get(bean);
-				} catch (IllegalArgumentException | IllegalAccessException ex) {
-					throw new IllegalStateException("Cannot access field: "
-							+ field, ex);
-				} finally {
-					field.setAccessible(wasAccessible);
-				}
-			}
-		});
-	}
 
 	private boolean canAccess(Class<?> controllerClass, String resourceName) {
 		try {
@@ -422,74 +377,5 @@ public class ViewFactory {
 		}
 		return false;
 	}
-
-	public <T> T createInstanceWithInjections(Class<T> cls, ViewContext context)
-			throws InstantiationException, IllegalAccessException {
-		T instance = cls.newInstance();
-		injectContexts(instance, context);
-		return instance;
-	}
-
-	private void injectContexts(final Object bean, final ViewContext context) {
-		Class<? extends Object> cls = bean.getClass();
-		Field[] fields = cls.getDeclaredFields();
-		for (final Field field : fields) {
-			if (field.isAnnotationPresent(FXMLViewContext.class)) {
-				Class<?> type = field.getType();
-				if (ViewContext.class.isAssignableFrom(type)) {
-					setPrivileged(field, bean, context);
-				} else {
-					throw new RuntimeException(
-							"Can not set ViewContext to field of type " + type
-									+ " (" + field + ")");
-				}
-			} else if (field.isAnnotationPresent(FXMLViewFlowContext.class)) {
-				Class<?> type = field.getType();
-				if (ViewFlowContext.class.isAssignableFrom(type)) {
-					setPrivileged(field, bean, context.getViewFlowContext());
-				} else {
-					throw new RuntimeException(
-							"Can not set FXMLViewFlowContext to field of type "
-									+ type + " (" + field + ")");
-				}
-			} else if (field.isAnnotationPresent(FXMLApplicationContext.class)) {
-				Class<?> type = field.getType();
-				if (ApplicationContext.class.isAssignableFrom(type)) {
-					setPrivileged(field, bean, context.getApplicationContext());
-				} else {
-					throw new RuntimeException(
-							"Can not set FXMLViewFlowContext to field of type "
-									+ type + " (" + field + ")");
-				}
-			}
-		}
-	}
-
-//	public static ViewContext startFlowInContainer(FlowView view,
-//			final FlowContainer container, ViewFlowContext flowContext)
-//			throws FlowException {
-//		FlowHandler handler = new FlowHandler(view, container, flowContext);
-//		
-//	}
-//
-//	public static ViewContext startFlowInPane(FlowView view,
-//			final Pane pane, ViewFlowContext flowContext)
-//			throws FlowException {
-//		FlowContainer container = new FlowContainer() {
-//
-//			@Override
-//			public void setView(ViewContext context) {
-//				pane.getChildren().clear();
-//				pane.getChildren().add(context.getRootNode());
-//			}
-//
-//		};
-//		return startFlowInContainer(view, container, flowContext);
-//	}
-//
-//	public static ViewContext startFlowInPane(FlowView view, final Pane pane)
-//			throws FlowException {
-//		return startFlowInPane(view, pane, new ViewFlowContext());
-//	}
 
 }

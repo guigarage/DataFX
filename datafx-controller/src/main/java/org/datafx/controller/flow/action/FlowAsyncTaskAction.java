@@ -52,7 +52,7 @@ public class FlowAsyncTaskAction implements FlowAction {
 	public void handle(FlowHandler flowHandler, String actionId)
 			throws FlowException {
 		try {
-			Runnable runnable = ViewFactory.getInstance().createInstanceWithInjections(runnableClass, flowHandler.getCurrentViewContext());
+			Runnable runnable = flowHandler.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
 			executorService.execute(runnable);
 		} catch (Exception e) {
 			throw new FlowException(e);

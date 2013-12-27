@@ -40,7 +40,7 @@ public class FlowTaskAction implements FlowAction {
     
     @Override public void handle(FlowHandler flowHandler, String actionId) throws FlowException{
 		try {
-			Runnable runnable = ViewFactory.getInstance().createInstanceWithInjections(runnableClass, flowHandler.getCurrentViewContext());
+			Runnable runnable = flowHandler.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
 			runnable.run();
 		} catch (Exception e) {
 			throw new FlowException(e);

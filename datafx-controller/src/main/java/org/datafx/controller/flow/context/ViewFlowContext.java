@@ -24,7 +24,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.context;
+package org.datafx.controller.flow.context;
+
+import org.datafx.controller.context.AbstractContext;
+import org.datafx.controller.context.ApplicationContext;
+import org.datafx.controller.context.ViewContext;
 
 /**
  * <p>
@@ -94,6 +98,7 @@ public class ViewFlowContext extends AbstractContext {
 	 */
 	public <T> void setCurrentViewContext(ViewContext<T> currentViewContext) {
 		this.currentViewContext = currentViewContext;
+        this.currentViewContext.register(this);
 	}
 
 	/**

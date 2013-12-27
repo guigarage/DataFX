@@ -27,18 +27,24 @@
 package org.datafx.samples.masterdetail.controller;
 
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
-import org.datafx.controller.context.FXMLViewFlowContext;
-import org.datafx.controller.context.ViewFlowContext;
+import javafx.scene.input.MouseEvent;
+import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.context.ActionHandler;
+import org.datafx.controller.flow.context.FXMLViewFlowContext;
+import org.datafx.controller.flow.context.FlowActionHandler;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.util.VetoException;
 import org.datafx.samples.masterdetail.data.DataModel;
-
 
 public class MasterViewController {
 
@@ -55,12 +61,27 @@ public class MasterViewController {
     @FXML
     @FXMLFlowAction("showDetails")
     private Button showDetailsButton;
-    
+
+
+    @ActionHandler
+    private FlowActionHandler actionHandler;
+
+    @Inject
+    private DataModel model;
+
     @PostConstruct
     public void init() {
-    	DataModel model = context.getRegisteredObject(DataModel.class);
         myList.setItems(model.getNames());
         myList.getSelectionModel().select(model.selectedIndex().get());
+        myList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+               if(event.getClickCount() >= 2) {
+                       actionHandler.handle("showDetails");
+               }
+            }
+        });
+
         model.selectedIndex().bind(myList.getSelectionModel().selectedIndexProperty());
     }
     

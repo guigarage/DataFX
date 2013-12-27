@@ -32,7 +32,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.datafx.controller.flow.injection.FlowScoped;
 
+@FlowScoped
 public class DataModel {
 
 	private ObservableList<StringProperty> names;

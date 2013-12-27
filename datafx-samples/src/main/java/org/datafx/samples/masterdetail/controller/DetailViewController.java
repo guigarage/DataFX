@@ -32,19 +32,22 @@ import javafx.scene.control.TextField;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.FXMLViewContext;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.flow.context.FXMLViewFlowContext;
+import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.samples.masterdetail.data.DataModel;
 
 
 @FXMLController("Details.fxml")
 public class DetailViewController {
 
-    @FXMLViewContext
-    private ViewContext<DetailViewController> context;
+    @FXMLViewFlowContext
+    private ViewFlowContext context;
     
     @FXML
     private TextField myTextfield;
@@ -52,10 +55,13 @@ public class DetailViewController {
     @FXML
     @FXMLFlowAction("back")
     private Button backButton;
-        
+
+    @Inject
+    private DataModel model;
+
     @PostConstruct
     public void init() {
-    	DataModel model = context.getViewFlowContext().getRegisteredObject(DataModel.class);
+    	//DataModel model = context.getRegisteredObject(DataModel.class);
     	myTextfield.textProperty().bindBidirectional(model.getSelected());
     }
     
