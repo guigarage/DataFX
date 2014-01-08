@@ -59,7 +59,9 @@ import javafx.concurrent.Worker.State;
  *
  */
 public class ObservableExecutor implements Executor {
+
     private Executor executor;
+
     private ListProperty<Service<?>> currentServices;
 
     /**
@@ -215,5 +217,19 @@ public class ObservableExecutor implements Executor {
         @Override public V call() throws Exception {
             return callable.call();
         }
+    }
+
+    public ProcessChain<Void> createProcessChain() {
+        return new ProcessChain<>(this);
+    }
+
+    private static ObservableExecutor defaultInstance;
+
+    public static synchronized ObservableExecutor getDefaultInstance() {
+        if(defaultInstance == null) {
+            //TODO: support of system properties to define the inner executor
+            defaultInstance = new ObservableExecutor();
+        }
+        return defaultInstance;
     }
 }
