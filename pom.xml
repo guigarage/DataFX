@@ -74,6 +74,8 @@
         <module>datafx-cell</module>
         <module>datafx-websocket</module>
         <module>datafx-samples</module>
+        <module>datafx-ejb-wildfly</module>
+        <module>datafx-samples-ejb</module>
     </modules>
 
     <profiles>
