@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,8 @@
  */
 package org.datafx.reader;
 
+import java.io.IOException;
+
 /**
  *
  * This is the root interface for all data readers. A DataReader is responsible
@@ -45,7 +47,7 @@ public interface DataReader<T> {
          * @return the next available data entity or null if no new data can be
          * retrieved
          */
-	public T get();
+	public T get() throws IOException;
 	
         /**
          * Check if more data is available on this DataReader. This method will only
@@ -56,6 +58,6 @@ public interface DataReader<T> {
          * @return true in case more data is available and obtainable via a {@link get()} call,
          * false otherwise.
          */
-	public boolean next();
+	public boolean next() throws IOException;
 	
 }

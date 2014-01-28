@@ -97,20 +97,18 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
         }
     }
 
-    protected synchronized void createRequest() {
-        try {
+    protected synchronized void createRequest() throws IOException {
+
             if (requestMade) {
                 return;
             }
             setInputStream(createInputStream());
             requestMade = true;
-        } catch (IOException ex) {
-            Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
-        }
+   
     }
 
     @Override
-    public T get() {
+    public T get() throws IOException {
         LOGGER.fine("[datafx] restsource will get a value, requestMade = "+requestMade);
         if (!requestMade) {
             createRequest();
@@ -123,7 +121,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     }
 
     @Override
-    public boolean next() {
+    public boolean next() throws IOException {
         if (!requestMade) {
             createRequest();
         }

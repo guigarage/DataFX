@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,7 @@
  */
 package org.datafx.reader;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.datafx.reader.converter.InputStreamConverter;
@@ -73,11 +74,11 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
         return this.is;
     }
     
-    @Override public T get() {
+    @Override public T get() throws IOException {
         return converter.get();
     }
 
-    @Override public boolean next() {
+    @Override public boolean next() throws IOException {
         return converter.next();
     }
 }
