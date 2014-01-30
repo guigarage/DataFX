@@ -28,7 +28,6 @@ package org.datafx.controller;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,11 +40,10 @@ import javax.annotation.PostConstruct;
 
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.FXMLFlowAction;
-import org.datafx.controller.util.PrivilegedReflection;
-import org.datafx.controller.util.VetoException;
+import org.datafx.util.DataFXUtils;
+import org.datafx.util.PrivilegedReflection;
 import org.datafx.controller.util.ViewConfiguration;
 import org.datafx.controller.util.FxmlLoadException;
 
@@ -130,10 +128,10 @@ public class ViewFactory {
 	 * {@link #FXMLController} annotation to link to the fxml file. You can skip
 	 * the annotation if you want to use the controller API conventions. By
 	 * doing so the fxml files has to be in the package as the controller and
-	 * must fit to a naming convention (see {@link #FXMLController} for more
-	 * informations). The method returns a {@link #ViewContext}. This is a
+	 * must fit to a naming convention (see {@link #org.datafx.controller.FXMLController} for more
+	 * informations). The method returns a {@link #org.datafx.controller.context.ViewContext}. This is a
 	 * wrapper around the view (view-node and controller) and can be used to
-	 * register your datamodel to the view. The doc of {@link #ViewContext} will
+	 * register your datamodel to the view. The doc of {@link #org.datafx.controller.context.ViewContext} will
 	 * provide more information about this topic. By using this method you can
 	 * overwrite the path to your fxml file.
 	 * 
@@ -327,7 +325,7 @@ public class ViewFactory {
 							controllerClass.getSimpleName().length()
 									- "Controller".length())
 					+ ".fxml";
-			if (canAccess(controllerClass, nameByController)) {
+			if (DataFXUtils.canAccess(controllerClass, nameByController)) {
 				foundFxmlName = nameByController;
 			}
 		}
@@ -363,19 +361,6 @@ public class ViewFactory {
 				}
 			}
 		}
-	}
-
-
-	private boolean canAccess(Class<?> controllerClass, String resourceName) {
-		try {
-			URL url = controllerClass.getResource(resourceName);
-			if (url == null) {
-				return false;
-			}
-			return true;
-		} catch (Exception e) {
-		}
-		return false;
 	}
 
 }

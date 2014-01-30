@@ -3,7 +3,7 @@ package org.datafx.controller.validation.ui;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import org.datafx.controller.util.PrivilegedReflection;
+import org.datafx.util.PrivilegedReflection;
 import org.datafx.controller.validation.event.ValidationFinishedEvent;
 import org.datafx.controller.validation.event.ValidationFinishedHandler;
 

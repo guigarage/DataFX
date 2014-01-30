@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-import static org.datafx.controller.util.PrivilegedReflection.setPrivileged;
+import static org.datafx.util.PrivilegedReflection.setPrivileged;
 
 public class InjectionHandler<U> {
 

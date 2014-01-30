@@ -1,4 +1,4 @@
-package org.datafx.controller.util;
+package org.datafx.util;
 
 import java.lang.reflect.Field;
 import java.security.AccessController;

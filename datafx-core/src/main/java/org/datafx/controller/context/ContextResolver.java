@@ -1,7 +1,7 @@
 package org.datafx.controller.context;
 
 import org.datafx.controller.context.resource.AnnotatedControllerResourceType;
-import org.datafx.controller.util.PrivilegedReflection;
+import org.datafx.util.PrivilegedReflection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

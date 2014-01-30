@@ -26,13 +26,11 @@
  */
 package org.datafx.controller.context;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import javafx.scene.Node;
-import org.datafx.controller.flow.context.ViewFlowContext;
 
 import javax.annotation.PreDestroy;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * <p>
@@ -76,7 +74,7 @@ import javax.annotation.PreDestroy;
  * provides annotations to inject all different context types:
  * </p>
  * <p>
- * 
+ * <p/>
  * "@FXMLApplicationContext" <br/>
  * ApplicationContext myApplicationContext;<br/>
  * </p>
@@ -84,94 +82,88 @@ import javax.annotation.PreDestroy;
  * By doing so you can easily access all your data in your controller and share
  * data between different controllers.
  * </p>
- * 
+ *
+ * @param <U> Controller class of the MVC view that is defined in this context
  * @author hendrikebbers
- * 
- * @param <U>
- *            Controller class of the MVC view that is defined in this context
  */
 public class ViewContext<U> extends AbstractContext {
 
-	private Node rootNode;
-
-	private U controller;
-
+    private Node rootNode;
+    private U controller;
     private ContextResolver<U> resolver;
 
-	/**
-	 * Create a new ViewContext for a (view-){@link #Node} and a controller.
-	 * Normally this constructor is used by the {@link #ViewFactory} and should
-	 * not be used in application code.
-	 * 
-	 * @param rootNode
-	 *            the (view-)node
-	 * @param controller
-	 *            the controller
-	 */
-	public ViewContext(Node rootNode, U controller, Object... resources) {
-		this.rootNode = rootNode;
+    /**
+     * Create a new ViewContext for a (view-){@link #Node} and a controller.
+     * Normally this constructor is used by the {@link #ViewFactory} and should
+     * not be used in application code.
+     *
+     * @param rootNode   the (view-)node
+     * @param controller the controller
+     */
+    public ViewContext(Node rootNode, U controller, Object... resources) {
+        this.rootNode = rootNode;
         this.controller = controller;
 
-        if(resources != null) {
-            for(Object resource : resources) {
+        if (resources != null) {
+            for (Object resource : resources) {
                 register(resource);
             }
         }
-	}
+    }
 
     public ContextResolver<U> getResolver() {
-        if(resolver == null) {
+        if (resolver == null) {
             resolver = new ContextResolver<U>(this);
         }
         return resolver;
     }
 
-	/**
-	 * Returns the controller of the MVC view that is wrapped by this context.
-	 * 
-	 * @return the controller
-	 */
-	public U getController() {
-		return controller;
-	}
+    /**
+     * Returns the controller of the MVC view that is wrapped by this context.
+     *
+     * @return the controller
+     */
+    public U getController() {
+        return controller;
+    }
 
-	/**
-	 * Returns the JavaFX view node of the MVC view that is wrapped by this
-	 * context.
-	 * 
-	 * @return the view node
-	 */
-	public Node getRootNode() {
-		return rootNode;
-	}
+    /**
+     * Returns the JavaFX view node of the MVC view that is wrapped by this
+     * context.
+     *
+     * @return the view node
+     */
+    public Node getRootNode() {
+        return rootNode;
+    }
 
-	/**
-	 * Returns the global application context
-	 * 
-	 * @return application context
-	 */
-	public ApplicationContext getApplicationContext() {
-		return ApplicationContext.getInstance();
-	}
+    /**
+     * Returns the global application context
+     *
+     * @return application context
+     */
+    public ApplicationContext getApplicationContext() {
+        return ApplicationContext.getInstance();
+    }
 
-	/**
-	 * Destroyes the context. This will be called by the flow API if a view is
-	 * closed. Normally an application should never call this.
-	 * 
-	 * @throws IllegalAccessException if the context can't be destroyed
-	 * @throws IllegalArgumentException if the context can't be destroyed
-	 * @throws InvocationTargetException if the context can't be destroyed
-	 */
-	public void destroy() throws IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException {
-		// TODO: All managed Object should be checked for a pre destroy....
-		Object controller = getRegisteredObject("controller");
-		if (controller != null) {
-			for (final Method method : controller.getClass().getMethods()) {
-				if (method.isAnnotationPresent(PreDestroy.class)) {
-					method.invoke(controller);
-				}
-			}
-		}
-	}
+    /**
+     * Destroyes the context. This will be called by the flow API if a view is
+     * closed. Normally an application should never call this.
+     *
+     * @throws IllegalAccessException    if the context can't be destroyed
+     * @throws IllegalArgumentException  if the context can't be destroyed
+     * @throws InvocationTargetException if the context can't be destroyed
+     */
+    public void destroy() throws IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
+        // TODO: All managed Object should be checked for a pre destroy....
+        Object controller = getRegisteredObject("controller");
+        if (controller != null) {
+            for (final Method method : controller.getClass().getMethods()) {
+                if (method.isAnnotationPresent(PreDestroy.class)) {
+                    method.invoke(controller);
+                }
+            }
+        }
+    }
 }
