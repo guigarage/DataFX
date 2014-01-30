@@ -1,9 +1,6 @@
 package org.datafx.samples.ejb.wildfly;
 
-import org.datafx.ejb.EjbLookup;
-import org.datafx.ejb.EjbLookupFactory;
-import org.datafx.ejb.JndiClassBinding;
-import org.datafx.ejb.RemoteCalculator;
+import org.datafx.ejb.*;
 
 import javax.naming.NamingException;
 
