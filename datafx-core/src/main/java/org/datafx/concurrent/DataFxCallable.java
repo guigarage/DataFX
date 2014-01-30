@@ -41,13 +41,7 @@ import java.util.concurrent.Callable;
  *
  * @param <V> the result type of method <tt>call</tt>
  */
-public interface DataFxCallable<V> extends Callable<V> {
-    /**
-     * This method will be called by DataFX to inject a
-     * <code>TaskStateHandler</code> in this callable. The handler can be used
-     * to provide some more feedback of this callable.
-     *
-     * @param stateHandler the injected TaskStateHandler
-     */
-    void injectStateHandler(TaskStateHandler stateHandler);
+@FunctionalInterface
+public interface DataFxCallable<V> extends Callable<V>, TaskWithStateHandler {
+
 }

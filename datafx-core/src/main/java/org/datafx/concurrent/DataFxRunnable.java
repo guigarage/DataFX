@@ -38,13 +38,6 @@ package org.datafx.concurrent;
  * @author hendrikebbers
  *
  */
-public interface DataFxRunnable extends Runnable {
-    /**
-     * This method will be called by DataFX to inject a
-     * <code>TaskStateHandler</code> in this Runnable. The handler can be used
-     * to provide some more feedback of this Runnable.
-     *
-     * @param stateHandler the injected TaskStateHandler
-     */
-    void injectStateHandler(TaskStateHandler stateHandler);
+@FunctionalInterface
+public interface DataFxRunnable extends Runnable, TaskWithStateHandler {
 }
