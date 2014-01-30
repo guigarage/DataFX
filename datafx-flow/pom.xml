@@ -9,9 +9,9 @@
 		<relativePath>../</relativePath>
 	</parent>
 
-    <artifactId>datafx-controller</artifactId>
+    <artifactId>datafx-flow</artifactId>
     <packaging>jar</packaging>
-    <name>datafx-controller</name>
+    <name>datafx-flow</name>
 
     <dependencies>
         <dependency>
