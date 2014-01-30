@@ -53,6 +53,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -74,6 +77,7 @@
         <module>datafx-cell</module>
         <module>datafx-websocket</module>
         <module>datafx-samples</module>
+        <module>datafx-ejb</module>
         <module>datafx-ejb-wildfly</module>
         <module>datafx-samples-ejb</module>
     </modules>
