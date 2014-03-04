@@ -99,8 +99,8 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
                 query = connection.createStatement();
             } else {
                 System.out.println("regularquery");
-                query = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_UPDATABLE);
+                query = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+                        ResultSet.CONCUR_READ_ONLY);
             }
             if (updateQuery) {
                 query.executeUpdate(sqlStatement);
