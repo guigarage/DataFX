@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     private String dataString;
     private String requestMethod = "GET";
     private int timeout = -1;
+    private String contentType;
   //  private StringBuilder queryString;
     //   private InputStream is;
     private static final Logger LOGGER = Logger.getLogger(RestSource.class.getName());
@@ -189,7 +190,10 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
             }
             if (getDataString() != null) {
                 connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                if (contentType == null) {
+                    contentType = "application/x-www-form-urlencoded";
+                }
+                connection.setRequestProperty("Content-Type", contentType);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
                 outputStreamWriter.write(getDataString());
                 outputStreamWriter.close();
@@ -341,5 +345,22 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    /**
+     * @return the contentType
+     */
+    public String getContentType() {
+        return contentType;
+    }
+
+    /**
+     * Set the contentType for this request. 
+     * If the contentType is not set, and form parameters or a post body is
+     * used, the contentType will be set to "application/x-www-form-urlencoded"
+     * @param contentType the contentType to set
+     */
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
