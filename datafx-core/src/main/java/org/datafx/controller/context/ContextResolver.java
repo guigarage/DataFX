@@ -1,6 +1,7 @@
 package org.datafx.controller.context;
 
 import org.datafx.controller.context.resource.AnnotatedControllerResourceType;
+import org.datafx.controller.context.resource.ControllerResourceConsumer;
 import org.datafx.util.PrivilegedReflection;
 
 import java.lang.annotation.Annotation;
@@ -17,21 +18,8 @@ public class ContextResolver<U> {
 
     public void injectResources(Object object) {
 
-        ServiceLoader<AnnotatedControllerResourceType> serviceLoader = ServiceLoader.load(AnnotatedControllerResourceType.class);
-
-        //Check if a Annotation is defined with two resourceTypes
-        Iterator<AnnotatedControllerResourceType> allResourceTypesIterator = serviceLoader.iterator();
-        List<Class<Annotation>> supportedAnnotations = new ArrayList<>();
-        List<AnnotatedControllerResourceType> allResourceTypes = new ArrayList<>();
-        while(allResourceTypesIterator.hasNext()) {
-            AnnotatedControllerResourceType currentResourceType = allResourceTypesIterator.next();
-            if(supportedAnnotations.contains(currentResourceType.getSupportedAnnotation())) {
-                //TODO: Custom Exception
-                throw new RuntimeException("TODO: Annotation wird doppelt belegt");
-            }
-            supportedAnnotations.add(currentResourceType.getSupportedAnnotation());
-            allResourceTypes.add(currentResourceType);
-        }
+        List<AnnotatedControllerResourceType> allResourceTypes = getAnnotatedControllerResourceTypes();
+        List<ControllerResourceConsumer> resourceConsumers = getControllerResourceConsumer();
 
         Class<? extends Object> cls = object.getClass();
         Field[] fields = cls.getDeclaredFields();
@@ -49,9 +37,44 @@ public class ContextResolver<U> {
                         injected = true;
                     }
                 }
+
+                for(ControllerResourceConsumer consumer : resourceConsumers) {
+                    if(field.getAnnotation(consumer.getSupportedAnnotation()) != null) {
+                        consumer.consumeResource(field.getAnnotation(consumer.getSupportedAnnotation()), PrivilegedReflection.getPrivileged(field, object), context);
+                    }
+                }
             }
         }
 
+    }
+
+    private List<AnnotatedControllerResourceType> getAnnotatedControllerResourceTypes() {
+        ServiceLoader<AnnotatedControllerResourceType> serviceLoader = ServiceLoader.load(AnnotatedControllerResourceType.class);
+
+        //Check if a Annotation is defined with two resourceTypes
+        Iterator<AnnotatedControllerResourceType> allResourceTypesIterator = serviceLoader.iterator();
+        List<Class<Annotation>> supportedAnnotations = new ArrayList<>();
+        List<AnnotatedControllerResourceType> allResourceTypes = new ArrayList<>();
+        while(allResourceTypesIterator.hasNext()) {
+            AnnotatedControllerResourceType currentResourceType = allResourceTypesIterator.next();
+            if(supportedAnnotations.contains(currentResourceType.getSupportedAnnotation())) {
+                //TODO: Custom Exception
+                throw new RuntimeException("TODO: Annotation wird doppelt belegt");
+            }
+            supportedAnnotations.add(currentResourceType.getSupportedAnnotation());
+            allResourceTypes.add(currentResourceType);
+        }
+        return allResourceTypes;
+    }
+
+    private List<ControllerResourceConsumer> getControllerResourceConsumer() {
+        ServiceLoader<ControllerResourceConsumer> serviceLoader = ServiceLoader.load(ControllerResourceConsumer.class);
+        Iterator<ControllerResourceConsumer> iterator = serviceLoader.iterator();
+        List<ControllerResourceConsumer> ret = new ArrayList<>();
+        while(iterator.hasNext()) {
+            ret.add(iterator.next());
+        }
+        return ret;
     }
 
     public <T> T createInstanceWithInjections(Class<T> cls)
