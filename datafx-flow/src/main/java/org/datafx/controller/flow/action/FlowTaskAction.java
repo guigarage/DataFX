@@ -26,18 +26,17 @@
  */
 package org.datafx.controller.flow.action;
 
-import org.datafx.controller.ViewFactory;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 
 public class FlowTaskAction implements FlowAction {
 
     private Class<? extends Runnable> runnableClass;
-    
+
     public FlowTaskAction(Class<? extends Runnable> runnableClass) {
         this.runnableClass = runnableClass;
     }
-    
+
     @Override public void handle(FlowHandler flowHandler, String actionId) throws FlowException{
 		try {
 			Runnable runnable = flowHandler.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
