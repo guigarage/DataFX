@@ -31,6 +31,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableStringValue;
 
+/**
+ * This class wrappes the complete state of a task
+ *
+ * @author Hendrik Ebbers
+ */
 public class TaskState {
 
 	private DoubleProperty progress;
@@ -40,40 +45,71 @@ public class TaskState {
 	private ObservableStringValue title;
 	
 	private ObservableStringValue message;
-	
+
+    /**
+     * Returns a property that defines the maximum value that the progress value can reach
+     * @return property that defines the maximum value that the progress value can reach
+     */
 	public DoubleProperty maxProgress() {
 		if(maxProgress == null) {
 			maxProgress = new SimpleDoubleProperty();
 		}
 		return maxProgress;
 	}
-	
+
+    /**
+     * Sets the max progress value. The value defines the maximum value that the progress value can reach
+     * @param maxProgress  the max progress value
+     */
 	public void setMaxProgress(double maxProgress) {
 		maxProgress().set(maxProgress);
 	}
-	
+
+    /**
+     *  Returns the max progress value. The value defines the maximum value that the progress value can reach
+     * @return the max progress value
+     */
 	public double getMaxProgress() {
 		return maxProgress == null ? 0d : maxProgress.get();
 	}
-	
+
+    /**
+     *  Returns a property that defines the current progress of the task. The internal value will be between 0 and maxProgress
+     * @return a property that defines the current progress
+     */
 	public DoubleProperty progress() {
 		if(progress == null) {
 			progress = new SimpleDoubleProperty();
 		}
 		return progress;
 	}
-	
+
+    /**
+     * Returns the current progress of the task. This will be between 0 and maxProgress
+     * @return the current progress
+     */
 	public double getProgress() {
 		return progress == null ? 0d : progress.get();
 	}
-	
+
+    /**
+     *  Sets the current progress of the task.
+     * @param progress the current progress
+     */
 	public void setProgress(double progress) {
 		progress().set(progress);
 	}
+
+    /**
+     * Returns a property that defines the title of the task.
+     * @return a property that defines the title
+     */
 	public ObservableStringValue title() {
 		if(title == null) {
 			title = new SimpleStringProperty();
 		}
 		return title;
 	}
+
+    //TODO: Message property and getter / setter for title
 }

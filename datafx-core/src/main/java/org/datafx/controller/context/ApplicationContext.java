@@ -74,7 +74,7 @@ package org.datafx.controller.context;
  * data between different controllers.
  * </p>
  * 
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  * 
  */
 public class ApplicationContext extends AbstractContext {

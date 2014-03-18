@@ -45,7 +45,7 @@ public class FlowLink<T> implements FlowAction {
 	public void handle(FlowHandler flowHandler, String actionId)
 			throws FlowException {
 		try {
-			ViewContext<T> viewContext = ViewFactory.getInstance().createByControllerInViewFlow(controllerClass, flowHandler.getFlowContext(), null, flowHandler);
+			ViewContext<T> viewContext = ViewFactory.getInstance().createByControllerInViewFlow(controllerClass, flowHandler.getFlowContext(), null, flowHandler, flowHandler.getViewConfiguration());
             flowHandler.setNewView(new FlowView<T>(viewContext));
         } catch (FxmlLoadException e) {
             throw new FlowException(e);

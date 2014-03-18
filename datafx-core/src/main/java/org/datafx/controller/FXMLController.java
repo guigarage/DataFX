@@ -64,7 +64,7 @@ import java.lang.annotation.Target;
  * </pre>
  * </p>
  * 
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)

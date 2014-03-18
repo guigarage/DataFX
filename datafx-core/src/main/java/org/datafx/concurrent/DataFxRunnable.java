@@ -35,7 +35,7 @@ package org.datafx.concurrent;
  * stateHandler can be used to provide some feedback of the current state of the
  * Runnable.
  *
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  */
 @FunctionalInterface

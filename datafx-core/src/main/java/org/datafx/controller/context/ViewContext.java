@@ -84,7 +84,7 @@ import java.lang.reflect.Method;
  * </p>
  *
  * @param <U> Controller class of the MVC view that is defined in this context
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  */
 public class ViewContext<U> extends AbstractContext {
 
@@ -159,7 +159,7 @@ public class ViewContext<U> extends AbstractContext {
         // TODO: All managed Object should be checked for a pre destroy....
         Object controller = getRegisteredObject("controller");
         if (controller != null) {
-            for (final Method method : controller.getClass().getMethods()) {
+            for (final Method method : controller.getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(PreDestroy.class)) {
                     method.invoke(controller);
                 }

@@ -33,7 +33,7 @@ import javafx.concurrent.Task;
 /**
  * A special task that provides some additional features.
  *
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  * @param <V> the result type of method <tt>getValue</tt>
  */

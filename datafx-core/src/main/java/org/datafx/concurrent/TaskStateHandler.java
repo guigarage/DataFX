@@ -30,7 +30,7 @@ package org.datafx.concurrent;
  * A interface that provides all functions to alter the basic informations of a
  * task. Normally one instance will handle one defined task.
  *
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  */
 public interface TaskStateHandler {

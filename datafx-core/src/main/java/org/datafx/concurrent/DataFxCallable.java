@@ -37,7 +37,7 @@ import java.util.concurrent.Callable;
  * stateHandler can be used to provide some feedback of the current state of the
  * callable.
  *
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  * @param <V> the result type of method <tt>call</tt>
  */

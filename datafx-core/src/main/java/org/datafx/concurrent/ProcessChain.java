@@ -9,6 +9,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ *  The class defines a chain of processes. All processes will be running in a queue and the result of a process will be used as the input parameter for the next process. A process can run
+ * @param <T>  Return value of the chain.
+ *
+ * @author Hendrik Ebbers
+ */
 public class ProcessChain<T> {
 
     private List<ProcessDescription<?, ?>> processes;

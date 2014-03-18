@@ -1,5 +1,11 @@
 package org.datafx.concurrent;
 
+/**
+ * A interface that adds support for <tt>TaskStateHandler</tt>
+ *
+ * @author Hendrik Ebbers
+ * @see TaskStateHandler
+ */
 public interface TaskWithStateHandler {
     /**
      * This method will be called by DataFX to inject a
@@ -12,7 +18,11 @@ public interface TaskWithStateHandler {
         TaskStateHandlerManager.add(this, stateHandler);
     }
 
-    default TaskStateHandler getStateHandler(TaskStateHandler stateHandler) {
+    /**
+     * Returns the <tt>TaskStateHandler</tt> for this instance
+     * @return the <tt>TaskStateHandler</tt> for this instance
+     */
+    default TaskStateHandler getStateHandler() {
         return TaskStateHandlerManager.get(this);
     }
 }

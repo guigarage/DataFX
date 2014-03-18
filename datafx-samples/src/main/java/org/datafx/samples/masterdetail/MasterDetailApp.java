@@ -47,16 +47,16 @@ public class MasterDetailApp extends Application {
 		
 		DefaultFlowContainer flowContainer = new DefaultFlowContainer(pane);
 
-		Flow flow = new Flow(MasterViewController.class)
-				.withLink(MasterViewController.class, "showDetails",
-						DetailViewController.class)
-				.withLink(DetailViewController.class, "back",
-						MasterViewController.class)
-				.withTaskAction(MasterViewController.class, "delete",
-						DeleteAction.class);
+        Flow flow = new Flow(MasterViewController.class)
+                .withLink(MasterViewController.class, "showDetails",
+                        DetailViewController.class)
+                .withLink(DetailViewController.class, "back",
+                        MasterViewController.class)
+                .withTaskAction(MasterViewController.class, "delete",
+                        DeleteAction.class);
 
-		flow.createHandler().start(flowContainer);
-		
+        flow.createHandler().start(flowContainer);
+
 		Scene myScene = new Scene(pane);
 
 		stage.setScene(myScene);

@@ -28,7 +28,18 @@ package org.datafx.controller.flow;
 
 import org.datafx.controller.context.ViewContext;
 
+/**
+ *  A Flow needs a JavaFX <tt>Parent</tt> node in that the current view of the flow will be added as a child. This interface defines a general class that will be used internally to set the new View for a Flow. A implementation should add the <tt>Node</tt> of the view to the scene graph.
+ *
+ * @author Hendrik Ebbers
+ * @see DefaultFlowContainer
+ */
 public interface FlowContainer {
 
+    /**
+     * The given view will be the new view of the flow. Implementations should add the he <tt>Node</tt> of the view to the scene graph and remove the old view.
+     * @param context Context of the current view
+     * @param <T> Controller type of the current view
+     */
     public <T> void setView(ViewContext<T> context);
 }
