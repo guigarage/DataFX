@@ -36,7 +36,7 @@ import javafx.collections.ObservableList;
 
 /**
  * Stream Helper class for JavaFX. Combines the Stream API with the JavaFX platform thread
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  * @param <T> type of elements in Stream
  */

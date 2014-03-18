@@ -55,7 +55,7 @@ import javafx.concurrent.Worker.State;
  * <code>ObservableExecutor</code> can be used as a wrapper around a default
  * executor.
  *
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  */
 public class ObservableExecutor implements Executor {
@@ -184,6 +184,12 @@ public class ObservableExecutor implements Executor {
         return submit(new RunnableBasedDataFxTask(runnable));
     }
 
+    /**
+     * Execute the given runnable at some time in the future.
+     *
+     * @param runnable the runnable. If a <code>DataFxRunnable</code> is used
+     * here a <code>TaskStateHandler</code> will be injected.
+     */
     public void execute(Runnable runnable) {
         submit(runnable);
     }
@@ -219,12 +225,22 @@ public class ObservableExecutor implements Executor {
         }
     }
 
+    /**
+     * Creates a new <tt>ProcessChain</tt> that uses this executor as the executor for all background tasks.
+     * @return a new <tt>ProcessChain</tt>
+     *
+     * @see ProcessChain
+     */
     public ProcessChain<Void> createProcessChain() {
         return new ProcessChain<>(this);
     }
 
     private static ObservableExecutor defaultInstance;
 
+    /**
+     * Returns the default executor. This one uses an internal cached thread pool.
+     * @return the default executor
+     */
     public static synchronized ObservableExecutor getDefaultInstance() {
         if(defaultInstance == null) {
             //TODO: support of system properties to define the inner executor

@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * Use this Annotation to inject the {@link #ApplicationContext} in a controller
  * instance or a flow action.
  * 
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  */
 @Target(value={ElementType.FIELD})

@@ -84,7 +84,7 @@ import java.lang.reflect.Method;
  * </p>
  *
  * @param <U> Controller class of the MVC view that is defined in this context
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  */
 public class ViewContext<U> extends AbstractContext {
 

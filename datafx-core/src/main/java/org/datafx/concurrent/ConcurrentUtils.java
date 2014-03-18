@@ -32,8 +32,21 @@ import java.util.concurrent.FutureTask;
 
 import javafx.application.Platform;
 
+/**
+ *  Utility class for concurrency issues in JavaFX
+ *
+ *  @author Hendrik Ebbers
+ */
 public class ConcurrentUtils {
-	
+
+    private ConcurrentUtils() {}
+
+    /**
+     * Runs the given <tt>Runnable</tt> on the JavaFX Application Thread. The method blocks until the <tt>Runnable</tt> is executed completely.
+     * @param runnable the runnable that will be executed on the JavaFX Application Thread
+     * @throws InterruptedException  if the JavaFX Application Thread was interrupted while waiting
+     * @throws ExecutionException if the call of the run method of the <tt>Runnable</tt> threw an exception
+     */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void runAndWait(Runnable runnable)
 			throws InterruptedException, ExecutionException {
@@ -42,6 +55,14 @@ public class ConcurrentUtils {
 		future.get();
 	}
 
+    /**
+     * Runs the given <tt>Callable</tt> on the JavaFX Application Thread. The method blocks until the <tt>Callable</tt> is executed completely. The return value of the call() method of the callable will be returned
+     * @param callable  the callable that will be executed on the JavaFX Application Thread
+     * @param <T>  return type of the callable
+     * @return  return value of the executed call() method of the <tt>Callable</tt>
+     * @throws InterruptedException   if the JavaFX Application Thread was interrupted while waiting
+     * @throws ExecutionException  if the call of the run method of the <tt>Callable</tt> threw an exception
+     */
 	public static <T> T runAndWait(Callable<T> callable)
 			throws InterruptedException, ExecutionException {
 		FutureTask<T> future = new FutureTask<T>(callable);

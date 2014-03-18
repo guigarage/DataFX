@@ -36,16 +36,28 @@ import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.action.FlowTaskAction;
 import org.datafx.controller.util.ViewConfiguration;
 
+/**
+ * This class defines a flow. A flow is a map of different views that are linked. A flow can define actions for each view or global actions for the complete flow. The class provides a fluent API to create a flow with views and actions.
+ *
+ * @author Hendrik Ebbers
+ */
 public class Flow {
 
-	private Class<?> startViewControllerClass;
+    private Class<?> startViewControllerClass;
 
-	private Map<Class<?>, Map<String, FlowAction>> viewFlowMap;
+    private Map<Class<?>, Map<String, FlowAction>> viewFlowMap;
 
-	private Map<String, FlowAction> globalFlowMap;
+    private Map<String, FlowAction> globalFlowMap;
 
     private ViewConfiguration viewConfiguration;
 
+    /**
+     * Creates a new Flow with the given controller for the start view and a view configuration for all views. The start view must be a view controller as specified in the DataFX-Controller API. See <tt>FXMLController</tt> for more information
+     * @param startViewControllerClass Controller class of the start view
+     * @param viewConfiguration Configuration for all views of the flow
+     *
+     * @see org.datafx.controller.FXMLController
+     */
     public Flow(Class<?> startViewControllerClass, ViewConfiguration viewConfiguration) {
         this.startViewControllerClass = startViewControllerClass;
         globalFlowMap = new HashMap<>();
@@ -53,97 +65,143 @@ public class Flow {
         this.viewConfiguration = viewConfiguration;
     }
 
+    /**
+     * Returns the view configuration for all views of the flow
+     * @return  the view configuration
+     */
     public ViewConfiguration getViewConfiguration() {
         return viewConfiguration;
     }
 
+    /**
+     * Creates a new Flow with the given controller for the start view. The start view must be a view controller as specified in the DataFX-Controller API. See <tt>FXMLController</tt> for more information
+     * @param startViewControllerClass Controller class of the start view
+     */
     public Flow(Class<?> startViewControllerClass) {
-		this(startViewControllerClass, new ViewConfiguration());
-	}
+        this(startViewControllerClass, new ViewConfiguration());
+    }
 
-	public FlowHandler createHandler(ViewFlowContext flowContext) {
-		return new FlowHandler(this, flowContext);
-	}
+    /**
+     * Creates a handler that can be used to run the flow. The Flow class provides only the definition of a flow. To run a flow in the JavaFX scene graph a <tt>FlowHandler</tt> is needed
+     * @param flowContext The context for the flow
+     * @return a flow handler to run the flow
+     */
+    public FlowHandler createHandler(ViewFlowContext flowContext) {
+        return new FlowHandler(this, flowContext);
+    }
 
-	public FlowHandler createHandler() throws FlowException {
-		return createHandler(new ViewFlowContext());
-	}
+    /**
+     * Creates a handler that can be used to run the flow. The Flow class provides only the definition of a flow. To run a flow in the JavaFX scene graph a <tt>FlowHandler</tt> is needed
+     * @return a flow handler to run the flow
+     */
+    public FlowHandler createHandler() throws FlowException {
+        return createHandler(new ViewFlowContext());
+    }
 
-	public <U> Flow withGlobalAction(String actionId, FlowAction action) {
-		addGlobalAction(actionId, action);
-		return this;
-	}
+    /**
+     * Adds a global action to the flow. The action is registered by the given unique ID and can be called at runtime by using the id. A global action can be called from each view and from outside of the flow.
+     * @param actionId  unique action id
+     * @param action  the action
+     * @return returns this flow (for the fluent API)
+     */
+    public Flow withGlobalAction(String actionId, FlowAction action) {
+        addGlobalAction(actionId, action);
+        return this;
+    }
 
-	public Flow withGlobalRunAction(String actionId,
-			Class<? extends Runnable> actionClass) {
-		addGlobalAction(actionId, new FlowTaskAction(actionClass));
-		return this;
-	}
+    /**
+     * Adds a run action as a global action to the flow. Internally a <tt>FlowTaskAction</tt> will be created and added to the flow
+     * @param actionId unique action id
+     * @param actionClass a runnable that will be called whenever the action is called
+     * @return returns this flow (for the fluent API)
+     *
+     * @see FlowTaskAction
+     */
+    public Flow withGlobalRunAction(String actionId,
+                                    Class<? extends Runnable> actionClass) {
+        addGlobalAction(actionId, new FlowTaskAction(actionClass));
+        return this;
+    }
 
-	public Flow withGlobalLink(String actionId, Class<?> controllerClass) {
-		addGlobalAction(actionId, new FlowLink<>(controllerClass));
-		return this;
-	}
+    /**
+     * Adds a link action as a global action to the flow. Internally a <tt>FlowLink</tt> will be created and added to the flow
+     * @param actionId unique action id
+     * @param controllerClass the controller of the view that should be shown whenever the action will be called
+     * @return returns this flow (for the fluent API)
+     *
+     * @see FlowLink
+     */
+    public Flow withGlobalLink(String actionId, Class<?> controllerClass) {
+        addGlobalAction(actionId, new FlowLink<>(controllerClass));
+        return this;
+    }
 
-	public <U> Flow withAction(Class<?> controllerClass, String actionId,
-			FlowAction action) {
-		addActionToView(controllerClass, actionId, action);
-		return this;
-	}
+    /**
+     * Adds a action to the view of the given view controller. The action is registered by the given unique ID and can be called at runtime by using the id. the action can only be called when the view of the given controller is the active view of the flow
+     * @param controllerClass  controller class for the view of the action
+     * @param actionId  unique action id
+     * @param action the action
+     * @return returns this flow (for the fluent API)
+     */
+    public Flow withAction(Class<?> controllerClass, String actionId,
+                               FlowAction action) {
+        addActionToView(controllerClass, actionId, action);
+        return this;
+    }
 
-	public Flow withLink(Class<?> fromControllerClass, String actionId,
-			Class<?> toControllerClass) {
-		addActionToView(fromControllerClass, actionId, new FlowLink<>(
-				toControllerClass));
-		return this;
-	}
+    public Flow withLink(Class<?> fromControllerClass, String actionId,
+                         Class<?> toControllerClass) {
+        addActionToView(fromControllerClass, actionId, new FlowLink<>(
+                toControllerClass));
+        return this;
+    }
 
-	public Flow withTaskAction(Class<?> controllerClass, String actionId,
-			Class<? extends Runnable> actionClass) {
-		addActionToView(controllerClass, actionId, new FlowTaskAction(
-				actionClass));
-		return this;
-	}
+    public Flow withTaskAction(Class<?> controllerClass, String actionId,
+                               Class<? extends Runnable> actionClass) {
+        addActionToView(controllerClass, actionId, new FlowTaskAction(
+                actionClass));
+        return this;
+    }
 
     public Flow withGlobalCallMethodAction(String actionId,
-                                     String actionMethodName) {
+                                           String actionMethodName) {
         addGlobalAction(actionId, new FlowMethodAction(actionMethodName));
         return this;
     }
 
     public Flow withCallMethodAction(Class<?> controllerClass, String actionId,
-                               String actionMethodName) {
+                                     String actionMethodName) {
         addActionToView(controllerClass, actionId, new FlowMethodAction(actionMethodName));
         return this;
     }
 
-	public <U> void addActionToView(Class<?> controllerClass, String actionId,
-			FlowAction action) {
-		if (viewFlowMap.get(controllerClass) == null) {
-			viewFlowMap.put(controllerClass, new HashMap<String, FlowAction>());
-		}
-		viewFlowMap.get(controllerClass).put(actionId, action);
-	}
+    public <U> void addActionToView(Class<?> controllerClass, String actionId,
+                                    FlowAction action) {
+        if (viewFlowMap.get(controllerClass) == null) {
+            viewFlowMap.put(controllerClass, new HashMap<String, FlowAction>());
+        }
+        viewFlowMap.get(controllerClass).put(actionId, action);
+    }
 
-	public <U> void addGlobalAction(String actionId, FlowAction action) {
-		globalFlowMap.put(actionId, action);
-	}
+    public <U> void addGlobalAction(String actionId, FlowAction action) {
+        globalFlowMap.put(actionId, action);
+    }
 
-	public FlowAction getGlobalActionById(String actionId) {
-		return globalFlowMap.get(actionId);
-	}
+    public FlowAction getGlobalActionById(String actionId) {
+        return globalFlowMap.get(actionId);
+    }
 
-	public Class<?> getStartViewControllerClass() {
-		return startViewControllerClass;
-	}
+    public Class<?> getStartViewControllerClass() {
+        return startViewControllerClass;
+    }
 
-	public <U> void addActionsToView(FlowView<U> newView) {
-		Map<String, FlowAction> viewActionMap = viewFlowMap.get(newView
-				.getViewContext().getController().getClass());
-		if (viewActionMap != null) {
-			for (String actionId : viewActionMap.keySet()) {
-				newView.addAction(actionId, viewActionMap.get(actionId));
-			}
-		}
-	}
+    public <U> void addActionsToView(FlowView<U> newView) {
+        Map<String, FlowAction> viewActionMap = viewFlowMap.get(newView
+                .getViewContext().getController().getClass());
+        if (viewActionMap != null) {
+            for (String actionId : viewActionMap.keySet()) {
+                newView.addAction(actionId, viewActionMap.get(actionId));
+            }
+        }
+    }
 }

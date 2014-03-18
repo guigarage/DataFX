@@ -36,13 +36,16 @@ import javafx.concurrent.Task;
  * A Service that provides a cancelable property. While the value of this
  * property is false the servce can not be canceled.
  *
- * @author hendrikebbers
+ * @author Hendrik Ebbers
  *
  * @param <V> the result type of method <tt>getValue</tt>
  */
 public abstract class DataFxService<V> extends Service<V> {
     private BooleanProperty cancelable;
 
+    /**
+     * Default Constructor
+     */
     public DataFxService() {
         cancelable = new SimpleBooleanProperty(true);
     }
@@ -59,7 +62,7 @@ public abstract class DataFxService<V> extends Service<V> {
      * This property wrapps the cancelableProperty of the task that is executed
      * by this service.
      *
-     * @return
+     * @return the property
      */
     public ReadOnlyBooleanProperty cancelableProperty() {
         return cancelable;

@@ -26,22 +26,43 @@
  */
 package org.datafx.controller.flow;
 
+/**
+ * Default Exception Type for the Flow API
+ *
+ * @author Hendrik Ebbers
+ */
 public class FlowException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Default Constructor
+     */
     public FlowException() {
         super();
     }
 
+    /**
+     * Defines an Exception with a message
+     * @param message a error message
+     */
     public FlowException(String message) {
         super(message);
     }
 
+    /**
+     *  Defines an Exception with a message and a cause
+     * @param message a error message
+     * @param cause   the cause
+     */
     public FlowException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Defines an Exception with a cause
+     * @param cause the cause
+     */
     public FlowException(Throwable cause) {
         super(cause);
     }
