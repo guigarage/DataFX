@@ -109,7 +109,9 @@ public  class RestSourceBuilder<T> {
     public RestSource build () {
         restSource.setQueryParams(queryParams);
         restSource.setFormParams(formParams);
-        restSource.setPath(path);
+        if (!this.path.isEmpty()) {
+            restSource.setPath(path);
+        }
         return restSource;
     }
     
