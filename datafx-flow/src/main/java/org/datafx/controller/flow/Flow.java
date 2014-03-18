@@ -29,6 +29,7 @@ package org.datafx.controller.flow;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.datafx.controller.flow.action.FlowMethodAction;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.action.FlowLink;
@@ -103,6 +104,18 @@ public class Flow {
 				actionClass));
 		return this;
 	}
+
+    public Flow withGlobalCallMethodAction(String actionId,
+                                     String actionMethodName) {
+        addGlobalAction(actionId, new FlowMethodAction(actionMethodName));
+        return this;
+    }
+
+    public Flow withCallMethodAction(Class<?> controllerClass, String actionId,
+                               String actionMethodName) {
+        addActionToView(controllerClass, actionId, new FlowMethodAction(actionMethodName));
+        return this;
+    }
 
 	public <U> void addActionToView(Class<?> controllerClass, String actionId,
 			FlowAction action) {

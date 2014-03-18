@@ -232,6 +232,7 @@ public class ViewFactory {
             ViewContext<T> context = new ViewContext<>(viewNode,
                      controller, viewFlowContext);
             context.register(controller);
+            context.register("controller", controller);
             // 3. Resolve the @Inject points in the Controller and call
             // @PostConstruct
             context.getResolver().injectResources(controller);
