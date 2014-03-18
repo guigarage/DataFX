@@ -33,10 +33,9 @@ import org.datafx.controller.flow.context.FlowActionHandler;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.event.*;
-import org.datafx.controller.util.FxmlLoadException;
-import org.datafx.controller.util.Veto;
-import org.datafx.controller.util.VetoException;
-import org.datafx.controller.util.VetoHandler;
+import org.datafx.controller.util.*;
+
+import java.util.ResourceBundle;
 
 public class FlowHandler {
 
@@ -50,25 +49,39 @@ public class FlowHandler {
 
     private SimpleObjectProperty<VetoHandler> vetoHandler;
 
-    public FlowHandler(Flow flow, ViewFlowContext flowContext) {
+    private ViewConfiguration viewConfiguration;
+
+    public FlowHandler(Flow flow, ViewFlowContext flowContext, ViewConfiguration viewConfiguration) {
         this.flowContext = flowContext;
         this.flow = flow;
+        this.viewConfiguration = viewConfiguration;
         flowContext.register(new FlowActionHandler(this));
+    }
+
+    public FlowHandler(Flow flow, ViewFlowContext flowContext) {
+        this(flow, flowContext, new ViewConfiguration());
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void start(FlowContainer container) throws FlowException {
         this.container = container;
         flowContext.register(this);
+        if(viewConfiguration != null) {
+            flowContext.register(ResourceBundle.class.toString(), viewConfiguration.getResources());
+        }
         try {
             FlowView<?> startView = new FlowView(ViewFactory.getInstance()
                     .createByControllerInViewFlow(
                             this.flow.getStartViewControllerClass(),
-                            flowContext, null, this));
+                            flowContext, null, this, getViewConfiguration()));
             setNewView(startView);
         } catch (FxmlLoadException e) {
             throw new FlowException(e);
         }
+    }
+
+    public ViewConfiguration getViewConfiguration() {
+        return viewConfiguration;
     }
 
     public void handle(String actionId) {

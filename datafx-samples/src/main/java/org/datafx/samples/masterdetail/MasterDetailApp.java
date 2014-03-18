@@ -28,9 +28,12 @@ package org.datafx.samples.masterdetail;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
@@ -47,16 +50,24 @@ public class MasterDetailApp extends Application {
 		
 		DefaultFlowContainer flowContainer = new DefaultFlowContainer(pane);
 
-		Flow flow = new Flow(MasterViewController.class)
-				.withLink(MasterViewController.class, "showDetails",
-						DetailViewController.class)
-				.withLink(DetailViewController.class, "back",
-						MasterViewController.class)
-				.withTaskAction(MasterViewController.class, "delete",
-						DeleteAction.class);
+		Flow flow = new Flow(ViewController1.class)
+				.withGlobalLink("view1ActionId",
+                        ViewController1.class)
+				.withGlobalLink("view2ActionId",
+                        ViewController1.class);
 
-		flow.createHandler().start(flowContainer);
-		
+        FlowHandler handler = flow.createHandler();
+        handler.start(flowContainer);
+
+        Button b1 = new Button("View 1");
+        b1.setOnAction((e) -> handler.handle(("view1ActionId"));
+
+        Button b2 = new Button("View 1");
+        b2.setOnAction((e) -> handler.handle(("view2ActionId"));
+
+        VBox box = new VBox();
+        box.getChildren().addAll()
+
 		Scene myScene = new Scene(pane);
 
 		stage.setScene(myScene);

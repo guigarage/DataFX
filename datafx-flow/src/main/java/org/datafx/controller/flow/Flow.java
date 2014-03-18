@@ -33,6 +33,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.action.FlowTaskAction;
+import org.datafx.controller.util.ViewConfiguration;
 
 public class Flow {
 
@@ -42,10 +43,21 @@ public class Flow {
 
 	private Map<String, FlowAction> globalFlowMap;
 
-	public Flow(Class<?> startViewControllerClass) {
-		this.startViewControllerClass = startViewControllerClass;
-		globalFlowMap = new HashMap<>();
-		viewFlowMap = new HashMap<>();
+    private ViewConfiguration viewConfiguration;
+
+    public Flow(Class<?> startViewControllerClass, ViewConfiguration viewConfiguration) {
+        this.startViewControllerClass = startViewControllerClass;
+        globalFlowMap = new HashMap<>();
+        viewFlowMap = new HashMap<>();
+        this.viewConfiguration = viewConfiguration;
+    }
+
+    public ViewConfiguration getViewConfiguration() {
+        return viewConfiguration;
+    }
+
+    public Flow(Class<?> startViewControllerClass) {
+		this(startViewControllerClass, new ViewConfiguration());
 	}
 
 	public FlowHandler createHandler(ViewFlowContext flowContext) {
