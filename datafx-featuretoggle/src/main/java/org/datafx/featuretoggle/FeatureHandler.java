@@ -1,7 +1,6 @@
 package org.datafx.featuretoggle;
 
 import com.guigarage.toggles.ObservableToggleManager;
-import javafx.beans.property.BooleanProperty;
 import javafx.scene.Node;
 import org.datafx.DataFXConfiguration;
 import org.togglz.core.Feature;
@@ -55,19 +54,11 @@ public class FeatureHandler {
     }
 
     public void hideByFeature(Node node, String featureName) {
-        bindToBooleanProperty(featureName, node.visibleProperty());
+        node.visibleProperty().bind(createFeatureProperty(featureName).not());
     }
 
     public void disableByFeature(Node node, String featureName) {
-        bindToBooleanProperty(featureName, node.disableProperty());
+        node.disableProperty().bind(createFeatureProperty(featureName).not());
     }
 
-    public void bindToBooleanProperty(String featureName, BooleanProperty property) {
-        bindToBooleanProperty(createFeatureProperty(featureName), property);
-    }
-
-    public void bindToBooleanProperty(FeatureProperty<?> feature, BooleanProperty property) {
-        property.bind(feature);
-        property.setValue(feature.get());
-    }
 }

@@ -345,6 +345,7 @@ public class ViewFactory {
 		Field[] fields = cls.getDeclaredFields();
 		for (final Field field : fields) {
 			if (field.isAnnotationPresent(FXMLFlowAction.class)) {
+                //TODO: Refactor and use ControllerResourceConsumer to add the action listener
 				final FXMLFlowAction action = field.getAnnotation(FXMLFlowAction.class);
 				Object content = PrivilegedReflection.getPrivileged(field, controller);
 				if (content != null) {

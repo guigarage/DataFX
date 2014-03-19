@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datafx version="8.0">
+          <features>
+              <featureEnum>org.datafx.samples.featuretoggle.SampleFeatures</featureEnum>
+          </features>
+</datafx>
