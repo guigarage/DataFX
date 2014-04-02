@@ -5,8 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.flow.action.FXMLFlowAction;
-import org.datafx.controller.flow.context.ActionHandler;
-import org.datafx.controller.flow.context.FlowActionHandler;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -32,9 +30,6 @@ public class MasterViewController {
 
     @FXML
     private ListView dataList;
-
-    @ActionHandler
-    private FlowActionHandler actionHandler;
 
     @Inject
     private DataModel model;

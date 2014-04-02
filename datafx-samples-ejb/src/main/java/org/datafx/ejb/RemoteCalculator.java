@@ -16,9 +16,6 @@
  */
 package org.datafx.ejb;
 
-/**
- * @author Jaikiran Pai
- */
 public interface RemoteCalculator {
 
     int add(int a, int b);

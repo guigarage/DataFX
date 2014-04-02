@@ -25,4 +25,24 @@ public interface TaskWithStateHandler {
     default TaskStateHandler getStateHandler() {
         return TaskStateHandlerManager.get(this);
     }
+
+    public default void updateTaskTitle(String title) {
+        getStateHandler().updateTaskTitle(title);
+    }
+
+    default void updateTaskMessage(String message){
+        getStateHandler().updateTaskMessage(message);
+    }
+
+    default void updateTaskProgress(double workDone, double max){
+        getStateHandler().updateTaskProgress(workDone, max);
+    }
+
+    default void updateTaskProgress(long workDone, long max){
+        getStateHandler().updateTaskProgress(workDone, max);
+    }
+
+    default void setCancelable(boolean cancelable){
+        getStateHandler().setCancelable(cancelable);
+    }
 }

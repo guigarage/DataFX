@@ -26,8 +26,6 @@
  */
 package org.datafx.control.cell;
 
-import java.io.IOException;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
@@ -41,6 +39,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import org.datafx.concurrent.DataFxService;
+
+import java.io.IOException;
 
 /**
  * A cell that visualizes the current state of a
@@ -96,6 +96,9 @@ public class ServiceListCell<T> extends ListCell<Service<T>> {
                         taskTitleLabel.textProperty().bind(newValue.titleProperty());
                         taskMessageLabel.textProperty().bind(newValue.messageProperty());
                         taskProgress.progressProperty().bind(newValue.progressProperty());
+
+                        newValue.progressProperty().addListener((e) -> System.out.println("Changed: " + newValue.progressProperty().get()));
+
                         if (newValue instanceof DataFxService<?>) {
                             killTaskButton.visibleProperty().bind(((DataFxService<?>) newValue).cancelableProperty());
                         } else {

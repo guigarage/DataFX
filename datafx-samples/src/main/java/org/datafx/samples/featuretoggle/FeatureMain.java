@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.datafx.controller.ViewFactory;
-import org.datafx.samples.validation.context.ValidationController;
 
 public class FeatureMain extends Application {
 

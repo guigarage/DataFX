@@ -31,6 +31,7 @@ public class DataFXDemo extends Application {
         Scene scene = new Scene(container.getPane());
         stage.setScene(scene);
         stage.show();
+
     }
 
 }

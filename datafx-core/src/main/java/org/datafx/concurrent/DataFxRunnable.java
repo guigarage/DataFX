@@ -40,4 +40,10 @@ package org.datafx.concurrent;
  */
 @FunctionalInterface
 public interface DataFxRunnable extends Runnable, TaskWithStateHandler {
+
+    default void run() {
+          runTask(getStateHandler());
+    }
+
+    void runTask(TaskStateHandler handler);
 }

@@ -3,6 +3,7 @@ package org.datafx.samples.ejb.wildfly;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import org.datafx.concurrent.ObservableExecutor;
+import org.datafx.concurrent.ProcessChain;
 import org.datafx.controller.FXMLController;
 import org.datafx.controller.context.ConcurrencyProvider;
 import org.datafx.ejb.RemoteCalculator;
@@ -24,15 +25,14 @@ public class ViewController {
 
     @PostConstruct
     public void init() {
-        myButton.setOnAction(e -> System.out.println(calculator.add(3, 3)));
-    }
 
-    private void action() {
-        executor.createProcessChain().
+        ProcessChain.create().
                 inPlatformThread(() -> myButton.setDisable(true)).
-                inExecutor(() -> System.out.println(calculator.add(3, 3))).
-                inPlatformThread(() -> myButton.setDisable(false)).
-                run();
+                inExecutor((Runnable)() -> calculator.add(3, 3)).
+                inPlatformThread((c) -> myButton.setText(c)).
+                inPlatformThread(() -> myButton.setDisable(false));
+
+        myButton.setOnAction(e -> System.out.println(calculator.add(3, 3)));
     }
 
 }

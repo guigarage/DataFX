@@ -1,6 +1,9 @@
 package org.datafx.samples.app;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.datafx.controller.flow.injection.FlowScoped;
@@ -9,6 +12,7 @@ import org.datafx.controller.flow.injection.FlowScoped;
 public class DataModel {
 
     private ListProperty<Person> persons;
+
     private IntegerProperty selectedPersonIndex;
 
     public ListProperty<Person> getPersons() {

@@ -77,9 +77,9 @@
         <module>datafx-flow</module>
         <module>datafx-cell</module>
         <module>datafx-websocket</module>
+        <module>datafx-samples-ejb</module>
         <module>datafx-ejb</module>
         <module>datafx-ejb-wildfly</module>
-        <module>datafx-samples-ejb</module>
         <module>datafx-flow-wysiwyg</module>
         <module>datafx-featuretoggle</module>
         <module>datafx-samples</module>

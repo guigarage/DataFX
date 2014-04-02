@@ -31,20 +31,17 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-
 import javafx.scene.input.MouseEvent;
-import org.datafx.controller.flow.FlowException;
+import org.datafx.controller.flow.action.FXMLFlowAction;
 import org.datafx.controller.flow.context.ActionHandler;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.FlowActionHandler;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.controller.flow.action.FXMLFlowAction;
-import org.datafx.controller.util.VetoException;
 import org.datafx.samples.masterdetail.data.DataModel;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 public class MasterViewController {
 
