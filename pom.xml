@@ -9,7 +9,7 @@
 
     <groupId>org.javafxdata</groupId>
     <artifactId>datafx-parent</artifactId>
-    <version>8.0-b1-SNAPSHOT</version>
+    <version>8.0b1</version>
     <packaging>pom</packaging>
 
     <name>datafx-parent</name>
