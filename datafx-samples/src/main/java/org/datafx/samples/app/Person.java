@@ -1,11 +1,11 @@
 package org.datafx.samples.app;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.datafx.controller.injection.ViewScoped;
 
+/**
+ * A simple entity
+ */
 public class Person {
 
     private StringProperty name;

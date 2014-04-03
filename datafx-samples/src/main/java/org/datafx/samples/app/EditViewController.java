@@ -10,9 +10,16 @@ import org.datafx.controller.flow.action.FXMLFlowAction;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+/**
+ * The controller for the edit view.
+ */
 @FXMLController("detailView.fxml")
 public class EditViewController {
 
+    /**
+     * The save button is bound to a flow action.
+     * This action is defined by the unique id "save"
+     */
     @FXML
     @FXMLFlowAction("save")
     private Button saveButton;
@@ -23,9 +30,15 @@ public class EditViewController {
     @FXML
     private TextArea notesTextArea;
 
+    /**
+     * The data model is injected.
+     */
     @Inject
     private DataModel model;
 
+    /**
+     * This binds the textfield to values of the selected person.
+     */
     @PostConstruct
     public void init() {
         Person p = model.getPersons().get(model.getSelectedPersonIndex());

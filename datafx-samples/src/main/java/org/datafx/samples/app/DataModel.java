@@ -8,6 +8,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.datafx.controller.flow.injection.FlowScoped;
 
+/**
+ * The data model for the sample. The model is defined as flow scoped.
+ * By doing so the model can be injected in any controller or action. For one flow the injected instance will always be the same.
+ */
 @FlowScoped
 public class DataModel {
 

@@ -5,11 +5,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.datafx.controller.flow.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
-import org.datafx.controller.flow.action.FlowActionChain;
-import org.datafx.controller.flow.action.FlowLink;
-import org.datafx.controller.flow.action.FlowMethodAction;
-import org.datafx.controller.validation.flow.ValidationFlowAction;
 
+/**
+ * Main Class of the DataFX demo.
+ * In this class a DataFX Flow is created. The flow is
+ */
 public class DataFXDemo extends Application {
 
     public static void main(String[] args) {
@@ -18,15 +18,26 @@ public class DataFXDemo extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Flow flow = new Flow(MasterViewController.class).
-                withLink(MasterViewController.class, "edit", EditViewController.class).
-                withLink(MasterViewController.class, "add", AddViewController.class).
-                withLink(EditViewController.class, "save", MasterViewController.class).
-                withTaskAction(MasterViewController.class, "remove", RemoveActionTask.class).
-                withTaskAction(MasterViewController.class, "load", LoadPersonsTask.class).
-                withAction(AddViewController.class, "save", new FlowActionChain(new ValidationFlowAction(), new FlowMethodAction("addPerson"), new FlowLink<MasterViewController>(MasterViewController.class)));
 
+        //This creates the flow. The MasterView will be the start view
+        Flow flow = new Flow(MasterViewController.class).
+
+                // By using the fluent API a link is added to the flow. The link has the unique id "edit" and will link from the MasterView to the EditView
+                withLink(MasterViewController.class, "edit", EditViewController.class).
+
+                // A link is added to the flow. The link has the unique id "save" and will link from the EditView to the MasterView
+                withLink(EditViewController.class, "save", MasterViewController.class).
+
+                // An action is added to the flow. The action is registered fot the MasterView and has the unique id "remove". The action is implemented by the RemoveActionTask class
+                withTaskAction(MasterViewController.class, "remove", RemoveActionTask.class).
+
+                // An action is added to the flow. The action is registered fot the MasterView and has the unique id "load". The action is implemented by the LoadPersonsTask class
+                withTaskAction(MasterViewController.class, "load", LoadPersonsTask.class);
+
+        // A Flow needs a special container that wrappes the flow
         DefaultFlowContainer container = new DefaultFlowContainer();
+
+        //This starts the Flow
         flow.createHandler().start(container);
         Scene scene = new Scene(container.getPane());
         stage.setScene(scene);
