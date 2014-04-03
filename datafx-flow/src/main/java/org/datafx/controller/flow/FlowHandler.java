@@ -27,13 +27,17 @@
 package org.datafx.controller.flow;
 
 import javafx.beans.property.SimpleObjectProperty;
+import org.datafx.controller.FxmlLoadException;
+import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.context.FlowActionHandler;
 import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.event.*;
-import org.datafx.controller.util.*;
+import org.datafx.controller.util.Veto;
+import org.datafx.controller.util.VetoException;
+import org.datafx.controller.util.VetoHandler;
 
 import java.util.ResourceBundle;
 
@@ -46,9 +50,7 @@ public class FlowHandler {
     private SimpleObjectProperty<BeforeFlowActionHandler> beforeFlowActionHandler;
     private SimpleObjectProperty<AfterFlowActionHandler> afterFlowActionHandler;
     private SimpleObjectProperty<VetoableBeforeFlowActionHandler> vetoableBeforeFlowActionHandler;
-
     private SimpleObjectProperty<VetoHandler> vetoHandler;
-
     private ViewConfiguration viewConfiguration;
 
     public FlowHandler(Flow flow, ViewFlowContext flowContext, ViewConfiguration viewConfiguration) {
@@ -62,18 +64,15 @@ public class FlowHandler {
         this(flow, flowContext, new ViewConfiguration());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public void start(FlowContainer container) throws FlowException {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void start(FlowContainer container) throws FlowException {
         this.container = container;
         flowContext.register(this);
-        if(viewConfiguration != null) {
+        if (viewConfiguration != null) {
             flowContext.register(ResourceBundle.class.toString(), viewConfiguration.getResources());
         }
         try {
-            FlowView<?> startView = new FlowView(ViewFactory.getInstance()
-                    .createByControllerInViewFlow(
-                            this.flow.getStartViewControllerClass(),
-                            flowContext, null, this, getViewConfiguration()));
+            FlowView<?> startView = new FlowView(ViewFactory.getInstance().createByController(this.flow.getStartViewControllerClass(), null, getViewConfiguration(), flowContext));
             setNewView(startView);
         } catch (FxmlLoadException e) {
             throw new FlowException(e);
@@ -86,14 +85,14 @@ public class FlowHandler {
 
     public void handle(String actionId) {
         try {
-        FlowAction action = null;
-        if (currentView != null) {
-            action = currentView.getActionById(actionId);
-        }
-        if (action == null) {
-            action = flow.getGlobalActionById(actionId);
-        }
-        handle(action, actionId);
+            FlowAction action = null;
+            if (currentView != null) {
+                action = currentView.getActionById(actionId);
+            }
+            if (action == null) {
+                action = flow.getGlobalActionById(actionId);
+            }
+            handle(action, actionId);
         } catch (Exception e) {
             //TODO: ExceptionHandler
             e.printStackTrace();

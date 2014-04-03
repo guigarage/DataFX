@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.util;
+package org.datafx.controller;
 
 /**
  * This Exception will by thrown by the {@link #ViewFactory} if a FXML file can't be loaded.

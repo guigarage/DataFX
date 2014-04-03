@@ -31,7 +31,7 @@ import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.FlowView;
-import org.datafx.controller.util.FxmlLoadException;
+import org.datafx.controller.FxmlLoadException;
 
 public class FlowLink<T> implements FlowAction {
 
@@ -45,7 +45,7 @@ public class FlowLink<T> implements FlowAction {
 	public void handle(FlowHandler flowHandler, String actionId)
 			throws FlowException {
 		try {
-			ViewContext<T> viewContext = ViewFactory.getInstance().createByControllerInViewFlow(controllerClass, flowHandler.getFlowContext(), null, flowHandler, flowHandler.getViewConfiguration());
+			ViewContext<T> viewContext = ViewFactory.getInstance().createByController(controllerClass, null, flowHandler.getViewConfiguration(), flowHandler.getFlowContext());
             flowHandler.setNewView(new FlowView<T>(viewContext));
         } catch (FxmlLoadException e) {
             throw new FlowException(e);

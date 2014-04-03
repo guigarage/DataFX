@@ -34,7 +34,7 @@ import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.action.FlowTaskAction;
-import org.datafx.controller.util.ViewConfiguration;
+import org.datafx.controller.ViewConfiguration;
 
 /**
  * This class defines a flow. A flow is a map of different views that are linked. A flow can define actions for each view or global actions for the complete flow. The class provides a fluent API to create a flow with views and actions.
