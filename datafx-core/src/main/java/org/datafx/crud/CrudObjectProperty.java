@@ -5,7 +5,6 @@ import javafx.concurrent.Worker;
 import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.concurrent.ObservableExecutor;
 
-import javax.swing.*;
 import java.util.concurrent.Executor;
 
 public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObjectProperty<S> {
@@ -50,7 +49,7 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
             try {
                 T id = ConcurrentUtils.runCallableAndWait(() -> get().getId());
                 S updatedData = crudService.getById(id);
-                SwingUtilities.invokeLater(() -> set(updatedData));
+                ConcurrentUtils.runAndWait(() -> set(updatedData));
                 return updatedData;
             } catch (Exception e) {
                 throw new RuntimeException("TODO", e);
@@ -62,7 +61,7 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
         return ConcurrentUtils.executeService(executor, ConcurrentUtils.createService(() -> {
             try {
                 S updatedData = crudService.save(get());
-                SwingUtilities.invokeLater(() -> set(updatedData));
+                ConcurrentUtils.runAndWait(() -> set(updatedData));
                 return updatedData;
             } catch (Exception e) {
                 throw new RuntimeException("TODO", e);
@@ -74,7 +73,7 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
         return ConcurrentUtils.executeService(executor, ConcurrentUtils.createService(() -> {
            try {
                crudService.delete(get());
-               SwingUtilities.invokeLater(() -> set(null));
+               ConcurrentUtils.runAndWait(() -> set(null));
                if (listProperty != null) {
                    listProperty.remove(this);
                }

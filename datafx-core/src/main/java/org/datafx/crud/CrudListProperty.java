@@ -6,7 +6,6 @@ import javafx.concurrent.Worker;
 import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.concurrent.ObservableExecutor;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -46,7 +45,7 @@ public class CrudListProperty<S extends EntityWithId<T>, T> extends ModifiableOb
                 for (S data : dataList) {
                     newProperties.add(new CrudObjectProperty<S, T>(data, CrudListProperty.this, crudService, executor));
                 }
-                SwingUtilities.invokeLater(() -> setAll(newProperties));
+                ConcurrentUtils.runAndWait(() -> setAll(newProperties));
                 return newProperties;
             } catch (Exception e) {
                 throw new RuntimeException("TODO", e);
