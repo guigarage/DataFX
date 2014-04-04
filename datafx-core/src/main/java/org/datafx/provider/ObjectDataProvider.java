@@ -42,6 +42,7 @@ import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.ServerSentEventReader;
 import org.datafx.reader.WritableDataReader;
+import org.datafx.util.ExceptionHandler;
 import org.datafx.writer.WriteBackHandler;
 import org.datafx.writer.WriteBackProvider;
 
@@ -163,13 +164,6 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
     @Override
     public Worker<T> retrieve() {
         final Service<T> retriever = createService(objectProperty);
-        retriever.setOnFailed(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent arg0) {
-                System.err.println("Default DataFX error handler:");
-                retriever.getException().printStackTrace();
-            }
-        });
         return ConcurrentUtils.executeService(executor, retriever);
     }
 

@@ -37,6 +37,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
+import org.datafx.util.ExceptionHandler;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -64,12 +65,22 @@ public class ObservableExecutor implements Executor {
 
     private ListProperty<Service<?>> currentServices;
 
+    private ExceptionHandler exceptionHandler;
+
     /**
      * Creates a new ObservableExecutor that uses a cached thread pool to handle
      * all commited tasks.
      */
     public ObservableExecutor() {
-        this(Executors.newCachedThreadPool());
+        this(ThreadPoolExecutorFactory.getThreadPoolExecutor());
+    }
+
+    public ObservableExecutor(Executor executor) {
+        this(executor, ExceptionHandler.getDefaultInstance());
+    }
+
+    public ObservableExecutor(ExceptionHandler exceptionHandler) {
+        this(ThreadPoolExecutorFactory.getThreadPoolExecutor(), exceptionHandler);
     }
 
     /**
@@ -79,8 +90,9 @@ public class ObservableExecutor implements Executor {
      * @param executor wrapped executor. It will be used to handle all task that
      * are commited to this executor.
      */
-    public ObservableExecutor(Executor executor) {
+    public ObservableExecutor(Executor executor, ExceptionHandler exceptionHandler) {
         this.executor = executor;
+        this.exceptionHandler = exceptionHandler;
         currentServices = new SimpleListProperty<Service<?>>(
                 FXCollections.<Service<?>>observableArrayList());
         currentServices.addListener(new ListChangeListener<Service<?>>() {
@@ -142,6 +154,9 @@ public class ObservableExecutor implements Executor {
     public <T> Worker<T> submit(Service<T> service) {
         service.setExecutor(executor);
         currentServices.add(service);
+        if(exceptionHandler != null) {
+            exceptionHandler.observeWorker(service);
+        }
         service.start();
         return service;
     }

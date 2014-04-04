@@ -26,22 +26,9 @@
  */
 package org.datafx.provider;
 
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -53,13 +40,22 @@ import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import org.datafx.concurrent.ConcurrentUtils;
-import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.WritableDataReader;
+import org.datafx.util.ExceptionHandler;
 import org.datafx.writer.WriteBackHandler;
 import org.datafx.writer.WriteBackListProvider;
 import org.datafx.writer.WriteBackProvider;
 import org.datafx.writer.WriteTransient;
+
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.Executor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The ListDataProvider is an implementation of {@link DataProvider} that allows
@@ -156,14 +152,6 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
 
     public Worker<ObservableList<T>> retrieve() {
         final Service<ObservableList<T>> retriever = createService(observableList);
-        retriever.setOnFailed(new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent arg0) {
-                System.err.println("Default DataFX error handler:");
-                retriever.getException().printStackTrace();
-            }
-        });
-
         return ConcurrentUtils.executeService(executor, retriever);
     }
     //   private static Map<ObservableList, ListChangeListener> addListeners = new HashMap<ObservableList, ListChangeListener>();
