@@ -51,10 +51,9 @@ public class ConcurrentUtils {
      * @throws InterruptedException  if the JavaFX Application Thread was interrupted while waiting
      * @throws ExecutionException if the call of the run method of the <tt>Runnable</tt> threw an exception
      */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void runAndWait(Runnable runnable)
 			throws InterruptedException, ExecutionException {
-		FutureTask<?> future = new FutureTask(runnable, null);
+		FutureTask<Void> future = new FutureTask<>(runnable, null);
 		Platform.runLater(future);
 		future.get();
 	}
