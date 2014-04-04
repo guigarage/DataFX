@@ -5,6 +5,7 @@ import org.datafx.crud.CrudService;
 import org.datafx.crud.EntityWithId;
 import org.datafx.crud.QueryParameter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,11 +66,12 @@ public class BasicCrudService<S extends EntityWithId<T>, T> implements CrudServi
     }
 
     @Override
-    public List<S> query(String name, List<QueryParameter> params) throws Exception {
+    public List<S> query(String name, QueryParameter... params) throws Exception {
         Call<List<QueryParameter>, List<S>> queryCall = queries.get(name);
         if(queryCall == null) {
             throw new RuntimeException("TODO");
         }
-        return queryCall.call(params);
+        List<QueryParameter> paramList = Arrays.asList(params);
+        return queryCall.call(paramList);
     }
 }
