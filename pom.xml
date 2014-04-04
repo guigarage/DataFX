@@ -65,7 +65,6 @@
         <module>datafx-samples-ejb</module>
         <module>datafx-ejb</module>
         <module>datafx-ejb-wildfly</module>
-        <module>datafx-flow-wysiwyg</module>
         <module>datafx-featuretoggle</module>
         <module>datafx-samples</module>
     </modules>

@@ -22,12 +22,14 @@ public class ThreadPoolExecutorFactory {
             return super.offer(runnable);
         }
     };
+
     private static final ThreadGroup DATAFX_THREAD_GROUP = AccessController.doPrivileged(new PrivilegedAction<ThreadGroup>() {
         @Override
         public ThreadGroup run() {
             return new ThreadGroup("DataFX thread pool");
         }
     });
+
     private static final ThreadFactory DATAFX_THREAD_FACTORY = new ThreadFactory() {
         @Override
         public Thread newThread(final Runnable run) {
