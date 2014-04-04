@@ -43,6 +43,7 @@ public class MasterViewController {
      * The list that shows the data
      */
     @FXML
+    @FXMLFlowAction("edit")
     private ListView dataList;
 
     /**
