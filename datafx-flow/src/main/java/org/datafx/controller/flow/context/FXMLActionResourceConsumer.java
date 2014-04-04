@@ -3,7 +3,7 @@ package org.datafx.controller.flow.context;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.resource.ControllerResourceConsumer;
 import org.datafx.controller.flow.action.FXMLFlowAction;
@@ -14,8 +14,8 @@ public class FXMLActionResourceConsumer implements ControllerResourceConsumer<FX
     public void consumeResource(FXMLFlowAction annotation, Node resource, ViewContext<?> context) {
         FlowActionHandler actionHandler = context.getRegisteredObject(ViewFlowContext.class).getRegisteredObject(FlowActionHandler.class);
         if (resource != null) {
-            if (resource instanceof Button) {
-                ((Button) resource)
+            if (resource instanceof ButtonBase) {
+                ((ButtonBase) resource)
                         .setOnAction(new EventHandler<ActionEvent>() {
 
                             @Override
