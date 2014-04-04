@@ -38,6 +38,7 @@ import org.datafx.controller.flow.event.*;
 import org.datafx.controller.util.Veto;
 import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.VetoHandler;
+import org.datafx.util.ExceptionHandler;
 
 import java.util.ResourceBundle;
 
@@ -52,16 +53,22 @@ public class FlowHandler {
     private SimpleObjectProperty<VetoableBeforeFlowActionHandler> vetoableBeforeFlowActionHandler;
     private SimpleObjectProperty<VetoHandler> vetoHandler;
     private ViewConfiguration viewConfiguration;
-
-    public FlowHandler(Flow flow, ViewFlowContext flowContext, ViewConfiguration viewConfiguration) {
-        this.flowContext = flowContext;
-        this.flow = flow;
-        this.viewConfiguration = viewConfiguration;
-        flowContext.register(new FlowActionHandler(this));
-    }
+    private ExceptionHandler exceptionHandler;
 
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this(flow, flowContext, new ViewConfiguration());
+    }
+
+    public FlowHandler(Flow flow, ViewFlowContext flowContext, ViewConfiguration viewConfiguration) {
+        this(flow, flowContext, viewConfiguration, ExceptionHandler.getDefaultInstance());
+    }
+
+    public FlowHandler(Flow flow, ViewFlowContext flowContext, ViewConfiguration viewConfiguration, ExceptionHandler exceptionHandler) {
+        this.flowContext = flowContext;
+        this.flow = flow;
+        this.viewConfiguration = viewConfiguration;
+        this.exceptionHandler = exceptionHandler;
+        flowContext.register(new FlowActionHandler(this));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -83,20 +90,19 @@ public class FlowHandler {
         return viewConfiguration;
     }
 
-    public void handle(String actionId) {
-        try {
-            FlowAction action = null;
-            if (currentView != null) {
-                action = currentView.getActionById(actionId);
-            }
-            if (action == null) {
-                action = flow.getGlobalActionById(actionId);
-            }
-            handle(action, actionId);
-        } catch (Exception e) {
-            //TODO: ExceptionHandler
-            e.printStackTrace();
+    public void handle(String actionId) throws VetoException, FlowException {
+        FlowAction action = null;
+        if (currentView != null) {
+            action = currentView.getActionById(actionId);
         }
+        if (action == null) {
+            action = flow.getGlobalActionById(actionId);
+        }
+        handle(action, actionId);
+    }
+
+    public ExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
     }
 
     public ViewFlowContext getFlowContext() {
