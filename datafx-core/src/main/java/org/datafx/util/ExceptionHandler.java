@@ -47,10 +47,10 @@ public class ExceptionHandler {
     private static boolean logException = false;
 
     public static void setExceptionLogging(boolean log) {
-        if (logException) {
-            getDefaultInstance().exceptionProperty().addListener(loggerListener);
+        if (log) {
+            getDefaultInstance().exceptionProperty().addListener(getLoggerListener());
         } else {
-            getDefaultInstance().exceptionProperty().removeListener(loggerListener);
+            getDefaultInstance().exceptionProperty().removeListener(getLoggerListener());
         }
         logException = log;
     }

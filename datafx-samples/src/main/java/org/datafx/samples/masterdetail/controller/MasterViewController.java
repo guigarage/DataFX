@@ -49,6 +49,7 @@ public class MasterViewController {
     private ViewFlowContext context;
     
     @FXML
+    @FXMLFlowAction("showDetails")
     private ListView<StringProperty> myList;
     
     @FXML
@@ -70,14 +71,6 @@ public class MasterViewController {
     public void init() {
         myList.setItems(model.getNames());
         myList.getSelectionModel().select(model.selectedIndex().get());
-        myList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-               if(event.getClickCount() >= 2) {
-                       actionHandler.handle("showDetails");
-               }
-            }
-        });
 
         model.selectedIndex().bind(myList.getSelectionModel().selectedIndexProperty());
     }
