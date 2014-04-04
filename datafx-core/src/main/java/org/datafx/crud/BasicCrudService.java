@@ -1,9 +1,6 @@
-package org.datafx.crud.api;
+package org.datafx.crud;
 
-import org.datafx.crud.Call;
-import org.datafx.crud.CrudService;
-import org.datafx.crud.EntityWithId;
-import org.datafx.crud.QueryParameter;
+import org.datafx.util.Call;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,31 +31,51 @@ public class BasicCrudService<S extends EntityWithId<T>, T> implements CrudServi
     }
 
     @Override
-    public void delete(S entity) throws Exception {
+    public void delete(S entity) throws CrudException {
         T id = entity.getId();
         if (id == null) {
-            throw new RuntimeException("TODO");
+            throw new CrudException("TODO");
         }
-        deleteByIdCall.call(id);
+        try {
+            deleteByIdCall.call(id);
+        } catch (Exception e) {
+            throw new CrudException("TODO", e);
+        }
     }
 
     @Override
-    public S save(S entity) throws Exception {
+    public S save(S entity) throws CrudException {
         if (entity.getId() == null) {
-            return persistCall.call(entity);
+            try {
+                return persistCall.call(entity);
+            } catch (Exception e) {
+                throw new CrudException("TODO", e);
+            }
         } else {
-            return updateCall.call(entity);
+            try {
+                return updateCall.call(entity);
+            } catch (Exception e) {
+                throw new CrudException("TODO", e);
+            }
         }
     }
 
     @Override
-    public List<S> getAll() throws Exception {
-        return getAllCall.call(null);
+    public List<S> getAll() throws CrudException {
+        try {
+            return getAllCall.call(null);
+        } catch (Exception e) {
+            throw new CrudException("TODO", e);
+        }
     }
 
     @Override
-    public S getById(T id) throws Exception {
-        return getByIdCall.call(id);
+    public S getById(T id) throws CrudException {
+        try {
+            return getByIdCall.call(id);
+        } catch (Exception e) {
+            throw new CrudException("TODO", e);
+        }
     }
 
     public void addQuery(String name, Call<List<QueryParameter>, List<S>> query) {
@@ -66,12 +83,16 @@ public class BasicCrudService<S extends EntityWithId<T>, T> implements CrudServi
     }
 
     @Override
-    public List<S> query(String name, QueryParameter... params) throws Exception {
+    public List<S> query(String name, QueryParameter... params) throws CrudException {
         Call<List<QueryParameter>, List<S>> queryCall = queries.get(name);
         if(queryCall == null) {
-            throw new RuntimeException("TODO");
+            throw new CrudException("TODO");
         }
         List<QueryParameter> paramList = Arrays.asList(params);
-        return queryCall.call(paramList);
+        try {
+            return queryCall.call(paramList);
+        } catch (Exception e) {
+            throw new CrudException("TODO", e);
+        }
     }
 }

@@ -6,6 +6,11 @@ public class QueryParameter<T> {
 
     private T value;
 
+    public QueryParameter(String name, T value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public String getName() {
         return name;
     }

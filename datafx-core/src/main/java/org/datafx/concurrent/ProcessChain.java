@@ -103,7 +103,7 @@ public class ProcessChain<T> {
             executorService.execute(task);
             return task.get();
         } else {
-            return ConcurrentUtils.runAndWait(() -> {
+            return ConcurrentUtils.runCallableAndWait(() -> {
                 return processDescription.getFunction().apply(inputParameter);
             });
         }

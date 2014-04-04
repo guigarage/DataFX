@@ -46,21 +46,14 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
     }
 
     public Worker<S> update() {
-        S data = get();
-        if (data == null) {
-            throw new RuntimeException("TODO");
-        }
-        T id = data.getId();
-        if (id == null) {
-            throw new RuntimeException("TODO");
-        }
         return ConcurrentUtils.executeService(executor, ConcurrentUtils.createService(() -> {
             try {
+                T id = ConcurrentUtils.runCallableAndWait(() -> get().getId());
                 S updatedData = crudService.getById(id);
                 SwingUtilities.invokeLater(() -> set(updatedData));
                 return updatedData;
             } catch (Exception e) {
-                throw new RuntimeException("TODO");
+                throw new RuntimeException("TODO", e);
             }
         }));
     }
@@ -72,7 +65,7 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
                 SwingUtilities.invokeLater(() -> set(updatedData));
                 return updatedData;
             } catch (Exception e) {
-                throw new RuntimeException("TODO");
+                throw new RuntimeException("TODO", e);
             }
         }));
     }
@@ -86,7 +79,7 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
                    listProperty.remove(this);
                }
            } catch (Exception e) {
-               throw new RuntimeException("TODO");
+               throw new RuntimeException("TODO", e);
            }
        }));
     }

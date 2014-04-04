@@ -1,6 +1,6 @@
 package org.datafx.crud.rest;
 
-import org.datafx.crud.api.BasicCrudService;
+import org.datafx.crud.BasicCrudService;
 import org.datafx.crud.EntityWithId;
 
 import java.net.MalformedURLException;

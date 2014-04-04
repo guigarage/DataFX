@@ -1,4 +1,4 @@
-package org.datafx.crud;
+package org.datafx.util;
 
 @FunctionalInterface
 public interface Call<S, T> {

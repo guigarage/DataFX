@@ -1,6 +1,6 @@
 package org.datafx.crud.rest;
 
-import org.datafx.crud.Call;
+import org.datafx.util.Call;
 
 import java.io.IOException;
 import java.io.InputStream;

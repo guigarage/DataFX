@@ -49,7 +49,7 @@ public class CrudListProperty<S extends EntityWithId<T>, T> extends ModifiableOb
                 SwingUtilities.invokeLater(() -> setAll(newProperties));
                 return newProperties;
             } catch (Exception e) {
-                throw new RuntimeException("TODO");
+                throw new RuntimeException("TODO", e);
             }
         }));
     }
