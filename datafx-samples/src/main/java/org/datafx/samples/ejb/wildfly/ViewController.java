@@ -25,8 +25,7 @@ public class ViewController {
 
     @PostConstruct
     public void init() {
-
-        ProcessChain.create().
+    ProcessChain.create().
                 inPlatformThread(() -> myButton.setDisable(true)).
                 inExecutor((Runnable)() -> calculator.add(3, 3)).
                 inPlatformThread(() -> myButton.setDisable(false));

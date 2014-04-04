@@ -26,13 +26,6 @@
  */
 package org.datafx.provider;
 
-import java.lang.reflect.Field;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -44,12 +37,21 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.ServerSentEventReader;
 import org.datafx.reader.WritableDataReader;
 import org.datafx.writer.WriteBackHandler;
 import org.datafx.writer.WriteBackProvider;
+
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -168,15 +170,7 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
                 retriever.getException().printStackTrace();
             }
         });
-        if (executor != null && executor instanceof ObservableExecutor) {
-            return ((ObservableExecutor) executor).submit(retriever);
-        } else {
-            if (executor != null) {
-                retriever.setExecutor(executor);
-            }
-            retriever.start();
-            return retriever;
-        }
+        return ConcurrentUtils.executeService(executor, retriever);
     }
 
     private void handleKeepReading (final ServerSentEventReader reader) {

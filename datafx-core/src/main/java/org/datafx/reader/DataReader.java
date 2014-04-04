@@ -26,6 +26,8 @@
  */
 package org.datafx.reader;
 
+import java.util.Iterator;
+
 /**
  *
  * This is the root interface for all data readers. A DataReader is responsible
@@ -37,7 +39,7 @@ package org.datafx.reader;
  * 
  * @param <T> the type of Java Objects that should be returned by this DataReader
  */
-public interface DataReader<T> {
+public interface DataReader<T> extends Iterable<T> {
 	/**
          * Obtain the next entity of data. In case the data is a single entity, 
          * this method returns all data. In case the data is a list, this method
@@ -53,9 +55,24 @@ public interface DataReader<T> {
          * data will be available at a later time.
          * Calling this method on a DataReader that does not support lists always returns
          * false
-         * @return true in case more data is available and obtainable via a {@link get()} call,
+         * @return true in case more data is available and obtainable via a <tt>get()</tt> call,
          * false otherwise.
          */
 	public boolean next();
+
+    default Iterator<T> iterator(){
+        return new Iterator<T>() {
+
+            @Override
+            public boolean hasNext() {
+                return DataReader.this.next();
+            }
+
+            @Override
+            public T next() {
+                return DataReader.this.get();
+            }
+        };
+    }
 	
 }

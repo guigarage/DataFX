@@ -32,6 +32,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
+import java.util.concurrent.Executor;
+
 /**
  * A Service that provides a cancelable property. While the value of this
  * property is false the servce can not be canceled.
@@ -55,7 +57,12 @@ public abstract class DataFxService<V> extends Service<V> {
         if (task instanceof DataFxTask) {
             cancelable.bind(((DataFxTask<V>) task).cancelableProperty());
         }
-        super.executeTask(task);
+        Executor e = getExecutor();
+        if (e != null) {
+            e.execute(task);
+        } else {
+            ObservableExecutor.getDefaultInstance().execute(task);
+        }
     }
 
     /**

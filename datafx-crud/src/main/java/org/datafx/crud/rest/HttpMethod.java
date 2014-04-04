@@ -1,4 +1,4 @@
-package org.datafx;
+package org.datafx.crud.rest;
 
 public enum HttpMethod {
     GET("GET"),

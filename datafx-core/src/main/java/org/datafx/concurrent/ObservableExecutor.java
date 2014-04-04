@@ -26,11 +26,6 @@
  */
 package org.datafx.concurrent;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -42,6 +37,11 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * A Executor that task can be observed. All current running and scheduled task
@@ -154,11 +154,7 @@ public class ObservableExecutor implements Executor {
      * receive the result of it.
      */
     public <T> Worker<T> submit(final Task<T> task) {
-        return submit(new DataFxService<T>() {
-            @Override protected Task<T> createTask() {
-                return task;
-            }
-        });
+        return submit(ConcurrentUtils.createService(task));
     }
 
     /**
@@ -170,7 +166,7 @@ public class ObservableExecutor implements Executor {
      * receive the result of it.
      */
     public <T> Worker<T> submit(final Callable<T> callable) {
-        return submit(new CallableBasedDataFxTask<T>(callable));
+        return submit(ConcurrentUtils.createService(callable));
     }
 
     /**
@@ -181,7 +177,7 @@ public class ObservableExecutor implements Executor {
      * @return a worker that can be used to check the state of the runnable
      */
     public Worker<Void> submit(final Runnable runnable) {
-        return submit(new RunnableBasedDataFxTask(runnable));
+        return submit(ConcurrentUtils.createService(runnable));
     }
 
     /**
@@ -192,37 +188,6 @@ public class ObservableExecutor implements Executor {
      */
     public void execute(Runnable runnable) {
         submit(runnable);
-    }
-
-    private class RunnableBasedDataFxTask extends DataFxTask<Void> {
-        private Runnable runnable;
-
-        public RunnableBasedDataFxTask(Runnable runnable) {
-            this.runnable = runnable;
-            if (this.runnable instanceof DataFxRunnable) {
-                ((DataFxRunnable) this.runnable).injectStateHandler(this);
-            }
-        }
-
-        @Override public Void call() throws Exception {
-            runnable.run();
-            return null;
-        }
-    }
-
-    private class CallableBasedDataFxTask<V> extends DataFxTask<V> {
-        private Callable<V> callable;
-
-        public CallableBasedDataFxTask(Callable<V> callable) {
-            this.callable = callable;
-            if (this.callable instanceof DataFxCallable) {
-                ((DataFxCallable<V>) this.callable).injectStateHandler(this);
-            }
-        }
-
-        @Override public V call() throws Exception {
-            return callable.call();
-        }
     }
 
     /**

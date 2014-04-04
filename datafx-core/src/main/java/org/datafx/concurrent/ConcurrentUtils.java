@@ -26,11 +26,15 @@
  */
 package org.datafx.concurrent;
 
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
-
-import javafx.application.Platform;
 
 /**
  *  Utility class for concurrency issues in JavaFX
@@ -69,4 +73,33 @@ public class ConcurrentUtils {
 		Platform.runLater(future);
 		return future.get();
 	}
+
+    public static DataFxService<Void> createService(Runnable runnable) {
+        return createService(new RunnableBasedDataFxTask(runnable));
+    }
+
+    public static <T> DataFxService<T> createService(Callable<T> callable) {
+        return createService(new CallableBasedDataFxTask<T>(callable));
+    }
+
+    public static <T> DataFxService<T> createService(Task<T> task) {
+        return new DataFxService<T>() {
+            @Override protected Task<T> createTask() {
+                return task;
+            }
+        };
+    }
+
+    public static <T> Worker<T> executeService(Executor executor, Service<T> service) {
+        if (executor != null && executor instanceof ObservableExecutor) {
+            return ((ObservableExecutor) executor).submit(service);
+        } else {
+            if (executor != null) {
+                service.setExecutor(executor);
+            }
+            service.start();
+            return service;
+        }
+    }
+
 }

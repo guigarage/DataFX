@@ -1,4 +1,6 @@
-package org.datafx;
+package org.datafx.crud.rest;
+
+import org.datafx.crud.Call;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.function.Function;
 
-public class RestCall<S, T> {
+public class RestCall<S, T> implements Call<S, T> {
 
     private Function<S, URL> urlFactory;
 

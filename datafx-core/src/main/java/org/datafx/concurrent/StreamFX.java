@@ -26,13 +26,13 @@
  */
 package org.datafx.concurrent;
 
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
+
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Stream Helper class for JavaFX. Combines the Stream API with the JavaFX platform thread
@@ -57,7 +57,7 @@ public class StreamFX<T> {
      * Each element is wrapped in a ObjectProperty and the action will run on the JavaFX Platform Thread
      * @param action action to perform on the elements
      */
-    void forEach(final Consumer<ObjectProperty<? super T>> action) {
+    public void forEach(final Consumer<ObjectProperty<? super T>> action) {
         stream.forEach((Consumer<T>) (t) -> {Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t)));});
     }
 
@@ -68,7 +68,7 @@ public class StreamFX<T> {
      * defined encounter order
      * @param action action to perform on the elements
      */
-    void forEachOrdered(final Consumer<ObjectProperty<? super T>> action) {
+    public void forEachOrdered(final Consumer<ObjectProperty<? super T>> action) {
         stream.forEachOrdered((Consumer<T>) (t) -> {Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t)));});
     }
 
@@ -91,4 +91,5 @@ public class StreamFX<T> {
     public void publishOrderer(final ObservableList<T> list) {
         stream.forEachOrdered((Consumer<T>) (t) -> {Platform.runLater(() -> list.add(t));});
     }
+
 }

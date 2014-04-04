@@ -1,4 +1,4 @@
-package org.datafx;
+package org.datafx.crud.rest;
 
 import java.io.InputStream;
 import java.util.function.Function;

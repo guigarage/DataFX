@@ -60,7 +60,7 @@
         <module>datafx-core</module>
         <module>datafx-flow</module>
         <module>datafx-cell</module>
-        <module>datafx-rs</module>
+        <module>datafx-crud</module>
         <module>datafx-websocket</module>
         <module>datafx-samples-ejb</module>
         <module>datafx-ejb</module>

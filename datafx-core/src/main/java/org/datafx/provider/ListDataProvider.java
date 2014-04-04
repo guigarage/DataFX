@@ -52,6 +52,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
+import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.concurrent.ObservableExecutor;
 import org.datafx.reader.DataReader;
 import org.datafx.reader.WritableDataReader;
@@ -163,18 +164,7 @@ public class ListDataProvider<T> implements DataProvider<ObservableList<T>>,
             }
         });
 
-        if (executor != null && executor instanceof ObservableExecutor) {
-
-            return ((ObservableExecutor) executor).submit(retriever);
-        } else {
-            if (executor != null) {
-                retriever.setExecutor(executor);
-            }
-
-            retriever.start();
-
-            return retriever;
-        }
+        return ConcurrentUtils.executeService(executor, retriever);
     }
     //   private static Map<ObservableList, ListChangeListener> addListeners = new HashMap<ObservableList, ListChangeListener>();
     final static Map<ObservableList, ListChangeListener> addListeners = new HashMap();

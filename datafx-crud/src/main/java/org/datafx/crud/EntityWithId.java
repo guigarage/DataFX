@@ -1,4 +1,4 @@
-package org.datafx;
+package org.datafx.crud;
 
 public interface EntityWithId<T> {
 
