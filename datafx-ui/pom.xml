@@ -8,10 +8,10 @@
 		<relativePath>../</relativePath>
 	</parent>
 
-	<artifactId>datafx-cell</artifactId>
+	<artifactId>datafx-ui</artifactId>
 	<packaging>jar</packaging>
 
-	<name>datafx-cell</name>
+	<name>datafx-ui</name>
 
 	<dependencies>
         <dependency>

@@ -27,6 +27,7 @@
 package org.datafx.controller.context;
 
 import javafx.scene.Node;
+import org.datafx.controller.ViewConfiguration;
 
 import javax.annotation.PreDestroy;
 import java.lang.reflect.InvocationTargetException;
@@ -89,8 +90,12 @@ import java.lang.reflect.Method;
 public class ViewContext<U> extends AbstractContext {
 
     private Node rootNode;
+
     private U controller;
+
     private ContextResolver<U> resolver;
+
+    private ViewConfiguration configuration;
 
     /**
      * Create a new ViewContext for a (view-){@link #Node} and a controller.
@@ -100,9 +105,10 @@ public class ViewContext<U> extends AbstractContext {
      * @param rootNode   the (view-)node
      * @param controller the controller
      */
-    public ViewContext(Node rootNode, U controller, Object... resources) {
+    public ViewContext(Node rootNode, U controller, ViewConfiguration configuration, Object... resources) {
         this.rootNode = rootNode;
         this.controller = controller;
+        this.configuration = configuration;
 
         if (resources != null) {
             for (Object resource : resources) {
@@ -165,5 +171,9 @@ public class ViewContext<U> extends AbstractContext {
                 }
             }
         }
+    }
+
+    public ViewConfiguration getConfiguration() {
+        return configuration;
     }
 }

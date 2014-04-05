@@ -32,6 +32,7 @@ import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.action.FlowAction;
+import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.context.FlowActionHandler;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.event.*;
@@ -40,7 +41,10 @@ import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.VetoHandler;
 import org.datafx.util.ExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class FlowHandler {
 
@@ -55,6 +59,8 @@ public class FlowHandler {
     private ViewConfiguration viewConfiguration;
     private ExceptionHandler exceptionHandler;
 
+    private List<Class<?>> controllerHistory;
+
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this(flow, flowContext, new ViewConfiguration());
     }
@@ -68,6 +74,7 @@ public class FlowHandler {
         this.flow = flow;
         this.viewConfiguration = viewConfiguration;
         this.exceptionHandler = exceptionHandler;
+        controllerHistory = new ArrayList<>();
         flowContext.register(new FlowActionHandler(this));
     }
 
@@ -142,6 +149,7 @@ public class FlowHandler {
 
     public <U> ViewContext<U> setNewView(FlowView<U> newView)
             throws FlowException {
+        controllerHistory.add(0, currentView.getViewContext().getController().getClass());
 
         flow.addActionsToView(newView);
 
@@ -163,5 +171,9 @@ public class FlowHandler {
         flowContext.setCurrentViewContext(currentView.getViewContext());
         container.setView(currentView.getViewContext());
         return newView.getViewContext();
+    }
+
+    public void navigateBack() throws VetoException, FlowException {
+        handle(new FlowLink(controllerHistory.remove(0)), "backAction-" + UUID.randomUUID().toString());
     }
 }

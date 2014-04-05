@@ -88,7 +88,7 @@ public class ViewFactory {
             // 2. load the FXML and make sure the @FXML annotations are injected
             Node viewNode = (Node) createLoader(controller, fxmlName, viewConfiguration).load();
             ViewContext<T> context = new ViewContext<>(viewNode,
-                    controller, viewContextResources);
+                    controller, viewConfiguration, viewContextResources);
             context.register(controller);
             context.register("controller", controller);
             // 3. Resolve the @Inject points in the Controller and call

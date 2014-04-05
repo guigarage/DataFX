@@ -1,4 +1,4 @@
-package org.datafx.controller.flow.context;
+package org.datafx.controller.context;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target(value={ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FlowResourceBundle {
+public @interface ViewResourceBundle {
 }

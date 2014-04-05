@@ -30,6 +30,10 @@ public class FlowActionHandler {
         handleAction(new FlowLink<>(controllerClass));
     }
 
+    public <T> void navigateBack() throws VetoException, FlowException {
+        this.handler.navigateBack();
+    }
+
     private void handleAction(FlowAction action) throws VetoException, FlowException {
         this.handler.handle(action, UUID.randomUUID().toString());
     }

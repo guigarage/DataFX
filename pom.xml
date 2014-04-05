@@ -59,7 +59,7 @@
     <modules>
         <module>datafx-core</module>
         <module>datafx-flow</module>
-        <module>datafx-cell</module>
+        <module>datafx-ui</module>
         <module>datafx-crud</module>
         <module>datafx-websocket</module>
         <module>datafx-samples-ejb</module>

@@ -1,5 +1,4 @@
 org.datafx.controller.validation.context.ValidatorControllerResource
 org.datafx.controller.flow.context.ViewFlowContextResourceType
 org.datafx.controller.flow.context.ActionHandlerResourceType
-org.datafx.controller.flow.context.ResourceBundleResourceType
 org.datafx.controller.injection.InjectResourceType
