@@ -26,15 +26,12 @@
  */
 package org.datafx.controller.flow;
 
+import org.datafx.controller.ViewConfiguration;
+import org.datafx.controller.flow.action.*;
+import org.datafx.controller.flow.context.ViewFlowContext;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.datafx.controller.flow.action.FlowMethodAction;
-import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.controller.flow.action.FlowAction;
-import org.datafx.controller.flow.action.FlowLink;
-import org.datafx.controller.flow.action.FlowTaskAction;
-import org.datafx.controller.ViewConfiguration;
 
 /**
  * This class defines a flow. A flow is a map of different views that are linked. A flow can define actions for each view or global actions for the complete flow. The class provides a fluent API to create a flow with views and actions.
@@ -136,6 +133,11 @@ public class Flow {
         return this;
     }
 
+    public Flow withGlobalBackAction(String actionId) {
+        addGlobalAction(actionId, new FlowBackAction());
+        return this;
+    }
+
     /**
      * Adds a action to the view of the given view controller. The action is registered by the given unique ID and can be called at runtime by using the id. the action can only be called when the view of the given controller is the active view of the flow
      * @param controllerClass  controller class for the view of the action
@@ -172,6 +174,11 @@ public class Flow {
     public Flow withCallMethodAction(Class<?> controllerClass, String actionId,
                                      String actionMethodName) {
         addActionToView(controllerClass, actionId, new FlowMethodAction(actionMethodName));
+        return this;
+    }
+
+    public Flow withBackAction(Class<?> controllerClass, String actionId) {
+        addActionToView(controllerClass, actionId, new FlowBackAction());
         return this;
     }
 
