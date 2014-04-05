@@ -67,6 +67,7 @@
         <module>datafx-ejb-wildfly</module>
         <module>datafx-featuretoggle</module>
         <module>datafx-samples</module>
+        <module>datafx-datareader</module>
     </modules>
 
     <profiles>
