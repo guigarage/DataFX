@@ -174,6 +174,10 @@ public class FlowHandler {
     }
 
     public void navigateBack() throws VetoException, FlowException {
-        handle(new FlowLink(controllerHistory.remove(0)), "backAction-" + UUID.randomUUID().toString());
+        navigateToHistoryIndex(0);
+    }
+
+    public void navigateToHistoryIndex(int index) throws VetoException, FlowException {
+        handle(new FlowLink(controllerHistory.remove(index)), "backAction-" + UUID.randomUUID().toString());
     }
 }
