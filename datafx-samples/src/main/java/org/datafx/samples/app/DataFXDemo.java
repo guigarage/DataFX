@@ -1,6 +1,7 @@
 package org.datafx.samples.app;
 
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.datafx.controller.flow.DefaultFlowContainer;
@@ -38,8 +39,8 @@ public class DataFXDemo extends Application {
         DefaultFlowContainer container = new DefaultFlowContainer();
 
         //This starts the Flow
-        flow.createHandler().start(container);
-        Scene scene = new Scene(container.getPane());
+        Parent parent = flow.start();
+        Scene scene = new Scene(parent);
         stage.setScene(scene);
         stage.show();
 

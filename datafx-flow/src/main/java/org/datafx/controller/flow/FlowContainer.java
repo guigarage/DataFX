@@ -26,6 +26,7 @@
  */
 package org.datafx.controller.flow;
 
+import javafx.scene.Parent;
 import org.datafx.controller.context.ViewContext;
 
 /**
@@ -37,9 +38,17 @@ import org.datafx.controller.context.ViewContext;
 public interface FlowContainer {
 
     /**
-     * The given view will be the new view of the flow. Implementations should add the he <tt>Node</tt> of the view to the scene graph and remove the old view.
+     * The given view will be the new view of the flow. 
+     * Implementations should add the he <tt>Node</tt> of the view to the scene graph and remove the old view.
      * @param context Context of the current view
      * @param <T> Controller type of the current view
      */
-    public <T> void setView(ViewContext<T> context);
+    public <T> void setViewContext(ViewContext<T> context);
+    
+    /**
+     * Return the <tt>Parent</tt> node that is rendering the flow.
+     * @return the <tt>Parent</tt> node that is rendering the flow
+     */
+    public Parent getView();
+            
 }

@@ -26,12 +26,12 @@
  */
 package org.datafx.controller.flow;
 
+import java.util.HashMap;
+import java.util.Map;
+import javafx.scene.Parent;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.flow.action.*;
 import org.datafx.controller.flow.context.ViewFlowContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class defines a flow. A flow is a map of different views that are linked. 
@@ -218,5 +218,27 @@ public class Flow {
                 newView.addAction(actionId, viewActionMap.get(actionId));
             }
         }
+    }
+    
+    /**
+     * Start the flow with a default handler and a default FlowContainer
+     * 
+     * @return the <tt>Parent</tt> that will be used for rendering
+     * @throws FlowException 
+     */
+    public Parent start () throws FlowException {
+        return start (new DefaultFlowContainer());
+    }
+    
+    /**
+     * Start the flow with a default handler and a provided FlowContainer
+     * 
+     * @param flowContainer the FlowContainer used to visualize this flow
+     * @return the <tt>Parent</tt> that will be used for rendering
+     * @throws FlowException 
+     */
+    public Parent start (FlowContainer flowContainer) throws FlowException {
+        createHandler().start(flowContainer);
+        return flowContainer.getView();
     }
 }

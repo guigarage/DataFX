@@ -26,8 +26,8 @@
  */
 package org.datafx.controller.flow;
 
+import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
-
 import org.datafx.controller.context.ViewContext;
 
 public class DefaultFlowContainer implements FlowContainer {
@@ -42,12 +42,13 @@ public class DefaultFlowContainer implements FlowContainer {
         this(new StackPane());
     }
 
-    public StackPane getPane() {
+    @Override
+    public Parent getView() {
         return pane;
     }
-
+    
     @Override
-    public <T> void setView(ViewContext<T> context) {
+    public <T> void setViewContext(ViewContext<T> context) {
         pane.getChildren().clear();
         pane.getChildren().add(context.getRootNode());
     }
