@@ -1,6 +1,6 @@
 package org.datafx.samples.ejb.wildfly;
 
-import org.datafx.ejb.jboss.JBossLookupConfiguration;
+//import org.datafx.ejb.jboss.JBossLookupConfiguration;
 import org.datafx.ejb.EjbLookupConfiguration;
 import org.datafx.ejb.EjbLookupConfigurationProvider;
 
@@ -15,6 +15,7 @@ public class DemoConfigurationProvider implements EjbLookupConfigurationProvider
 
     @Override
     public EjbLookupConfiguration getConfiguration() {
-        return new JBossLookupConfiguration(NAME);
+        return null;
+        //return new JBossLookupConfiguration(NAME);
     }
 }

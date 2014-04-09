@@ -34,7 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class defines a flow. A flow is a map of different views that are linked. A flow can define actions for each view or global actions for the complete flow. The class provides a fluent API to create a flow with views and actions.
+ * This class defines a flow. A flow is a map of different views that are linked. 
+ * A flow can define actions for each view or global actions for the complete flow. 
+ * The class provides a fluent API to create a flow with views and actions.
  *
  * @author Hendrik Ebbers
  */
@@ -49,7 +51,11 @@ public class Flow {
     private ViewConfiguration viewConfiguration;
 
     /**
-     * Creates a new Flow with the given controller for the start view and a view configuration for all views. The start view must be a view controller as specified in the DataFX-Controller API. See <tt>FXMLController</tt> for more information
+     * Creates a new Flow with the given controller for the start view and a 
+     * view configuration for all views. 
+     * The start view must be a view controller as specified in the DataFX-Controller API. 
+     * See <tt>FXMLController</tt> for more information
+     * 
      * @param startViewControllerClass Controller class of the start view
      * @param viewConfiguration Configuration for all views of the flow
      *
@@ -71,7 +77,9 @@ public class Flow {
     }
 
     /**
-     * Creates a new Flow with the given controller for the start view. The start view must be a view controller as specified in the DataFX-Controller API. See <tt>FXMLController</tt> for more information
+     * Creates a new Flow with the given controller for the start view. 
+     * The start view must be a view controller as specified in the DataFX-Controller API. 
+     * See <tt>FXMLController</tt> for more information
      * @param startViewControllerClass Controller class of the start view
      */
     public Flow(Class<?> startViewControllerClass) {
