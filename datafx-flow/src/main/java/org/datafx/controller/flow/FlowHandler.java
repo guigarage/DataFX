@@ -149,7 +149,6 @@ public class FlowHandler {
 
     public <U> ViewContext<U> setNewView(FlowView<U> newView)
             throws FlowException {
-        System.out.println("CV = "+currentView);
         if (currentView != null) {
             controllerHistory.add(0, currentView.getViewContext().getController().getClass());
         }
@@ -171,7 +170,7 @@ public class FlowHandler {
 
         currentView = newView;
         flowContext.setCurrentViewContext(currentView.getViewContext());
-        container.setView(currentView.getViewContext());
+        container.setViewContext(currentView.getViewContext());
         return newView.getViewContext();
     }
 
