@@ -1,10 +1,9 @@
 package org.datafx.samples.app;
 
 import javafx.application.Application;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.datafx.controller.flow.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
 
 /**
@@ -35,11 +34,9 @@ public class DataFXDemo extends Application {
                 // An action is added to the flow. The action is registered fot the MasterView and has the unique id "load". The action is implemented by the LoadPersonsTask class
                 withTaskAction(MasterViewController.class, "load", LoadPersonsTask.class);
 
-        // A Flow needs a special container that wrappes the flow
-        DefaultFlowContainer container = new DefaultFlowContainer();
 
         //This starts the Flow
-        Parent parent = flow.start();
+        StackPane parent = flow.start();
         Scene scene = new Scene(parent);
         stage.setScene(scene);
         stage.show();
