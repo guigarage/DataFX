@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,18 @@
  */
 package org.datafx.controller.flow;
 
+import java.util.HashMap;
+import java.util.Map;
+import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.flow.action.*;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * This class defines a flow. A flow is a map of different views that are linked. A flow can define actions for each view or global actions for the complete flow. The class provides a fluent API to create a flow with views and actions.
+ * This class defines a flow. A flow is a map of different views that are linked. 
+ * A flow can define actions for each view or global actions for the complete flow. 
+ * The class provides a fluent API to create a flow with views and actions.
  *
  * @author Hendrik Ebbers
  */
@@ -49,7 +52,11 @@ public class Flow {
     private ViewConfiguration viewConfiguration;
 
     /**
-     * Creates a new Flow with the given controller for the start view and a view configuration for all views. The start view must be a view controller as specified in the DataFX-Controller API. See <tt>FXMLController</tt> for more information
+     * Creates a new Flow with the given controller for the start view and a 
+     * view configuration for all views. 
+     * The start view must be a view controller as specified in the DataFX-Controller API. 
+     * See <tt>FXMLController</tt> for more information
+     * 
      * @param startViewControllerClass Controller class of the start view
      * @param viewConfiguration Configuration for all views of the flow
      *
@@ -71,7 +78,9 @@ public class Flow {
     }
 
     /**
-     * Creates a new Flow with the given controller for the start view. The start view must be a view controller as specified in the DataFX-Controller API. See <tt>FXMLController</tt> for more information
+     * Creates a new Flow with the given controller for the start view. 
+     * The start view must be a view controller as specified in the DataFX-Controller API. 
+     * See <tt>FXMLController</tt> for more information
      * @param startViewControllerClass Controller class of the start view
      */
     public Flow(Class<?> startViewControllerClass) {
@@ -210,5 +219,30 @@ public class Flow {
                 newView.addAction(actionId, viewActionMap.get(actionId));
             }
         }
+    }
+    
+    /**
+     * Start the flow with a default handler and a default FlowContainer
+     * This will start the flow using a DefaultFlowContainer, which returns a
+     * StackPane.
+     * @return the <tt>Parent</tt> that will be used for rendering
+     * 
+     * @throws FlowException 
+     */
+    public StackPane start () throws FlowException {
+        return start (new DefaultFlowContainer());
+    }
+    
+    /**
+     * Start the flow with a default handler and a provided FlowContainer
+     * 
+     * @param <T>
+     * @param flowContainer the FlowContainer used to visualize this flow
+     * @return the <tt>Parent</tt> that will be used for rendering
+     * @throws FlowException 
+     */
+    public <T extends Node> T start (FlowContainer<T> flowContainer) throws FlowException {
+        createHandler().start(flowContainer);
+        return flowContainer.getView();
     }
 }

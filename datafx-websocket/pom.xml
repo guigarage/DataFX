@@ -20,6 +20,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-datareader</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>javax.websocket</groupId>
 			<artifactId>javax.websocket-client-api</artifactId>
 			<version>1.0</version>
