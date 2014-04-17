@@ -1,6 +1,7 @@
 package org.datafx.crud.rest;
 
 import org.datafx.util.Call;
+import org.datafx.util.HttpMethods;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +13,13 @@ public class RestCall<S, T> implements Call<S, T> {
 
     private Function<S, URL> urlFactory;
 
-    private HttpMethod httpMethod;
+    private HttpMethods httpMethod;
 
     private RequestDataHandler<S> requestDataProvider;
 
     private Function<InputStream, T> responseDataHandler;
 
-    public RestCall(Function<S, URL> urlFactory, HttpMethod httpMethod, RequestDataHandler<S> requestDataProvider, Function<InputStream, T> responseDataHandler) {
+    public RestCall(Function<S, URL> urlFactory, HttpMethods httpMethod, RequestDataHandler<S> requestDataProvider, Function<InputStream, T> responseDataHandler) {
         this.httpMethod = httpMethod;
         this.requestDataProvider = requestDataProvider;
         this.responseDataHandler = responseDataHandler;

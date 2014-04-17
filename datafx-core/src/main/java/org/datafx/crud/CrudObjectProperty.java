@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Worker;
 import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.concurrent.ObservableExecutor;
+import org.datafx.util.EntityWithId;
 
 import java.util.concurrent.Executor;
 

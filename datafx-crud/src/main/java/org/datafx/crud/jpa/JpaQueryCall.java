@@ -1,7 +1,7 @@
 package org.datafx.crud.jpa;
 
-import org.datafx.crud.EntityWithId;
-import org.datafx.crud.QueryParameter;
+import org.datafx.util.EntityWithId;
+import org.datafx.util.QueryParameter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

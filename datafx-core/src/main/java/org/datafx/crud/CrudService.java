@@ -1,5 +1,8 @@
 package org.datafx.crud;
 
+import org.datafx.util.EntityWithId;
+import org.datafx.util.QueryParameter;
+
 import java.util.List;
 
 public interface CrudService<S extends EntityWithId<T>, T> {

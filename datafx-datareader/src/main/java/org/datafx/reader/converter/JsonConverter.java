@@ -35,11 +35,10 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.datafx.provider.ObjectDataProvider;
 
 /**
  *
- * An implementation of {@link Converter} that converts JSON data into Java Objects
+ * An implementation of {@link org.datafx.util.Converter} that converts JSON data into Java Objects
  * of type T.
  * 
  * @Param <T> the type of the resulting Java objects

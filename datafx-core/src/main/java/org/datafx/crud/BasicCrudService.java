@@ -1,6 +1,8 @@
 package org.datafx.crud;
 
 import org.datafx.util.Call;
+import org.datafx.util.EntityWithId;
+import org.datafx.util.QueryParameter;
 
 import java.util.Arrays;
 import java.util.HashMap;

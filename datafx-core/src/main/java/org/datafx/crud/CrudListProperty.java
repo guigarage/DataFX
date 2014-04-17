@@ -5,6 +5,8 @@ import javafx.collections.ModifiableObservableListBase;
 import javafx.concurrent.Worker;
 import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.concurrent.ObservableExecutor;
+import org.datafx.util.EntityWithId;
+import org.datafx.util.QueryParameter;
 
 import java.util.ArrayList;
 import java.util.List;

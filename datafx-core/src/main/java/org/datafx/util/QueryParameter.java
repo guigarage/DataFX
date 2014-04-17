@@ -1,4 +1,4 @@
-package org.datafx.crud;
+package org.datafx.util;
 
 public class QueryParameter<T> {
 

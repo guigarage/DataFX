@@ -27,6 +27,8 @@
 package org.datafx.reader.converter;
 
 
+import org.datafx.util.Converter;
+
 import java.io.InputStream;
 
 /**

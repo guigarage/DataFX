@@ -1,6 +1,6 @@
-package org.datafx.crud.rest;
+package org.datafx.util;
 
-public enum HttpMethod {
+public enum HttpMethods {
     GET("GET"),
     POST("POST"),
     HEAD("HEAD"),
@@ -11,7 +11,7 @@ public enum HttpMethod {
 
     private String name;
 
-    private HttpMethod(String name) {
+    private HttpMethods(String name) {
         this.name = name;
     }
 

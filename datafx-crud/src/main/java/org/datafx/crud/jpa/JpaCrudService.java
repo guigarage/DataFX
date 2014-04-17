@@ -1,6 +1,6 @@
 package org.datafx.crud.jpa;
 
-import org.datafx.crud.EntityWithId;
+import org.datafx.util.EntityWithId;
 import org.datafx.crud.BasicCrudService;
 
 import javax.persistence.EntityManager;

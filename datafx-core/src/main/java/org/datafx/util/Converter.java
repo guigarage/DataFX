@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.reader.converter;
+package org.datafx.util;
 
 /**
  * A Converter is responsible for converting raw data (obtained from a data source)

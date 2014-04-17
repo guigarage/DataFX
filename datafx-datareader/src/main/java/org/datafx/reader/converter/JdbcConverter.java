@@ -26,6 +26,8 @@
  */
 package org.datafx.reader.converter;
 
+import org.datafx.util.Converter;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

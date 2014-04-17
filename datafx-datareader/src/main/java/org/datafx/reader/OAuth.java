@@ -27,6 +27,8 @@
 package org.datafx.reader;
 
 
+import org.datafx.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
