@@ -8,6 +8,9 @@ import javafx.concurrent.Worker;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Exception handler for DataFX. By default a handler is used that will log all exceptions.
+ */
 public class ExceptionHandler {
 
     private static final Logger LOGGER = Logger.getLogger(ExceptionHandler.class.getName());

@@ -2,6 +2,9 @@ package org.datafx.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.util.DataFXUtils;
 
@@ -104,6 +107,12 @@ public class ViewFactory {
         } catch (Exception e) {
             throw new FxmlLoadException(e);
         }
+    }
+
+    public void showInStage(Stage stage, Class<?> controllerClass) throws FxmlLoadException {
+        Scene myScene = new Scene((Parent) createByController(controllerClass).getRootNode());
+        stage.setScene(myScene);
+        stage.show();
     }
 
     private FXMLLoader createLoader(final Object controller, String fxmlName, ViewConfiguration viewConfiguration)
