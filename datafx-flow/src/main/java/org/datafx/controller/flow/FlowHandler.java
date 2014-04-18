@@ -27,6 +27,10 @@
 package org.datafx.controller.flow;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.ViewFactory;
@@ -41,8 +45,6 @@ import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.VetoHandler;
 import org.datafx.util.ExceptionHandler;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -59,7 +61,7 @@ public class FlowHandler {
     private ViewConfiguration viewConfiguration;
     private ExceptionHandler exceptionHandler;
 
-    private final List<Class<?>> controllerHistory;
+    private final ObservableList<Class<?>> controllerHistory;
 
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this(flow, flowContext, new ViewConfiguration());
@@ -74,12 +76,15 @@ public class FlowHandler {
         this.flow = flow;
         this.viewConfiguration = viewConfiguration;
         this.exceptionHandler = exceptionHandler;
-        controllerHistory = new ArrayList<>();
+        controllerHistory = FXCollections.observableArrayList();
         flowContext.register(new FlowActionHandler(this));
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public void start(FlowContainer container) throws FlowException {
+    public StackPane start() throws FlowException {
+        return start(new DefaultFlowContainer());
+    }
+
+    public <T extends Node> T start(FlowContainer<T> container) throws FlowException {
         this.container = container;
         flowContext.register(this);
         if (viewConfiguration != null) {
@@ -91,6 +96,7 @@ public class FlowHandler {
         } catch (FxmlLoadException e) {
             throw new FlowException(e);
         }
+        return container.getView();
     }
 
     public ViewConfiguration getViewConfiguration() {
@@ -178,7 +184,12 @@ public class FlowHandler {
         navigateToHistoryIndex(0);
     }
 
+    public ObservableList<Class<?>> getControllerHistory() {
+        return FXCollections.unmodifiableObservableList(controllerHistory);
+    }
+
     public void navigateToHistoryIndex(int index) throws VetoException, FlowException {
         handle(new FlowLink(controllerHistory.remove(index)), "backAction-" + UUID.randomUUID().toString());
     }
+
 }
