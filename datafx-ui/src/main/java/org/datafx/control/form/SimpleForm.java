@@ -21,17 +21,17 @@ public class SimpleForm extends VBox {
     private int rowCount = 0;
 
     public SimpleForm() {
-        getStylesheets().add(getClass().getResource("form.css").toExternalForm());
         setSpacing(12);
 
         titlePane = new AnchorPane();
-        titlePane.getStyleClass().add("form-title");
+        titlePane.getStyleClass().add("datafx-form-title");
         titleLabel = new Label();
-        titleLabel.getStyleClass().add("form-title-label");
+        titleLabel.getStyleClass().add("datafx-form-title-label");
         AnchorPane.setLeftAnchor(titleLabel, 12.0);
         AnchorPane.setTopAnchor(titleLabel, 6.0);
         AnchorPane.setBottomAnchor(titleLabel, 6.0);
         titlePane.getChildren().add(titleLabel);
+        titlePane.setVisible(false);
         getChildren().add(titlePane);
 
         mainPane = new GridPane();
@@ -52,7 +52,7 @@ public class SimpleForm extends VBox {
     public Button addAction(String name, EventHandler<ActionEvent> eventHandler) {
         Button actionButton = new Button(name);
         actionButton.setOnAction(eventHandler);
-        actionButton.getStyleClass().add("form-button");
+        actionButton.getStyleClass().add("datafx-form-button");
         addToActionPane(actionButton);
         return actionButton;
     }

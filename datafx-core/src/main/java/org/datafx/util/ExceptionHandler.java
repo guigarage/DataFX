@@ -1,10 +1,14 @@
 package org.datafx.util;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
+import org.datafx.DataFXConfiguration;
+import org.datafx.concurrent.ConcurrentUtils;
 
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,15 +23,17 @@ public class ExceptionHandler {
 
     private static ExceptionHandler defaultInstance;
 
+    private static boolean logException = false;
+
     private ObjectProperty<Throwable> exception;
 
     public ExceptionHandler() {
     }
 
-    public static ExceptionHandler getDefaultInstance() {
+    public static synchronized ExceptionHandler getDefaultInstance() {
         if (defaultInstance == null) {
             defaultInstance = new ExceptionHandler();
-            setExceptionLogging(true);
+            setExceptionLogging(DataFXConfiguration.getInstance().isExceptionLoggingActive());
         }
         return defaultInstance;
     }
@@ -47,8 +53,6 @@ public class ExceptionHandler {
         return loggerListener;
     }
 
-    private static boolean logException = false;
-
     public static void setExceptionLogging(boolean log) {
         if (log) {
             getDefaultInstance().exceptionProperty().addListener(getLoggerListener());
@@ -67,7 +71,16 @@ public class ExceptionHandler {
     }
 
     public void setException(Throwable exception) {
-        exceptionProperty().set(exception);
+        if(Platform.isFxApplicationThread()) {
+            exceptionProperty().set(exception);
+        }   else {
+            try {
+                ConcurrentUtils.runAndWait(() -> exceptionProperty().set(exception));
+            } catch (InterruptedException | ExecutionException e) {
+                LOGGER.log(Level.SEVERE, "Can't handle exception in JavaFX Application Thread!", e);
+                LOGGER.log(Level.SEVERE, "Initial exception: ", exception);
+            }
+        }
     }
 
     public <T> void observeWorker(Worker<T> worker) {

@@ -12,11 +12,31 @@ import java.util.List;
 
 public class DataFXConfiguration {
 
-    public static DataFXConfiguration instance;
+    private static DataFXConfiguration instance;
 
     private Document configurationDocument;
 
     private DataFXConfiguration() {}
+
+    public boolean isExceptionLoggingActive() {
+        return true;
+    }
+
+    public int getDefaultThreadMaxSize() {
+        return 32;
+    }
+
+    public int getDefaultThreadPoolStartSize() {
+        return 2;
+    }
+
+    public String getThreadGroupName() {
+        return "DataFX thread pool";
+    }
+
+    public long getDefaultThreadTimeout() {
+        return 1000;
+    }
 
     public List<Element> getElements(String tagName) {
         NodeList nodes = getConfigurationDocument().getElementsByTagName(tagName);
