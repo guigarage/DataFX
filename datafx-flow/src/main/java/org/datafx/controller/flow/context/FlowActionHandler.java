@@ -1,5 +1,7 @@
 package org.datafx.controller.flow.context;
 
+import javafx.scene.Node;
+import javafx.scene.control.MenuItem;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.FlowAction;
@@ -15,7 +17,7 @@ public class FlowActionHandler {
     private FlowHandler handler;
 
     public FlowActionHandler(FlowHandler handler) {
-                 this.handler = handler;
+        this.handler = handler;
     }
 
     public void handle(String actionId) throws VetoException, FlowException {
@@ -40,5 +42,21 @@ public class FlowActionHandler {
 
     public ExceptionHandler getExceptionHandler() {
         return handler.getExceptionHandler();
+    }
+
+    public void attachEventHandler(Node node, String actionId) {
+        handler.attachEventHandler(node, actionId);
+    }
+
+    public void attachBackEventHandler(MenuItem menuItem) {
+        handler.attachBackEventHandler(menuItem);
+    }
+
+    public void attachBackEventHandler(Node node) {
+        handler.attachBackEventHandler(node);
+    }
+
+    public void attachEventHandler(MenuItem menuItem, String actionId) {
+        handler.attachEventHandler(menuItem, actionId);
     }
 }

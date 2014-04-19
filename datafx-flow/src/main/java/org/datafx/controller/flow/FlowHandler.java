@@ -30,6 +30,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
@@ -192,4 +194,51 @@ public class FlowHandler {
         handle(new FlowLink(controllerHistory.remove(index)), "backAction-" + UUID.randomUUID().toString());
     }
 
+    public void attachEventHandler(Node node, String actionId) {
+        if (node instanceof ButtonBase) {
+            ((ButtonBase) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
+        } else {
+            node.setOnMouseClicked((e) -> {
+                if (e.getClickCount() > 1) {
+                    handleActionWithExceptionHandler(actionId);
+                }
+            });
+        }
+    }
+
+    public void attachBackEventHandler(MenuItem menuItem) {
+        menuItem.setOnAction((e) -> handleBackActionWithExceptionHandler());
+    }
+
+    public void attachBackEventHandler(Node node) {
+        if (node instanceof ButtonBase) {
+            ((ButtonBase) node).setOnAction((e) -> handleBackActionWithExceptionHandler());
+        } else {
+            node.setOnMouseClicked((e) -> {
+                if (e.getClickCount() > 1) {
+                    handleBackActionWithExceptionHandler();
+                }
+            });
+        }
+    }
+
+    public void attachEventHandler(MenuItem menuItem, String actionId) {
+        menuItem.setOnAction((e) -> handleActionWithExceptionHandler(actionId));
+    }
+
+    private void handleActionWithExceptionHandler(String id) {
+        try {
+            handle(id);
+        } catch (VetoException | FlowException e) {
+            getExceptionHandler().setException(e);
+        }
+    }
+
+    private void handleBackActionWithExceptionHandler() {
+        try {
+            navigateBack();
+        } catch (VetoException | FlowException e) {
+            getExceptionHandler().setException(e);
+        }
+    }
 }

@@ -17,6 +17,7 @@ public class Wizard extends Application {
         BorderPane pane = new BorderPane();
         BreadCrumbBar<String> breadCrumbBar = new BreadCrumbBar<>();
         pane.setTop(breadCrumbBar);
+
         Flow flow = new Flow(ViewController1.class);
         FlowHandler handler = flow.createHandler();
         pane.setCenter(handler.start());
@@ -24,14 +25,12 @@ public class Wizard extends Application {
         HBox actionBar = new HBox();
         actionBar.setSpacing(6);
         actionBar.setAlignment(Pos.CENTER_RIGHT);
-
         Button backButton = new Button("back");
-        backButton.setOnAction((e) -> handler.navigateBack());
-
+        handler.attachBackEventHandler(backButton);
         Button nextButton = new Button("next");
-        backButton.setOnAction((e) -> handler.handle("next"));
-
+        handler.attachEventHandler(nextButton, "next");
         actionBar.getChildren().addAll(backButton, nextButton);
+        pane.setBottom(handler.start());
 
     }
 
