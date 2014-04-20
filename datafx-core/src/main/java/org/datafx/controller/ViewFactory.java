@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewMetadata;
@@ -43,11 +44,9 @@ public class ViewFactory {
      * register your datamodel to the view. The doc of {@link org.datafx.controller.context.ViewContext} will
      * provide more information about this topic.
      *
-     * @param controllerClass
-     *            the class of the controller.
+     * @param controllerClass the class of the controller.
      * @return a ViewContext that encapsulate the complete MVC
-     * @throws FxmlLoadException
-     *             if the fxml file can not be loaded
+     * @throws FxmlLoadException if the fxml file can not be loaded
      */
     public <T> ViewContext<T> createByController(final Class<T> controllerClass)
             throws FxmlLoadException {
@@ -67,19 +66,16 @@ public class ViewFactory {
      * provide more information about this topic. By using this method you can
      * overwrite the path to your fxml file.
      *
-     * @param controllerClass
-     *            the class of the controller.
-     * @param fxmlName
-     *            path to the fxml file that will be used for the generated MVC
-     *            context
+     * @param controllerClass the class of the controller.
+     * @param fxmlName        path to the fxml file that will be used for the generated MVC
+     *                        context
      * @return a ViewContext that encapsulate the complete MVC
-     * @throws FxmlLoadException
-     *             if the fxml file can not be loaded
+     * @throws FxmlLoadException if the fxml file can not be loaded
      */
     public <T> ViewContext<T> createByController(
             final Class<T> controllerClass, String fxmlName)
             throws FxmlLoadException {
-       return createByController(controllerClass, fxmlName, new ViewConfiguration());
+        return createByController(controllerClass, fxmlName, new ViewConfiguration());
     }
 
     public <T> ViewContext<T> createByController(
@@ -89,6 +85,19 @@ public class ViewFactory {
             // 1. Create an instance of the Controller
             final T controller = controllerClass.newInstance();
             ViewMetadata metadata = new ViewMetadata();
+            FXMLController controllerAnnotation = (FXMLController) controllerClass
+                    .getAnnotation(FXMLController.class);
+            if (controllerAnnotation != null && !controllerAnnotation.title().isEmpty()) {
+                metadata.setTitle(controllerAnnotation.title());
+            }
+            if (controllerAnnotation != null && !controllerAnnotation.iconPath().isEmpty()) {
+                metadata.setGraphicsFactory((d) -> {
+                    ImageView iconView = new ImageView(getClass().getResource(controllerAnnotation.iconPath()).toString());
+                    iconView.setFitHeight(d.getHeight());
+                    iconView.setFitWidth(d.getWidth());
+                    return iconView;
+                });
+            }
 
             // 2. load the FXML and make sure the @FXML annotations are injected
             Node viewNode = (Node) createLoader(controller, fxmlName, viewConfiguration).load();

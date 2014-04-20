@@ -14,33 +14,33 @@ public class ViewMetadata {
 
     private ObjectProperty<Callback<Dimension2D, Node>> graphicsFactoryProperty;
 
-    public String getTitleProperty() {
-        return titlePropertyProperty().get();
+    public String getTitle() {
+        return titleProperty().get();
     }
 
-    public StringProperty titlePropertyProperty() {
+    public StringProperty titleProperty() {
         if(titleProperty == null) {
             titleProperty = new SimpleStringProperty();
         }
         return titleProperty;
     }
 
-    public void setTitleProperty(String titleProperty) {
-        titlePropertyProperty().set(titleProperty);
+    public void setTitle(String titleProperty) {
+        titleProperty().set(titleProperty);
     }
 
-    public Callback<Dimension2D, Node> getGraphicsFactoryProperty() {
-        return graphicsFactoryPropertyProperty().get();
+    public Callback<Dimension2D, Node> getGraphicsFactory() {
+        return graphicsFactoryProperty().get();
     }
 
-    public ObjectProperty<Callback<Dimension2D, Node>> graphicsFactoryPropertyProperty() {
+    public ObjectProperty<Callback<Dimension2D, Node>> graphicsFactoryProperty() {
         if(graphicsFactoryProperty == null) {
             graphicsFactoryProperty = new SimpleObjectProperty<>((d) -> null);
         }
         return graphicsFactoryProperty;
     }
 
-    public void setGraphicsFactoryProperty(Callback<Dimension2D, Node> graphicsFactoryProperty) {
-        this.graphicsFactoryPropertyProperty().set(graphicsFactoryProperty);
+    public void setGraphicsFactory(Callback<Dimension2D, Node> graphicsFactoryProperty) {
+        this.graphicsFactoryProperty().set(graphicsFactoryProperty);
     }
 }

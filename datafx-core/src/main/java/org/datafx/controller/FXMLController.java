@@ -76,4 +76,8 @@ public @interface FXMLController {
 	 * @return name of the fxml file
 	 */
 	String value();
+
+    String title() default "";
+
+    String iconPath() default "";
 }
