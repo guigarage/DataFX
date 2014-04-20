@@ -46,7 +46,7 @@ public class FlowView<T> {
     private ViewContext<T> viewContext;
 
     /**
-     * Creates a View based on a context
+     * Creates a ViewMetadata based on a context
      * @param viewContext The context of the view
      */
     public FlowView(ViewContext<T> viewContext) {

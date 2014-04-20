@@ -32,6 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.StackPane;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
@@ -47,6 +48,7 @@ import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.VetoHandler;
 import org.datafx.util.ExceptionHandler;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -63,7 +65,7 @@ public class FlowHandler {
     private ViewConfiguration viewConfiguration;
     private ExceptionHandler exceptionHandler;
 
-    private final ObservableList<Class<?>> controllerHistory;
+    private final ObservableList<ViewHistoryDefinition<?>> controllerHistory;
 
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this(flow, flowContext, new ViewConfiguration());
@@ -158,7 +160,8 @@ public class FlowHandler {
     public <U> ViewContext<U> setNewView(FlowView<U> newView)
             throws FlowException {
         if (currentView != null) {
-            controllerHistory.add(0, currentView.getViewContext().getController().getClass());
+            ViewHistoryDefinition<?> historyDefinition = new ViewHistoryDefinition(currentView.getViewContext().getController().getClass(), "", null);
+            controllerHistory.add(0, historyDefinition);
         }
         flow.addActionsToView(newView);
 
@@ -186,12 +189,12 @@ public class FlowHandler {
         navigateToHistoryIndex(0);
     }
 
-    public ObservableList<Class<?>> getControllerHistory() {
+    public ObservableList<ViewHistoryDefinition<?>> getControllerHistory() {
         return FXCollections.unmodifiableObservableList(controllerHistory);
     }
 
     public void navigateToHistoryIndex(int index) throws VetoException, FlowException {
-        handle(new FlowLink(controllerHistory.remove(index)), "backAction-" + UUID.randomUUID().toString());
+        handle(new FlowLink(controllerHistory.remove(index).getControllerClass()), "backAction-" + UUID.randomUUID().toString());
     }
 
     public void attachEventHandler(Node node, String actionId) {

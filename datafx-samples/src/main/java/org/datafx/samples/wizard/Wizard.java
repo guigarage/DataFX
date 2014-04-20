@@ -28,7 +28,7 @@ public class Wizard extends Application {
         Button backButton = new Button("back");
         handler.attachBackEventHandler(backButton);
         Button nextButton = new Button("next");
-        handler.attachEventHandler(nextButton, "next");
+        handler.attachEventHandler(nextButton, "nextPage");
         actionBar.getChildren().addAll(backButton, nextButton);
         pane.setBottom(handler.start());
 

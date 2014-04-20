@@ -97,6 +97,8 @@ public class ViewContext<U> extends AbstractContext {
 
     private ViewConfiguration configuration;
 
+    private ViewMetadata metadata;
+
     /**
      * Create a new ViewContext for a (view-){@link #Node} and a controller.
      * Normally this constructor is used by the {@link #ViewFactory} and should
@@ -105,10 +107,11 @@ public class ViewContext<U> extends AbstractContext {
      * @param rootNode   the (view-)node
      * @param controller the controller
      */
-    public ViewContext(Node rootNode, U controller, ViewConfiguration configuration, Object... resources) {
+    public ViewContext(Node rootNode, U controller, ViewMetadata metadata, ViewConfiguration configuration, Object... resources) {
         this.rootNode = rootNode;
         this.controller = controller;
         this.configuration = configuration;
+        this.metadata = metadata;
 
         if (resources != null) {
             for (Object resource : resources) {
@@ -175,5 +178,9 @@ public class ViewContext<U> extends AbstractContext {
 
     public ViewConfiguration getConfiguration() {
         return configuration;
+    }
+
+    public ViewMetadata getMetadata() {
+        return metadata;
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.context.ViewMetadata;
 import org.datafx.util.DataFXUtils;
 
 import javax.annotation.PostConstruct;
@@ -87,11 +88,12 @@ public class ViewFactory {
         try {
             // 1. Create an instance of the Controller
             final T controller = controllerClass.newInstance();
+            ViewMetadata metadata = new ViewMetadata();
 
             // 2. load the FXML and make sure the @FXML annotations are injected
             Node viewNode = (Node) createLoader(controller, fxmlName, viewConfiguration).load();
             ViewContext<T> context = new ViewContext<>(viewNode,
-                    controller, viewConfiguration, viewContextResources);
+                    controller, metadata, viewConfiguration, viewContextResources);
             context.register(controller);
             context.register("controller", controller);
             // 3. Resolve the @Inject points in the Controller and call
