@@ -8,17 +8,11 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.util.Callback;
 
-public class ViewMetadata<T> {
-
-    private Class<T> controllerClass;
+public class ViewMetadata {
 
     private StringProperty titleProperty;
 
     private ObjectProperty<Callback<Dimension2D, Node>> graphicsFactoryProperty;
-
-    public ViewMetadata(Class<T> controllerClass) {
-        this.controllerClass = controllerClass;
-    }
 
     public String getTitle() {
         return titleProperty().get();
@@ -54,7 +48,4 @@ public class ViewMetadata<T> {
         this.graphicsFactoryProperty().set(graphicsFactoryProperty);
     }
 
-    public Class<T> getControllerClass() {
-        return controllerClass;
-    }
 }
