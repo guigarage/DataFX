@@ -84,7 +84,7 @@ public class ViewFactory {
         try {
             // 1. Create an instance of the Controller
             final T controller = controllerClass.newInstance();
-            ViewMetadata metadata = new ViewMetadata();
+            ViewMetadata<T> metadata = new ViewMetadata<>(controllerClass);
             FXMLController controllerAnnotation = (FXMLController) controllerClass
                     .getAnnotation(FXMLController.class);
             if (controllerAnnotation != null && !controllerAnnotation.title().isEmpty()) {
@@ -92,7 +92,7 @@ public class ViewFactory {
             }
             if (controllerAnnotation != null && !controllerAnnotation.iconPath().isEmpty()) {
                 metadata.setGraphicsFactory((d) -> {
-                    ImageView iconView = new ImageView(getClass().getResource(controllerAnnotation.iconPath()).toString());
+                    ImageView iconView = new ImageView(controllerClass.getResource(controllerAnnotation.iconPath()).toExternalForm());
                     iconView.setFitHeight(d.getHeight());
                     iconView.setFitWidth(d.getWidth());
                     return iconView;
