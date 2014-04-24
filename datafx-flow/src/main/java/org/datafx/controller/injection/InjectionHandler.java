@@ -1,20 +1,19 @@
 package org.datafx.controller.injection;
 
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import org.datafx.controller.context.AbstractContext;
-import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.injection.provider.ContextProvider;
-
-import javax.inject.Inject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javax.inject.Inject;
+import org.datafx.controller.context.AbstractContext;
+import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.injection.provider.ContextProvider;
+import org.datafx.util.DataFXUtils;
 
-import static org.datafx.util.PrivilegedReflection.setPrivileged;
 
 public class InjectionHandler<U> {
 
@@ -70,7 +69,7 @@ public class InjectionHandler<U> {
         Field[] fields = cls.getDeclaredFields();
         for (final Field field : fields) {
             if (field.isAnnotationPresent(Inject.class)) {
-                setPrivileged(field, bean, createProxy(field.getType()));
+                DataFXUtils.setPrivileged(field, bean, createProxy(field.getType()));
             }
         }
     }

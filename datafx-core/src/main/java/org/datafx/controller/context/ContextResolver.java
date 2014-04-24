@@ -1,12 +1,11 @@
 package org.datafx.controller.context;
 
-import org.datafx.controller.context.resource.AnnotatedControllerResourceType;
-import org.datafx.controller.context.resource.ControllerResourceConsumer;
-import org.datafx.util.PrivilegedReflection;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
+import org.datafx.controller.context.resource.AnnotatedControllerResourceType;
+import org.datafx.controller.context.resource.ControllerResourceConsumer;
+import org.datafx.util.DataFXUtils;
 
 public class ContextResolver<U> {
 
@@ -33,14 +32,14 @@ public class ContextResolver<U> {
                             //TODO: Custom Exception
                             throw new RuntimeException("TODO: double injection of field");
                         }
-                        PrivilegedReflection.setPrivileged(field, object, currentResourceType.getResource(field.getAnnotation(currentResourceType.getSupportedAnnotation()), field.getType(), context));
+                        DataFXUtils.setPrivileged(field, object, currentResourceType.getResource(field.getAnnotation(currentResourceType.getSupportedAnnotation()), field.getType(), context));
                         injected = true;
                     }
                 }
 
                 for(ControllerResourceConsumer consumer : resourceConsumers) {
                     if(field.getAnnotation(consumer.getSupportedAnnotation()) != null) {
-                        consumer.consumeResource(field.getAnnotation(consumer.getSupportedAnnotation()), PrivilegedReflection.getPrivileged(field, object), context);
+                        consumer.consumeResource(field.getAnnotation(consumer.getSupportedAnnotation()), DataFXUtils.getPrivileged(field, object), context);
                     }
                 }
             }

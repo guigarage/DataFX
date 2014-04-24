@@ -1,18 +1,17 @@
 package org.datafx.controller.validation.ui;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import org.datafx.util.PrivilegedReflection;
-import org.datafx.controller.validation.event.ValidationFinishedEvent;
-import org.datafx.controller.validation.event.ValidationFinishedHandler;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Path;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javax.validation.ConstraintViolation;
+import javax.validation.Path;
+import org.datafx.controller.validation.event.ValidationFinishedEvent;
+import org.datafx.controller.validation.event.ValidationFinishedHandler;
+import org.datafx.util.DataFXUtils;
 
 public class ViolationBindingManager<U> implements ValidationFinishedHandler<U> {
 
@@ -24,7 +23,7 @@ public class ViolationBindingManager<U> implements ValidationFinishedHandler<U> 
         for (final Field field : fields) {
             if (field.isAnnotationPresent(ViolationBinding.class)) {
                 ViolationBinding violationBinding = field.getAnnotation(ViolationBinding.class);
-                Object value = PrivilegedReflection.getPrivileged(field, controller);
+                Object value = DataFXUtils.getPrivileged(field, controller);
                 ViolationMapper mapper = createMapper(value, violationBinding.path(), violationBinding.useSubPaths());
                 if(mapper != null) {
                     bindings.add(mapper);
