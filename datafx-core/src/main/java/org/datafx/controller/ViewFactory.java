@@ -84,7 +84,7 @@ public class ViewFactory {
         try {
             // 1. Create an instance of the Controller
             final T controller = controllerClass.newInstance();
-            ViewMetadata<T> metadata = new ViewMetadata<>(controllerClass);
+            ViewMetadata metadata = new ViewMetadata();
             FXMLController controllerAnnotation = (FXMLController) controllerClass
                     .getAnnotation(FXMLController.class);
             if (controllerAnnotation != null && !controllerAnnotation.title().isEmpty()) {
