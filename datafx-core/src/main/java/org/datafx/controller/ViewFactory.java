@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.datafx.controller.context.ViewContext;
@@ -91,12 +92,7 @@ public class ViewFactory {
                 metadata.setTitle(controllerAnnotation.title());
             }
             if (controllerAnnotation != null && !controllerAnnotation.iconPath().isEmpty()) {
-                metadata.setGraphicsFactory((d) -> {
-                    ImageView iconView = new ImageView(controllerClass.getResource(controllerAnnotation.iconPath()).toExternalForm());
-                    iconView.setFitHeight(d.getHeight());
-                    iconView.setFitWidth(d.getWidth());
-                    return iconView;
-                });
+                metadata.setGraphic(new ImageView(controllerClass.getResource(controllerAnnotation.iconPath()).toExternalForm()));
             }
 
             // 2. load the FXML and make sure the @FXML annotations are injected
@@ -168,5 +164,17 @@ public class ViewFactory {
             foundFxmlName = controllerAnnotation.value();
         }
         return foundFxmlName;
+    }
+
+    public <T> Tab createTab(Class<T> controllerClass) throws FxmlLoadException {
+        return createTab(createByController(controllerClass));
+    }
+
+    public <T> Tab createTab(ViewContext<T> context) {
+        Tab tab = new Tab();
+        tab.textProperty().bind(context.getMetadata().titleProperty());
+        tab.graphicProperty().bind(context.getMetadata().graphicsProperty());
+        tab.setContent(context.getRootNode());
+        return tab;
     }
 }

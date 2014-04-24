@@ -1,6 +1,7 @@
 package org.datafx.samples.multitab;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
@@ -21,29 +22,24 @@ public class MultiTabMain extends Application {
         pane.setCenter(tabPane);
 
         FlowPane actionPane = new FlowPane();
+        actionPane.setStyle("-fx-background-color: #a9a9a9");
+        actionPane.setPadding(new Insets(12));
+
         Button addTabButton = new Button("add");
         addTabButton.setOnAction((e) -> addTab(tabPane, SampleTabController.class));
         actionPane.getChildren().add(addTabButton);
         pane.setTop(actionPane);
 
-        primaryStage.setScene(new Scene(pane));
+        primaryStage.setScene(new Scene(pane, 640, 480));
         primaryStage.show();
     }
 
     private <T> void addTab(TabPane tabPane, Class<T> controllerClass) {
         try {
-            addTab(tabPane, ViewFactory.getInstance().createByController(controllerClass));
+            tabPane.getTabs().add(ViewFactory.getInstance().createTab(controllerClass));
         } catch (FxmlLoadException e) {
             e.printStackTrace();
         }
-    }
-
-    private <T> void addTab(TabPane tabPane, ViewContext<T> context) {
-        Tab tab = new Tab();
-        tab.textProperty().bind(context.getMetadata().titleProperty());
-        tab.graphicProperty().bind(context.getMetadata().graphicsProperty());
-        tab.setContent(context.getRootNode());
-        tabPane.getTabs().add(tab);
     }
 
     public static void main(String[] args) {
