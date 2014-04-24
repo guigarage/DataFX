@@ -124,9 +124,9 @@ public class JdbcSample {
             final ListProperty<Person> op = lodp.getData();
             TableView<Person> tv = new TableView(myList);
             tv.setEditable(true);
-            TableColumn<Person, String> firstNameCol = new TableColumn<Person, String>("First Name");
+            TableColumn<Person, String> firstNameCol = new TableColumn<Person, String>("First ViewColumn");
             firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
-            TableColumn<Person, String> lastNameCol = new TableColumn<Person, String>("Last Name");
+            TableColumn<Person, String> lastNameCol = new TableColumn<Person, String>("Last ViewColumn");
             lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
             lastNameCol.setCellFactory(new Callback<TableColumn<Person, String>, TableCell<Person, String>>(){
 

@@ -26,6 +26,8 @@
  */
 package org.datafx.controller.flow.context;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.datafx.controller.context.AbstractContext;
 import org.datafx.controller.context.ApplicationContext;
 import org.datafx.controller.context.ViewContext;
@@ -81,7 +83,7 @@ import org.datafx.controller.context.ViewContext;
  */
 public class ViewFlowContext extends AbstractContext {
 
-	private ViewContext<?> currentViewContext;
+	private ObjectProperty<ViewContext<?>> currentViewContextProperty;
 
 	/**
 	 * Default constructor
@@ -89,7 +91,20 @@ public class ViewFlowContext extends AbstractContext {
 	public ViewFlowContext() {
 	}
 
-	/**
+    public ObjectProperty<ViewContext<?>> currentViewContextPropertyProperty() {
+        if(currentViewContextProperty == null) {
+            currentViewContextProperty = new SimpleObjectProperty<ViewContext<?>>() {
+                @Override
+                protected void invalidated() {
+                    super.invalidated();
+                    get().register(ViewFlowContext.this);
+                }
+            };
+        }
+        return currentViewContextProperty;
+    }
+
+    /**
 	 * Sets the context of the current view in the flow of this context.
 	 * Normally an application will cal this method. The flow API manages all
 	 * contexts.
@@ -97,8 +112,7 @@ public class ViewFlowContext extends AbstractContext {
 	 * @param currentViewContext
 	 */
 	public <T> void setCurrentViewContext(ViewContext<T> currentViewContext) {
-		this.currentViewContext = currentViewContext;
-        this.currentViewContext.register(this);
+        currentViewContextPropertyProperty().setValue(currentViewContext);
 	}
 
 	/**
@@ -106,7 +120,7 @@ public class ViewFlowContext extends AbstractContext {
 	 * @return the view context
 	 */
 	public ViewContext<?> getCurrentViewContext() {
-		return currentViewContext;
+		return currentViewContextPropertyProperty().get();
 	}
 
 	/**

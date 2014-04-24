@@ -32,7 +32,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.StackPane;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
@@ -48,13 +47,15 @@ import org.datafx.controller.util.VetoException;
 import org.datafx.controller.util.VetoHandler;
 import org.datafx.util.ExceptionHandler;
 
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
 public class FlowHandler {
 
+
+    //TODO: use ReadOnlyObjectWrapper here
     private FlowView<?> currentView;
+
     private FlowContainer container;
     private ViewFlowContext flowContext;
     private Flow flow;
