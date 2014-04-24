@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewMetadata;
 import org.datafx.util.DataFXUtils;
+import org.datafx.util.ExceptionHandler;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
@@ -170,10 +171,25 @@ public class ViewFactory {
         return createTab(createByController(controllerClass));
     }
 
+    public <T> Tab createTab(Class<T> controllerClass, ExceptionHandler exceptionHandler) throws FxmlLoadException {
+        return createTab(createByController(controllerClass), exceptionHandler);
+    }
+
     public <T> Tab createTab(ViewContext<T> context) {
+        return createTab(context, ExceptionHandler.getDefaultInstance());
+    }
+
+    public <T> Tab createTab(ViewContext<T> context, ExceptionHandler exceptionHandler) {
         Tab tab = new Tab();
         tab.textProperty().bind(context.getMetadata().titleProperty());
         tab.graphicProperty().bind(context.getMetadata().graphicsProperty());
+        tab.setOnClosed(e -> {
+            try {
+                context.destroy();
+            } catch (Exception exception) {
+                exceptionHandler.setException(exception);
+            }
+        });
         tab.setContent(context.getRootNode());
         return tab;
     }
