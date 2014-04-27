@@ -88,7 +88,7 @@
         <dependency>
             <groupId>org.javafxdata</groupId>
             <artifactId>datafx-ejb</artifactId>
-            <version>8.0b2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>
