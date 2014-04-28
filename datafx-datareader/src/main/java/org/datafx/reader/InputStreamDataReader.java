@@ -26,8 +26,8 @@
  */
 package org.datafx.reader;
 
+import java.io.IOException;
 import java.io.InputStream;
-
 import org.datafx.reader.converter.InputStreamConverter;
 
 /**
@@ -37,6 +37,7 @@ import org.datafx.reader.converter.InputStreamConverter;
  * InputStreams. Common functionality includes the handling of a
  * Converting, translating the {@link java.io.InputStream} data into Object(s)
  * @author johan
+ * @param <T> the type of data this reader expects
  */
 public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
 
@@ -49,7 +50,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
         this.converter = converter;
     }
     
-    public InputStreamDataReader(final InputStream is, final InputStreamConverter<T> converter) {
+    public InputStreamDataReader(final InputStream is, final InputStreamConverter<T> converter) throws IOException {
         this.converter = converter;
         setInputStream(is);
     }
@@ -62,7 +63,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
         return this.converter;
     }
     
-    public void setInputStream(InputStream is) {
+    public void setInputStream(InputStream is) throws IOException {
         this.is = is;
         if (converter != null) {
             converter.initialize(is);

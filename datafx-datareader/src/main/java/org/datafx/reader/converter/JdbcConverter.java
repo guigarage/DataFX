@@ -26,10 +26,12 @@
  */
 package org.datafx.reader.converter;
 
-import org.datafx.util.Converter;
-
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.datafx.util.Converter;
 
 /**
  * A Converter implementation that translates a {@link java.sql.ResultSet} 
@@ -42,17 +44,23 @@ import java.sql.SQLException;
 public abstract class JdbcConverter<T> implements Converter<ResultSet, T> {
 
     protected ResultSet resultSet;
+    private boolean hasNext = true;
     
     @Override
-    public void initialize(ResultSet input) {
+    public void initialize(ResultSet input) throws IOException {
         this.resultSet = input;
+        try {
+            hasNext = resultSet.next();
+        } catch (SQLException ex) {
+            throw new IOException ("Can't initialize Jdbc resultset", ex);
+        }
     }
 
     @Override
     public T get() {
         T entry = convertOneRow (resultSet);
         try {
-            resultSet.next();
+            boolean hasNext = resultSet.next();
         } catch (SQLException ex) {
             ex.printStackTrace();
             // TODO we rather should throw an exception than returning null here
@@ -71,7 +79,13 @@ public abstract class JdbcConverter<T> implements Converter<ResultSet, T> {
     @Override
     public boolean next() {
         try {
-            return !resultSet.isAfterLast();
+            int type = resultSet.getType();
+            if (type == ResultSet.TYPE_FORWARD_ONLY) {
+               return hasNext;    
+            }
+            else {
+                return !resultSet.isAfterLast();
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

@@ -30,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -83,7 +84,8 @@ public class WebSocketReader<T> implements DataReader<T> {//, WritableDataReader
         System.out.println("WebSocketReader was notified new data");
     }
     
-    public T get() {
+    @Override
+    public T get() throws IOException {
         System.out.println("WebSocketReader in get...");
         synchronized (this.availableLock) {
             if (!connected) {
@@ -118,10 +120,11 @@ public class WebSocketReader<T> implements DataReader<T> {//, WritableDataReader
         session.getBasicRemote().sendText(msg);
     }
 
-//    public void writeBack() {
-//        session.getBasicRemote().
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
+
+    @Override
+    public Iterator<T> iterator() {
+        throw new UnsupportedOperationException("WebSockets don't support iterators.");
+    }
 
     
 }

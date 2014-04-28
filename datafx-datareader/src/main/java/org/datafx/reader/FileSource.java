@@ -29,6 +29,7 @@ package org.datafx.reader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.datafx.reader.converter.InputStreamConverter;
 import org.datafx.reader.converter.XmlConverter;
@@ -59,11 +60,12 @@ public class FileSource<T> extends InputStreamDataReader<T> {
      * the input format is XML. Use FileSource (String, Format) to specify a
      * different format.
      *
+     * @param f
      * @param filename the filename
      * @throws FileNotFoundException
      */
-    public FileSource(File f) throws FileNotFoundException {
-        this(f, new XmlConverter<T>("", null));
+    public FileSource(File f) throws FileNotFoundException, IOException {
+        this(f, new XmlConverter<>("", null));
     }
 
     /**
@@ -98,7 +100,7 @@ public class FileSource<T> extends InputStreamDataReader<T> {
      * @param format the format of the data
      * @throws FileNotFoundException
      */
-    public FileSource(File f, InputStreamConverter<T> converter) throws FileNotFoundException {
+    public FileSource(File f, InputStreamConverter<T> converter) throws FileNotFoundException, IOException {
         super(new FileInputStream(f), converter);
     }
 

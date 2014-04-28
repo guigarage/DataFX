@@ -28,6 +28,7 @@ package org.datafx.samples;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +52,7 @@ class FileXmlSingleSample {
     public FileXmlSingleSample() {
     }
 
-    public Node getContent(Scene scene) {
+    public Node getContent(Scene scene) throws IOException {
         // TabPane
         final TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -72,7 +73,7 @@ class FileXmlSingleSample {
         return tabPane;
     }
 
-    private void buildLocalTab(Tab tab) {
+    private void buildLocalTab(Tab tab) throws IOException {
         try {
             URL resource = this.getClass().getResource("singlebook.xml");
             FileSource<Book> dr = new FileSource<Book>(new File(resource.getFile()));

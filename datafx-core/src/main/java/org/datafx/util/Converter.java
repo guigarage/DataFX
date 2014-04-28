@@ -26,6 +26,8 @@
  */
 package org.datafx.util;
 
+import java.io.IOException;
+
 /**
  * A Converter is responsible for converting raw data (obtained from a data source)
  * into one or more Java objects.
@@ -47,8 +49,9 @@ public interface Converter<U, T> {
      * In the case of an {@link XmlConverter}, for example, the DOM-model is created
      * in this method.
      * @param input the raw input.
+     * @throws java.io.IOException in case the raw input can't be processed by this converter.
      */
-    public void initialize(U input);
+    public void initialize(U input) throws IOException;
     
     /**
      * Get the next available data entity in the desired type
