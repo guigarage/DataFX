@@ -31,25 +31,32 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.MappingJsonFactory;
-import org.codehaus.jackson.map.ObjectMapper;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import javax.json.stream.JsonParser;
+//import org.codehaus.jackson.JsonNode;
+//import org.codehaus.jackson.JsonParser;
+//import org.codehaus.jackson.map.MappingJsonFactory;
+//import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *
  * An implementation of {@link org.datafx.util.Converter} that converts JSON data into Java Objects
  * of type T.
  * 
- * @Param <T> the type of the resulting Java objects
+ * @param <T> the type of the resulting Java objects
  * @author johan
  */
 public class JsonConverter<T> extends InputStreamConverter<T> {
 
-    private JsonNode rootNode;
+    private JsonStructure rootNode;
+  //  private JsonNode rootNode;
     private final String tag;
     private final Class<T> clazz;
-    Iterator<JsonNode> iterator;
+ //   Iterator<JsonNode> iterator;
+    Iterator<JsonObject> iterator;
     private static final Logger LOGGER = Logger.getLogger(JsonConverter.class.getName());
 
 
@@ -76,10 +83,14 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
     @Override
     public void initialize(InputStream input) {
         try {
+            JsonReader reader = Json.createReader(input);
+            rootNode = reader.read();
             MappingJsonFactory mappingJsonFactory = new MappingJsonFactory();
             JsonParser jp = mappingJsonFactory.createJsonParser(input);
             rootNode = jp.readValueAsTree();
             if (tag != null) {
+                JsonObject obj = (JsonObject)rootNode;
+                obj.getJsonArray(tag);
                 JsonNode cNode = rootNode.findValue(tag);
                 if (cNode != null) {
                     iterator = cNode.iterator();
