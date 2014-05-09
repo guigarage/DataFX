@@ -26,13 +26,16 @@
  */
 package org.datafx.controller.flow;
 
-import java.util.HashMap;
-import java.util.Map;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.flow.action.*;
 import org.datafx.controller.flow.context.ViewFlowContext;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class defines a flow. A flow is a map of different views that are linked. 
@@ -231,6 +234,11 @@ public class Flow {
      */
     public StackPane start () throws FlowException {
         return start (new DefaultFlowContainer());
+    }
+
+    public void startInStage(Stage stage) throws FlowException {
+        stage.setScene(new Scene(start()));
+        stage.show();
     }
     
     /**

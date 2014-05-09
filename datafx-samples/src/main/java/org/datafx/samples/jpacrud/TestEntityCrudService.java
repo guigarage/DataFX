@@ -1,23 +1,19 @@
 package org.datafx.samples.jpacrud;
 
 import org.datafx.controller.flow.injection.FlowScoped;
-import org.datafx.crud.jpa.JpaCrudService;
+import org.datafx.crud.jpa.SimpleJpaCrudService;
 
 import javax.annotation.PreDestroy;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 @FlowScoped
-public class TestEntityCrudService extends JpaCrudService<TestEntity, Long> {
-
-    private static EntityManagerFactory factory = Persistence.createEntityManagerFactory("DataFX-Samples");
+public class TestEntityCrudService extends SimpleJpaCrudService<TestEntity, Long> {
 
     public TestEntityCrudService() {
-        super(factory.createEntityManager(), TestEntity.class);
+        super("DataFX-Samples", TestEntity.class);
     }
 
     @PreDestroy
     public void destroy() {
-          getEntityManager().close();
+          super.destroy();
     }
 }
