@@ -7,13 +7,18 @@ import java.util.List;
 
 public class JpaGetAllCall<S extends EntityWithId<T>, T> extends JpaCall<Void, List<S>> {
 
-    public JpaGetAllCall(EntityManager manager) {
+    private Class<S> entityClass;
+
+    public JpaGetAllCall(EntityManager manager, Class<S> entityClass) {
         super(manager);
+        this.entityClass = entityClass;
     }
 
     @Override
     public List<S> call(Void dummy) throws Exception {
-        //TODO
-        return null;
+        System.out.println("Select a from " + entityClass.getSimpleName() + " a");
+        return getManager()
+                .createQuery("Select a from " + entityClass.getSimpleName() + " a", entityClass)
+                .getResultList();
     }
 }

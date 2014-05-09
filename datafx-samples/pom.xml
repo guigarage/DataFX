@@ -91,5 +91,10 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.2.7.Final</version>
+        </dependency>
     </dependencies>
 </project>

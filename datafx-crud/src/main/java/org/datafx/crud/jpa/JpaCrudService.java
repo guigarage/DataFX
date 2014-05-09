@@ -11,7 +11,7 @@ public class JpaCrudService<S extends EntityWithId<T>, T extends Serializable> e
     private EntityManager entityManager;
 
     public JpaCrudService(EntityManager entityManager, Class<S> entityClass) {
-        super(new JpaGetAllCall<S, T>(entityManager),
+        super(new JpaGetAllCall<S, T>(entityManager, entityClass),
                 new JpaGetByIdCall<S, T>(entityManager, entityClass),
                 new JpaDeleteCall<S, T>(entityManager, entityClass),
                 new JpaPersistCall<S, T>(entityManager),
