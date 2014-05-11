@@ -11,9 +11,7 @@ import java.util.concurrent.Executor;
 public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObjectProperty<S> {
 
     private CrudService<S, T> crudService;
-
     private Executor executor;
-
     private CrudListProperty<S, T> listProperty;
 
     public CrudObjectProperty(S entity, CrudListProperty<S, T> listProperty, CrudService<S, T> crudService) {
@@ -72,16 +70,18 @@ public class CrudObjectProperty<S extends EntityWithId<T>, T> extends SimpleObje
 
     public Worker<Void> delete() {
         return ConcurrentUtils.executeService(executor, ConcurrentUtils.createService(() -> {
-           try {
-               crudService.delete(get());
-               ConcurrentUtils.runAndWait(() -> set(null));
-               if (listProperty != null) {
-                   listProperty.remove(this);
-               }
-           } catch (Exception e) {
-               throw new RuntimeException("TODO", e);
-           }
-       }));
+            try {
+                crudService.delete(get());
+                ConcurrentUtils.runAndWait(() -> {
+                    set(null);
+                    if (listProperty != null) {
+                        listProperty.remove(this);
+                    }
+                });
+            } catch (Exception e) {
+                throw new RuntimeException("TODO", e);
+            }
+        }));
     }
 
 }
