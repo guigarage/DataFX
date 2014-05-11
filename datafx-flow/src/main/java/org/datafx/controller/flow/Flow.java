@@ -34,6 +34,7 @@ import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.flow.action.*;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -221,6 +222,15 @@ public class Flow {
             for (String actionId : viewActionMap.keySet()) {
                 newView.addAction(actionId, viewActionMap.get(actionId));
             }
+        }
+
+        for(Method method : newView
+                .getViewContext().getController().getClass().getMethods()) {
+            ActionMethod actionMethod = method.getAnnotation(ActionMethod.class);
+            if(actionMethod != null) {
+                newView.addAction(actionMethod.value(), new FlowMethodAction(method.getName()));
+            }
+
         }
     }
     
