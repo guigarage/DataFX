@@ -53,9 +53,9 @@ import java.util.UUID;
 public class FlowHandler {
 
 
+    private final ObservableList<ViewHistoryDefinition<?>> controllerHistory;
     //TODO: use ReadOnlyObjectWrapper here
     private FlowView<?> currentView;
-
     private FlowContainer container;
     private ViewFlowContext flowContext;
     private Flow flow;
@@ -65,8 +65,6 @@ public class FlowHandler {
     private SimpleObjectProperty<VetoHandler> vetoHandler;
     private ViewConfiguration viewConfiguration;
     private ExceptionHandler exceptionHandler;
-
-    private final ObservableList<ViewHistoryDefinition<?>> controllerHistory;
 
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this(flow, flowContext, new ViewConfiguration());
@@ -196,6 +194,23 @@ public class FlowHandler {
 
     public void navigateToHistoryIndex(int index) throws VetoException, FlowException {
         handle(new FlowLink(controllerHistory.remove(index).getControllerClass()), "backAction-" + UUID.randomUUID().toString());
+    }
+
+    public void attachAction(Node node, Runnable action) {
+        if (node instanceof ButtonBase) {
+            ((ButtonBase) node).setOnAction((e) -> action.run());
+        } else {
+            node.setOnMouseClicked((ev) -> {
+                if (ev.getClickCount() > 1) {
+                    action.run();
+                }
+            });
+        }
+    }
+
+
+    public void attachAction(MenuItem menuItem, Runnable action) {
+        menuItem.setOnAction((e) -> action.run());
     }
 
     public void attachEventHandler(Node node, String actionId) {

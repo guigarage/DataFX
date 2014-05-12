@@ -12,14 +12,12 @@ public class BackActionResourceConsumer implements ControllerResourceConsumer<Ba
     public void consumeResource(BackAction annotation, Object resource, ViewContext<?> context) {
         FlowActionHandler actionHandler = context.getRegisteredObject(ViewFlowContext.class).getRegisteredObject(FlowActionHandler.class);
         if (resource != null) {
-            if (resource != null) {
                 if(resource instanceof MenuItem) {
                     actionHandler.attachBackEventHandler((MenuItem) resource);
                 } else if(resource instanceof Node){
                     actionHandler.attachBackEventHandler((Node) resource);
                 }
             }
-        }
     }
 
     @Override

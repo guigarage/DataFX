@@ -48,6 +48,26 @@ public class FlowActionHandler {
         handler.attachEventHandler(node, actionId);
     }
 
+    public void attachLinkEventHandler(MenuItem menuItem, Class<?> controllerClass) {
+        handler.attachAction(menuItem, () -> {
+            try {
+                navigate(controllerClass);
+            } catch (Exception e) {
+                getExceptionHandler().setException(e);
+            }
+        });
+    }
+
+    public void attachLinkEventHandler(Node node, Class<?> controllerClass) {
+        handler.attachAction(node, () -> {
+            try {
+                navigate(controllerClass);
+            } catch (Exception e) {
+                getExceptionHandler().setException(e);
+            }
+        });
+    }
+
     public void attachBackEventHandler(MenuItem menuItem) {
         handler.attachBackEventHandler(menuItem);
     }
