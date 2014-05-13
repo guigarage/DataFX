@@ -1,25 +1,39 @@
 package org.datafx.crud.jpa;
 
-import org.datafx.util.EntityWithId;
 import org.datafx.crud.BasicCrudService;
+import org.datafx.util.EntityWithId;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 public class JpaCrudService<S extends EntityWithId<T>, T extends Serializable> extends BasicCrudService<S, T> {
 
-    private EntityManager entityManager;
+    private CreateOnceSupplier<EntityManager> entityManagerSupplier;
+
+    private EntityManager createdManager;
 
     public JpaCrudService(EntityManager entityManager, Class<S> entityClass) {
-        super(new JpaGetAllCall<S, T>(entityManager, entityClass),
-                new JpaGetByIdCall<S, T>(entityManager, entityClass),
-                new JpaDeleteCall<S, T>(entityManager, entityClass),
-                new JpaPersistCall<S, T>(entityManager),
-                new JpaUpdateCall<S, T>(entityManager));
-        this.entityManager = entityManager;
+        this(() -> entityManager, entityClass);
+    }
+
+    public JpaCrudService(Supplier<EntityManager> entityManagerSupplier, Class<S> entityClass) {
+       this(new CreateOnceSupplier<EntityManager>(entityManagerSupplier), entityClass);
+    }
+
+    public JpaCrudService(CreateOnceSupplier<EntityManager> entityManagerSupplier, Class<S> entityClass) {
+        super(new JpaGetAllCall<S, T>(entityManagerSupplier, entityClass),
+                new JpaGetByIdCall<S, T>(entityManagerSupplier, entityClass),
+                new JpaDeleteCall<S, T>(entityManagerSupplier, entityClass),
+                new JpaPersistCall<S, T>(entityManagerSupplier),
+                new JpaUpdateCall<S, T>(entityManagerSupplier));
+        this.entityManagerSupplier = entityManagerSupplier;
     }
 
     public EntityManager getEntityManager() {
-        return entityManager;
+        if(createdManager == null) {
+            createdManager = entityManagerSupplier.get();
+        }
+        return createdManager;
     }
 }

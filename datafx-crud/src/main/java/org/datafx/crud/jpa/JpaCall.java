@@ -3,16 +3,21 @@ package org.datafx.crud.jpa;
 import org.datafx.util.Call;
 
 import javax.persistence.EntityManager;
+import java.util.function.Supplier;
 
 public abstract class JpaCall<S, T> implements Call<S, T>{
 
-    private EntityManager manager;
+    private Supplier<EntityManager> managerSupplier;
+
+    public JpaCall(Supplier<EntityManager> managerSupplier) {
+          this.managerSupplier = managerSupplier;
+    }
 
     public JpaCall(EntityManager manager) {
-          this.manager = manager;
+        this(() -> manager);
     }
 
     public EntityManager getManager() {
-        return manager;
+        return managerSupplier.get();
     }
 }

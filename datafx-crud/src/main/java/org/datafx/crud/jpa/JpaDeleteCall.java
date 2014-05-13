@@ -5,14 +5,19 @@ import org.datafx.util.EntityWithId;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
+import java.util.function.Supplier;
 
 public class JpaDeleteCall<S extends EntityWithId<T>, T> extends JpaCall<T, Void> {
 
     private Class<S> entityClass;
 
-    public JpaDeleteCall(EntityManager manager, Class<S> entityClass) {
-        super(manager);
+    public JpaDeleteCall(Supplier<EntityManager> managerSupplier, Class<S> entityClass) {
+        super(managerSupplier);
         this.entityClass = entityClass;
+    }
+
+    public JpaDeleteCall(EntityManager manager, Class<S> entityClass) {
+        this(() -> manager, entityClass);
     }
 
     @Override

@@ -3,14 +3,19 @@ package org.datafx.crud.jpa;
 import org.datafx.util.EntityWithId;
 
 import javax.persistence.EntityManager;
+import java.util.function.Supplier;
 
 public class JpaGetByIdCall<S extends EntityWithId<T>, T> extends JpaCall<T, S> {
 
     private Class<S> entityClass;
 
-    public JpaGetByIdCall(EntityManager manager, Class<S> entityClass) {
-        super(manager);
+    public JpaGetByIdCall(Supplier<EntityManager> managerSupplier, Class<S> entityClass) {
+        super(managerSupplier);
         this.entityClass = entityClass;
+    }
+
+    public JpaGetByIdCall(EntityManager manager, Class<S> entityClass) {
+        this(() -> manager, entityClass);
     }
 
     @Override

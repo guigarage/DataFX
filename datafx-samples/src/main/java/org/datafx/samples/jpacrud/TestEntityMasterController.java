@@ -39,7 +39,6 @@ public class TestEntityMasterController {
     @PostConstruct
     public void init() {
         data = new CrudListProperty(crudService);
-
         removeButton.setDisable(true);
         dataTable.getColumns().setAll(TableColumnFactory.createColumns(TestEntity.class));
         dataTable.setItems(data.getImmutableEntityList());

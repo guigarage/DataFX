@@ -4,14 +4,19 @@ import org.datafx.util.EntityWithId;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class JpaGetAllCall<S extends EntityWithId<T>, T> extends JpaCall<Void, List<S>> {
 
     private Class<S> entityClass;
 
-    public JpaGetAllCall(EntityManager manager, Class<S> entityClass) {
-        super(manager);
+    public JpaGetAllCall(Supplier<EntityManager> managerSupplier, Class<S> entityClass) {
+        super(managerSupplier);
         this.entityClass = entityClass;
+    }
+
+    public JpaGetAllCall(EntityManager manager, Class<S> entityClass) {
+        this(() -> manager, entityClass);
     }
 
     @Override

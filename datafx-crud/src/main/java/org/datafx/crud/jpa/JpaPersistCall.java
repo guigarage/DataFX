@@ -5,11 +5,16 @@ import org.datafx.util.EntityWithId;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
+import java.util.function.Supplier;
 
 public class JpaPersistCall<S extends EntityWithId<T>, T> extends JpaCall<S, S> {
 
+    public JpaPersistCall(Supplier<EntityManager> managerSupplier) {
+        super(managerSupplier);
+    }
+
     public JpaPersistCall(EntityManager manager) {
-        super(manager);
+        this(() -> manager);
     }
 
     @Override
