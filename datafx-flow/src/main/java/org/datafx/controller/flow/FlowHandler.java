@@ -34,6 +34,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.StackPane;
 import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
@@ -93,6 +94,35 @@ public class FlowHandler {
 
     public StackPane start() throws FlowException {
         return start(new DefaultFlowContainer());
+    }
+
+    public Tab startInTab() throws FlowException {
+        return startInTab(new DefaultFlowContainer());
+    }
+
+    public <T extends Node> Tab startInTab(FlowContainer<T> container) throws FlowException {
+        Tab tab = new Tab();
+
+        getCurrentViewMetadata().addListener((e) -> {
+            tab.textProperty().unbind();
+            tab.graphicProperty().unbind();
+            tab.textProperty().bind(getCurrentViewMetadata().get().titleProperty());
+            tab.graphicProperty().bind(getCurrentViewMetadata().get().graphicsProperty());
+        });
+
+        tab.setOnClosed(e -> {
+            try {
+                destroy();
+            } catch (Exception exception) {
+                exceptionHandler.setException(exception);
+            }
+        });
+        tab.setContent(start(container));
+        return tab;
+    }
+
+    public void destroy() {
+        //TODO
     }
 
     public <T extends Node> T start(FlowContainer<T> container) throws FlowException {

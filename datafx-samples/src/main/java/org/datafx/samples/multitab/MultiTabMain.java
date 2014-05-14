@@ -8,11 +8,19 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
-import org.datafx.controller.FxmlLoadException;
-import org.datafx.controller.ViewFactory;
+import org.datafx.controller.flow.Flow;
+import org.datafx.controller.flow.FlowException;
+import org.datafx.samples.app.EditViewController;
+import org.datafx.samples.app.LoadPersonsTask;
+import org.datafx.samples.app.MasterViewController;
+import org.datafx.samples.app.RemoveActionTask;
 import org.datafx.samples.jpacrud.TestEntityMasterController;
 
 public class MultiTabMain extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -30,7 +38,12 @@ public class MultiTabMain extends Application {
         Button addCrudTabButton = new Button("addJpaCrud");
         addCrudTabButton.setOnAction((e) -> addTab(tabPane, TestEntityMasterController.class));
 
-        actionPane.getChildren().addAll(addTabButton, addCrudTabButton);
+
+        Flow flow = new Flow(MasterViewController.class).withLink(MasterViewController.class, "edit", EditViewController.class).withLink(EditViewController.class, "save", MasterViewController.class).withTaskAction(MasterViewController.class, "remove", RemoveActionTask.class).withTaskAction(MasterViewController.class, "load", LoadPersonsTask.class);
+        Button addFlowTabButton = new Button("addFlow");
+        addFlowTabButton.setOnAction((e) -> addTab(tabPane, flow));
+
+        actionPane.getChildren().addAll(addTabButton, addCrudTabButton, addFlowTabButton);
         pane.setTop(actionPane);
 
         primaryStage.setScene(new Scene(pane, 640, 480));
@@ -38,15 +51,15 @@ public class MultiTabMain extends Application {
     }
 
     private <T> void addTab(TabPane tabPane, Class<T> controllerClass) {
-        try {
-            tabPane.getTabs().add(ViewFactory.getInstance().createTab(controllerClass));
-        } catch (FxmlLoadException e) {
-            e.printStackTrace();
-        }
+        addTab(tabPane, new Flow(controllerClass));
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private <T> void addTab(TabPane tabPane, Flow flow) {
+        try {
+            tabPane.getTabs().add(flow.startInTab());
+        } catch (FlowException e) {
+            e.printStackTrace();
+        }
     }
 
 }

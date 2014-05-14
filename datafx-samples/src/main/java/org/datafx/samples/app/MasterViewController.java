@@ -12,7 +12,7 @@ import javax.inject.Inject;
 /**
  * The controller of the master view. The @FXMLController annotation defines the FXML file that describes the view.
  */
-@FXMLController("listView.fxml")
+@FXMLController(value="listView.fxml", title = "User overview")
 public class MasterViewController {
 
     /**

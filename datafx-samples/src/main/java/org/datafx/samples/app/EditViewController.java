@@ -13,7 +13,7 @@ import javax.inject.Inject;
 /**
  * The controller for the edit view.
  */
-@FXMLController("detailView.fxml")
+@FXMLController(value="detailView.fxml", title = "Edit user")
 public class EditViewController {
 
     /**

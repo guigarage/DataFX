@@ -42,5 +42,4 @@ public class DataFXDemo extends Application {
         stage.show();
 
     }
-
 }
