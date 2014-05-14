@@ -1,10 +1,14 @@
 package org.datafx.concurrent;
 
 import javafx.concurrent.Task;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -114,6 +118,49 @@ public class ProcessChain<T> {
                 return processDescription.getFunction().apply(inputParameter);
             });
         }
+    }
+
+    public Task<T> repeatInfinite() {
+        return repeat(Integer.MAX_VALUE);
+    }
+
+    public Task<T> repeatInfinite(Duration pauseTime) {
+        return repeat(Integer.MAX_VALUE, pauseTime);
+    }
+
+    public Task<T> repeat(int count) {
+        return repeat(count, Duration.ZERO);
+    }
+
+    public Task<T> repeat(int count, Duration pauseTime) {
+        Task<T> task = new Task<T>() {
+
+            @Override
+            protected T call() throws Exception {
+                Object lastResult = null;
+                if(count == Integer.MAX_VALUE) {
+                    while(true) {
+                        lastResult = null;
+                        for (ProcessDescription<?, ?> processDescription : processes) {
+                            lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription, executorService);
+                        }
+                        Thread.sleep((long) pauseTime.toMillis());
+                    }
+                } else {
+                    for(int i = 0; i < count; i++) {
+                        lastResult = null;
+                        for (ProcessDescription<?, ?> processDescription : processes) {
+                            lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription, executorService);
+                        }
+                        Thread.sleep((long) pauseTime.toMillis());
+                    }
+                }
+                return (T) lastResult;
+            }
+
+        };
+        executorService.execute(task);
+        return task;
     }
 
     public Task<T> run() {
