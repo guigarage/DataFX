@@ -56,7 +56,8 @@ public class TestEntityMasterController {
 
     @ActionMethod("removeAction")
     public void onRemoveAction() {
-        data.get(dataTable.getSelectionModel().getSelectedIndex()).delete();
+        disableUiProperty.setValue(true);
+        ConcurrentUtils.then(data.get(dataTable.getSelectionModel().getSelectedIndex()).delete(), (e) -> disableUiProperty.setValue(false));
     }
 
     private void initDisableUiProperty() {

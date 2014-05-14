@@ -26,6 +26,8 @@
  */
 package org.datafx.controller.flow;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -54,11 +56,10 @@ public class FlowHandler {
 
 
     private final ObservableList<ViewHistoryDefinition<?>> controllerHistory;
-    //TODO: use ReadOnlyObjectWrapper here
-    private FlowView<?> currentView;
-    private FlowContainer container;
-    private ViewFlowContext flowContext;
-    private Flow flow;
+    private ReadOnlyObjectWrapper<FlowView<?>> currentViewWrapper;
+    private ReadOnlyObjectWrapper<FlowContainer> containerWrapper;
+    private ReadOnlyObjectWrapper<ViewFlowContext> flowContextWrapper;
+    private ReadOnlyObjectWrapper<Flow> flowWrapper;
     private SimpleObjectProperty<BeforeFlowActionHandler> beforeFlowActionHandler;
     private SimpleObjectProperty<AfterFlowActionHandler> afterFlowActionHandler;
     private SimpleObjectProperty<VetoableBeforeFlowActionHandler> vetoableBeforeFlowActionHandler;
@@ -75,12 +76,14 @@ public class FlowHandler {
     }
 
     public FlowHandler(Flow flow, ViewFlowContext flowContext, ViewConfiguration viewConfiguration, ExceptionHandler exceptionHandler) {
-        this.flowContext = flowContext;
-        this.flow = flow;
+        this.flowWrapper = new ReadOnlyObjectWrapper<>(flow);
         this.viewConfiguration = viewConfiguration;
         this.exceptionHandler = exceptionHandler;
         controllerHistory = FXCollections.observableArrayList();
-        flowContext.register(new FlowActionHandler(this));
+        currentViewWrapper = new ReadOnlyObjectWrapper<>();
+        containerWrapper = new ReadOnlyObjectWrapper<>();
+        flowContextWrapper = new ReadOnlyObjectWrapper<>(flowContext);
+        flowContextWrapper.get().register(new FlowActionHandler(this));
     }
 
     public StackPane start() throws FlowException {
@@ -88,13 +91,13 @@ public class FlowHandler {
     }
 
     public <T extends Node> T start(FlowContainer<T> container) throws FlowException {
-        this.container = container;
-        flowContext.register(this);
+        containerWrapper.set(container);
+        flowContextWrapper.get().register(this);
         if (viewConfiguration != null) {
-            flowContext.register(ResourceBundle.class.toString(), viewConfiguration.getResources());
+            flowContextWrapper.get().register(ResourceBundle.class.toString(), viewConfiguration.getResources());
         }
         try {
-            FlowView<?> startView = new FlowView(ViewFactory.getInstance().createByController(this.flow.getStartViewControllerClass(), null, getViewConfiguration(), flowContext));
+            FlowView<?> startView = new FlowView(ViewFactory.getInstance().createByController(flowWrapper.get().getStartViewControllerClass(), null, getViewConfiguration(), flowContextWrapper.get()));
             setNewView(startView);
         } catch (FxmlLoadException e) {
             throw new FlowException(e);
@@ -108,11 +111,11 @@ public class FlowHandler {
 
     public void handle(String actionId) throws VetoException, FlowException {
         FlowAction action = null;
-        if (currentView != null) {
-            action = currentView.getActionById(actionId);
+        if (getCurrentView() != null) {
+            action = getCurrentView().getActionById(actionId);
         }
         if (action == null) {
-            action = flow.getGlobalActionById(actionId);
+            action = flowWrapper.get().getGlobalActionById(actionId);
         }
         handle(action, actionId);
     }
@@ -122,26 +125,39 @@ public class FlowHandler {
     }
 
     public ViewFlowContext getFlowContext() {
-        return flowContext;
+        return flowContextWrapper.get();
+    }
+
+    public ReadOnlyObjectProperty<ViewFlowContext> getFlowContextProperty() {
+        return flowContextWrapper.getReadOnlyProperty();
+    }
+
+    public ReadOnlyObjectProperty<FlowView<?>> getCurrentViewProperty() {
+        return currentViewWrapper.getReadOnlyProperty();
+    }
+
+
+    public ReadOnlyObjectProperty<FlowContainer> getContainerProperty() {
+        return containerWrapper.getReadOnlyProperty();
     }
 
     public FlowView<?> getCurrentView() {
-        return currentView;
+        return currentViewWrapper.get();
     }
 
     public ViewContext<?> getCurrentViewContext() {
-        return currentView.getViewContext();
+        return getCurrentView().getViewContext();
     }
 
     public void handle(FlowAction action, String actionId) throws FlowException, VetoException {
 
         if (beforeFlowActionHandler != null && beforeFlowActionHandler.getValue() != null) {
-            beforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContext));
+            beforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContextWrapper.get()));
         }
 
         if (vetoableBeforeFlowActionHandler != null && vetoableBeforeFlowActionHandler.getValue() != null) {
             try {
-                vetoableBeforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContext));
+                vetoableBeforeFlowActionHandler.getValue().handle(new BeforeFlowActionEvent(actionId, action, flowContextWrapper.get()));
             } catch (Veto veto) {
                 if (vetoHandler != null && vetoHandler.getValue() != null) {
                     vetoHandler.get().onVeto(veto);
@@ -152,19 +168,19 @@ public class FlowHandler {
 
         action.handle(this, actionId);
         if (afterFlowActionHandler != null && afterFlowActionHandler.getValue() != null) {
-            afterFlowActionHandler.getValue().handle(new AfterFlowActionEvent(actionId, action, flowContext));
+            afterFlowActionHandler.getValue().handle(new AfterFlowActionEvent(actionId, action, flowContextWrapper.get()));
         }
     }
 
     public <U> ViewContext<U> setNewView(FlowView<U> newView)
             throws FlowException {
-        if (currentView != null) {
-            ViewHistoryDefinition<?> historyDefinition = new ViewHistoryDefinition(currentView.getViewContext().getController().getClass(), "", null);
+        if (getCurrentView() != null) {
+            ViewHistoryDefinition<?> historyDefinition = new ViewHistoryDefinition(getCurrentView().getViewContext().getController().getClass(), "", null);
             controllerHistory.add(0, historyDefinition);
         }
-        flow.addActionsToView(newView);
+        flowWrapper.get().addActionsToView(newView);
 
-        FlowView<?> oldView = currentView;
+        FlowView<?> oldView = getCurrentView();
 
         if (oldView != null) {
             ViewContext<?> lastViewContext = oldView.getViewContext();
@@ -177,10 +193,9 @@ public class FlowHandler {
                 }
             }
         }
-
-        currentView = newView;
-        flowContext.setCurrentViewContext(currentView.getViewContext());
-        container.setViewContext(currentView.getViewContext());
+        currentViewWrapper.set(newView);
+        flowContextWrapper.get().setCurrentViewContext(getCurrentView().getViewContext());
+        containerWrapper.get().setViewContext(getCurrentView().getViewContext());
         return newView.getViewContext();
     }
 
