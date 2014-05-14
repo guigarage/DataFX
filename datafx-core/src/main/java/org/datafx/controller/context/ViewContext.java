@@ -166,11 +166,10 @@ public class ViewContext<U> extends AbstractContext {
     public void destroy() throws IllegalAccessException,
             IllegalArgumentException, InvocationTargetException {
         // TODO: All managed Object should be checked for a pre destroy....
-        Object controller = getRegisteredObject("controller");
         if (controller != null) {
-            for (final Method method : controller.getClass().getDeclaredMethods()) {
+            for (final Method method : getController().getClass().getDeclaredMethods()) {
                 if (method.isAnnotationPresent(PreDestroy.class)) {
-                    method.invoke(controller);
+                    method.invoke(getController());
                 }
             }
         }
