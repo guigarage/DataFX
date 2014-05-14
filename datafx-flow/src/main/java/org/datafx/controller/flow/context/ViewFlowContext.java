@@ -91,7 +91,7 @@ public class ViewFlowContext extends AbstractContext {
 	public ViewFlowContext() {
 	}
 
-    public ObjectProperty<ViewContext<?>> currentViewContextPropertyProperty() {
+    public ObjectProperty<ViewContext<?>> currentViewContextProperty() {
         if(currentViewContextProperty == null) {
             currentViewContextProperty = new SimpleObjectProperty<ViewContext<?>>() {
                 @Override
@@ -112,7 +112,7 @@ public class ViewFlowContext extends AbstractContext {
 	 * @param currentViewContext
 	 */
 	public <T> void setCurrentViewContext(ViewContext<T> currentViewContext) {
-        currentViewContextPropertyProperty().setValue(currentViewContext);
+        currentViewContextProperty().setValue(currentViewContext);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class ViewFlowContext extends AbstractContext {
 	 * @return the view context
 	 */
 	public ViewContext<?> getCurrentViewContext() {
-		return currentViewContextPropertyProperty().get();
+		return currentViewContextProperty().get();
 	}
 
 	/**

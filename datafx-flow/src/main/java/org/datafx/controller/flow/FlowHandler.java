@@ -39,6 +39,7 @@ import org.datafx.controller.FxmlLoadException;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.ViewFactory;
 import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.context.ViewMetadata;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.action.FlowLink;
 import org.datafx.controller.flow.context.FlowActionHandler;
@@ -67,6 +68,8 @@ public class FlowHandler {
     private ViewConfiguration viewConfiguration;
     private ExceptionHandler exceptionHandler;
 
+    private ReadOnlyObjectWrapper<ViewMetadata> currentViewMetadataWrapper;
+
     public FlowHandler(Flow flow, ViewFlowContext flowContext) {
         this(flow, flowContext, new ViewConfiguration());
     }
@@ -83,6 +86,8 @@ public class FlowHandler {
         currentViewWrapper = new ReadOnlyObjectWrapper<>();
         containerWrapper = new ReadOnlyObjectWrapper<>();
         flowContextWrapper = new ReadOnlyObjectWrapper<>(flowContext);
+        currentViewMetadataWrapper = new ReadOnlyObjectWrapper<>();
+        flowContextWrapper.get().currentViewContextProperty().addListener((e) -> currentViewMetadataWrapper.set(flowContextWrapper.get().getCurrentViewContext().getMetadata()));
         flowContextWrapper.get().register(new FlowActionHandler(this));
     }
 
@@ -126,6 +131,10 @@ public class FlowHandler {
 
     public ViewFlowContext getFlowContext() {
         return flowContextWrapper.get();
+    }
+
+    public ReadOnlyObjectProperty<ViewMetadata> getCurrentViewMetadata() {
+        return currentViewMetadataWrapper.getReadOnlyProperty();
     }
 
     public ReadOnlyObjectProperty<ViewFlowContext> getFlowContextProperty() {
