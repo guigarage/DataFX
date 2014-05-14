@@ -1,11 +1,12 @@
 package org.datafx.controller.context;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.*;
 import org.datafx.controller.context.resource.AnnotatedControllerResourceType;
 import org.datafx.controller.context.resource.ControllerResourceConsumer;
 import org.datafx.util.DataFXUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class ContextResolver<U> {
 
@@ -15,14 +16,15 @@ public class ContextResolver<U> {
         this.context = context;
     }
 
+
+
     public void injectResources(Object object) {
 
         List<AnnotatedControllerResourceType> allResourceTypes = getAnnotatedControllerResourceTypes();
         List<ControllerResourceConsumer> resourceConsumers = getControllerResourceConsumer();
 
         Class<? extends Object> cls = object.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for (final Field field : fields) {
+        for (final Field field : DataFXUtils.getInheritedPrivateFields(cls)) {
             List<Annotation> fieldAnnotations = Arrays.asList(field.getAnnotations());
             if(fieldAnnotations != null && !fieldAnnotations.isEmpty()) {
                 boolean injected = false;

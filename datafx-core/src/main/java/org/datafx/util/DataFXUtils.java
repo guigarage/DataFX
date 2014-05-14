@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * General util class
@@ -76,5 +79,15 @@ public class DataFXUtils {
                 }
             }
         });
+    }
+
+    public static List<Field> getInheritedPrivateFields(Class<?> type) {
+        List<Field> result = new ArrayList<Field>();
+        Class<?> i = type;
+        while (i != null && i != Object.class) {
+            result.addAll(Arrays.asList(i.getDeclaredFields()));
+            i = i.getSuperclass();
+        }
+        return result;
     }
 }

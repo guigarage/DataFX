@@ -1,18 +1,19 @@
 package org.datafx.controller.injection;
 
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import org.datafx.controller.context.AbstractContext;
+import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.injection.provider.ContextProvider;
+import org.datafx.util.DataFXUtils;
+
+import javax.inject.Inject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.ServiceLoader;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javax.inject.Inject;
-import org.datafx.controller.context.AbstractContext;
-import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.injection.provider.ContextProvider;
-import org.datafx.util.DataFXUtils;
 
 
 public class InjectionHandler<U> {
@@ -66,8 +67,7 @@ public class InjectionHandler<U> {
 
     private <T> void injectAllSupportedFields(T bean) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Class<T> cls = (Class<T>) bean.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for (final Field field : fields) {
+        for (final Field field : DataFXUtils.getInheritedPrivateFields(cls)) {
             if (field.isAnnotationPresent(Inject.class)) {
                 DataFXUtils.setPrivileged(field, bean, createProxy(field.getType()));
             }
