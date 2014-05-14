@@ -29,11 +29,13 @@ public class ProcessChainDemo extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ProcessChain.create().inPlatformThread(() -> button.setDisable(true))
-                        .inExecutor(() -> communicateWithServer())
-                        .inExecutor(() -> {return "Time in Millis: " + System.currentTimeMillis();})
-                        .inPlatformThread((Consumer<String>) (t) -> label.setText(t.toString()))
-                        .inPlatformThread(() -> button.setDisable(false))
+                ProcessChain.create().addRunnableInPlatformThread(() -> button.setDisable(true))
+                        .addRunnableInExecutor(() -> communicateWithServer())
+                        .addSupplierInExecutor(() -> {
+                            return "Time in Millis: " + System.currentTimeMillis();
+                        })
+                        .addConsumerInPlatformThread((Consumer<String>) (t) -> label.setText(t.toString()))
+                        .addRunnableInPlatformThread(() -> button.setDisable(false))
                         .run();
             }
         });

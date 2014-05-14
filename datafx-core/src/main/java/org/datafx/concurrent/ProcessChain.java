@@ -44,54 +44,61 @@ public class ProcessChain<T> {
         return new ProcessChain<>(executorService);
     }
 
-    public <V> ProcessChain<V> inPlatformThread(Function<T, V> function) {
-        processes.add(new ProcessDescription<T, V>(function, ThreadType.PLATFORM));
+    public <V> ProcessChain<V> addFunction(Function<T, V> function, ThreadType type) {
+        processes.add(new ProcessDescription<T, V>(function, type));
         return new ProcessChain<V>(executorService, processes);
     }
 
-    public <V> ProcessChain<V> inExecutor(Function<T, V> function) {
-        processes.add(new ProcessDescription<T, V>(function, ThreadType.EXECUTOR));
-        return new ProcessChain<V>(executorService, processes);
+    public <V> ProcessChain<V> addFunctionInPlatformThread(Function<T, V> function) {
+        return addFunction(function, ThreadType.PLATFORM);
     }
 
-    public ProcessChain<Void> inPlatformThread(Runnable runnable) {
-        return inPlatformThread((Function<T, Void>) (e) -> {
-            runnable.run();
-            return null;
-        });
+    public <V> ProcessChain<V> addFunctionInExecutor(Function<T, V> function) {
+        return addFunction(function, ThreadType.EXECUTOR);
     }
 
-    public ProcessChain<Void> inExecutor(Runnable runnable) {
-        return inExecutor((Function<T, Void>) (e) -> {
-            runnable.run();
-            return null;
-        });
+    public ProcessChain<Void> addRunnable(Runnable runnable, ThreadType type) {
+           return addFunction((Function<T, Void>) (e) -> {
+               runnable.run();
+               return null;
+           }, type);
     }
 
-    public ProcessChain<Void> inPlatformThread(Consumer<T> consumer) {
-        return inPlatformThread((Function<T, Void>) (e) -> {
+    public ProcessChain<Void> addRunnableInPlatformThread(Runnable runnable) {
+        return addRunnable(runnable, ThreadType.PLATFORM);
+    }
+
+    public ProcessChain<Void> addRunnableInExecutor(Runnable runnable) {
+        return addRunnable(runnable, ThreadType.EXECUTOR);
+    }
+
+    public ProcessChain<Void> addConsumer(Consumer<T> consumer, ThreadType type) {
+        return addFunction((Function<T, Void>) (e) -> {
             consumer.accept(e);
             return null;
-        });
+        }, type);
     }
 
-    public ProcessChain<Void> inExecutor(Consumer<T> consumer) {
-        return inExecutor((Function<T, Void>) (e) -> {
-            consumer.accept(e);
-            return null;
-        });
+    public ProcessChain<Void> addConsumerInPlatformThread(Consumer<T> consumer) {
+        return addConsumer(consumer, ThreadType.PLATFORM);
     }
 
-    public <V> ProcessChain<V> inPlatformThread(Supplier<V> supplier) {
-        return inPlatformThread((Function<T, V>) (e) -> {
+    public ProcessChain<Void> addConsumerInExecutor(Consumer<T> consumer) {
+        return addConsumer(consumer, ThreadType.EXECUTOR);
+    }
+
+    public <V> ProcessChain<V> addSupplierInPlatformThread(Supplier<V> supplier) {
+        return addSupplier(supplier, ThreadType.PLATFORM);
+    }
+
+    public <V> ProcessChain<V> addSupplierInExecutor(Supplier<V> supplier) {
+        return addSupplier(supplier, ThreadType.EXECUTOR);
+    }
+
+    public <V> ProcessChain<V> addSupplier(Supplier<V> supplier, ThreadType type) {
+        return addFunction((Function<T, V>) (e) -> {
             return supplier.get();
-        });
-    }
-
-    public <V> ProcessChain<V> inExecutor(Supplier<V> supplier) {
-        return inExecutor((Function<T, V>) (e) -> {
-            return supplier.get();
-        });
+        }, type);
     }
 
     @SuppressWarnings("unchecked")

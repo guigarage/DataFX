@@ -123,12 +123,6 @@ public class CrudListProperty<S extends EntityWithId<T>, T> extends ModifiableOb
     }
 
     public Worker<List<CrudObjectProperty<S, T>>> reload() {
-        Object d = null;
-        try {
-            d = crudService.getAll();
-        } catch (CrudException e) {
-            e.printStackTrace();
-        }
         return innerReload(() -> crudService.getAll());
     }
 
@@ -181,6 +175,6 @@ public class CrudListProperty<S extends EntityWithId<T>, T> extends ModifiableOb
         CrudObjectProperty<S, T> p = new CrudObjectProperty<>(entity, this, crudService);
         p.save();
         add(p);
-        //return ProcessChain.create().inPlatformThread((Supplier<Worker<S>>) () -> p.save()).inExecutor((Consumer<Worker<S>>) (w) -> w.isRunning()).inExecutor((Runnable) () -> add(p)).run();
+        //return ProcessChain.create().addFunctionInPlatformThread((Supplier<Worker<S>>) () -> p.save()).addFunctionInExecutor((Consumer<Worker<S>>) (w) -> w.isRunning()).addFunctionInExecutor((Runnable) () -> addFunction(p)).run();
     }
 }

@@ -30,6 +30,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 
+import java.util.function.Consumer;
+
 /**
  * A special task that provides some additional features.
  *
@@ -92,5 +94,9 @@ public abstract class DataFxTask<V> extends Task<V> implements TaskStateHandler 
         } else {
             throw new RuntimeException("Task is not cancelable!");
         }
+    }
+
+    public void then(Consumer<V> consumer) {
+        ConcurrentUtils.then(this, consumer);
     }
 }

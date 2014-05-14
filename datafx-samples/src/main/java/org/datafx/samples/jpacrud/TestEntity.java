@@ -25,6 +25,14 @@ public class TestEntity implements EntityWithId<Long> {
     @Version
     private Date version;
 
+
+    public TestEntity(String name) {
+        this.name = name;
+    }
+
+    public TestEntity() {
+    }
+
     @Override
     public Long getId() {
         return id;

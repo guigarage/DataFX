@@ -27,6 +27,11 @@
 package org.datafx.concurrent;
 
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -35,6 +40,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
+import java.util.function.Consumer;
 
 /**
  *  Utility class for concurrency issues in JavaFX
@@ -101,4 +107,32 @@ public class ConcurrentUtils {
         }
     }
 
+    public static <V> BooleanBinding isFinishedProperty(Worker<V> worker) {
+        return worker.stateProperty().isEqualTo(Worker.State.CANCELLED).or(worker.stateProperty().isEqualTo(Worker.State.FAILED).or(worker.stateProperty().isEqualTo(Worker.State.SUCCEEDED)));
+    }
+
+    public static <T> void then(Worker<T> worker, Consumer<T> consumer) {
+        ReadOnlyBooleanProperty doneProperty = createIsDoneProperty(worker);
+        ChangeListener<Boolean> listener = (o, oldValue, newValue) -> {
+            if (newValue) {
+                consumer.accept(worker.getValue());
+            }
+        };
+        doneProperty.addListener(listener);
+    }
+
+    public static ReadOnlyBooleanProperty createIsDoneProperty(Worker<?> worker) {
+        final BooleanProperty property = new SimpleBooleanProperty();
+        Consumer<Worker.State> stateChecker = (s) -> {
+            if (s.equals(Worker.State.CANCELLED) || s.equals(Worker.State.FAILED) || s.equals(Worker.State.SUCCEEDED)) {
+                property.setValue(true);
+            } else {
+                property.setValue(false);
+            }
+        };
+        worker.stateProperty().addListener((o, oldValue, newValue) -> stateChecker.accept(newValue));
+        stateChecker.accept(worker.getState());
+        return property;
+
+    }
 }
