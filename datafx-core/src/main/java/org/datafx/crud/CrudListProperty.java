@@ -132,6 +132,7 @@ public class CrudListProperty<S extends EntityWithId<T>, T> extends ModifiableOb
 
     private Worker<List<CrudObjectProperty<S, T>>> innerReload(Callable<List<S>> supplier) {
         return ConcurrentUtils.executeService(executor, ConcurrentUtils.createService(() -> {
+
             try {
                 List<CrudObjectProperty<S, T>> newProperties = FXCollections.observableArrayList();
                 List<S> dataList = supplier.call();
