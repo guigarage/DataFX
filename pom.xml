@@ -69,6 +69,7 @@
         <module>datafx-samples</module>
         <module>datafx-datareader</module>
         <module>datafx-tutorial1</module>
+        <module>datafx-tutorial2</module>
     </modules>
 
     <profiles>

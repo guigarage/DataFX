@@ -41,6 +41,12 @@ import javax.annotation.PostConstruct;
 @FXMLController("simpleView.fxml")
 public class SimpleController {
 
+    /**
+     * In the FXML file of this view (simpleView.fxml) a Label is defined. This label has the attribute fx:id="resultLabel".
+     * The definition of the @FXML annotation defines that the value of a field will be injected if the name of the field is
+     * equal to an fx:id that is defined in the FXML file. So the value of this Label field will be injected and once the controller
+     * is initialized it will contain the instance of the Label that is defined by the FXML file.
+     */
     @FXML
     private Label resultLabel;
 
