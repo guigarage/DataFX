@@ -7,8 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import org.datafx.concurrent.ConcurrentUtils;
 import org.datafx.controller.FXMLController;
+import org.datafx.controller.flow.action.ActionTrigger;
 import org.datafx.controller.flow.action.ActionMethod;
-import org.datafx.controller.flow.action.FXMLFlowAction;
 import org.datafx.crud.CrudListProperty;
 import org.datafx.crud.table.TableColumnFactory;
 
@@ -21,13 +21,13 @@ public class TestEntityMasterController {
     @FXML
     TableView<TestEntity> dataTable;
     @FXML
-    @FXMLFlowAction("addAction")
+    @ActionTrigger("addAction")
     private Button addButton;
     @FXML
-    @FXMLFlowAction("reloadAction")
+    @ActionTrigger("reloadAction")
     private Button reloadButton;
     @FXML
-    @FXMLFlowAction("removeAction")
+    @ActionTrigger("removeAction")
     private Button removeButton;
     @Inject
     private TestEntityCrudService crudService;

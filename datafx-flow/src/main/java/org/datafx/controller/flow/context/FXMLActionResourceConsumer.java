@@ -4,14 +4,12 @@ import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.resource.ControllerResourceConsumer;
-import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.action.FXMLFlowAction;
-import org.datafx.controller.util.VetoException;
+import org.datafx.controller.flow.action.ActionTrigger;
 
-public class FXMLActionResourceConsumer implements ControllerResourceConsumer<FXMLFlowAction, Object>  {
+public class FXMLActionResourceConsumer implements ControllerResourceConsumer<ActionTrigger, Object>  {
 
     @Override
-    public void consumeResource(FXMLFlowAction annotation, Object resource, ViewContext<?> context) {
+    public void consumeResource(ActionTrigger annotation, Object resource, ViewContext<?> context) {
         FlowActionHandler actionHandler = context.getRegisteredObject(ViewFlowContext.class).getRegisteredObject(FlowActionHandler.class);
         if (resource != null) {
             if(resource instanceof MenuItem) {
@@ -23,7 +21,7 @@ public class FXMLActionResourceConsumer implements ControllerResourceConsumer<FX
     }
 
     @Override
-    public Class<FXMLFlowAction> getSupportedAnnotation() {
-        return FXMLFlowAction.class;
+    public Class<ActionTrigger> getSupportedAnnotation() {
+        return ActionTrigger.class;
     }
 }

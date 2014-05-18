@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.flow.action.ActionTrigger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ public class EditViewController {
      * This action is defined by the unique id "save"
      */
     @FXML
-    @FXMLFlowAction("save")
+    @ActionTrigger("save")
     private Button saveButton;
 
     @FXML

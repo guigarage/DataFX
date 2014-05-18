@@ -27,12 +27,10 @@
 package org.datafx.samples.masterdetail.controller;
 
 import javafx.beans.property.StringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
-import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.flow.action.ActionTrigger;
 import org.datafx.controller.flow.context.ActionHandler;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.FlowActionHandler;
@@ -49,15 +47,15 @@ public class MasterViewController {
     private ViewFlowContext context;
     
     @FXML
-    @FXMLFlowAction("showDetails")
+    @ActionTrigger("showDetails")
     private ListView<StringProperty> myList;
     
     @FXML
-    @FXMLFlowAction("delete")
+    @ActionTrigger("delete")
     private Button deleteButton;
     
     @FXML
-    @FXMLFlowAction("showDetails")
+    @ActionTrigger("showDetails")
     private Button showDetailsButton;
 
 

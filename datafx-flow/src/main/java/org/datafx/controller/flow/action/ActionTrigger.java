@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 
 @Target(value={ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FXMLFlowAction {
+public @interface ActionTrigger {
 
     public abstract String value();
 }

@@ -35,9 +35,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.context.FXMLViewContext;
-import org.datafx.controller.context.ViewContext;
-import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.flow.action.ActionTrigger;
 import org.datafx.controller.flow.context.FXMLViewFlowContext;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.samples.masterdetail.data.DataModel;
@@ -53,7 +51,7 @@ public class DetailViewController {
     private TextField myTextfield;
     
     @FXML
-    @FXMLFlowAction("back")
+    @ActionTrigger("back")
     private Button backButton;
 
     @Inject

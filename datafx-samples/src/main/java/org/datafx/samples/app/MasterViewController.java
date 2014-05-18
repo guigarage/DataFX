@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.flow.action.FXMLFlowAction;
+import org.datafx.controller.flow.action.ActionTrigger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ public class MasterViewController {
      * In addition a Flow action will be bound to the button. The action is defined by the unique id "edit"
      */
     @FXML
-    @FXMLFlowAction("edit")
+    @ActionTrigger("edit")
     private Button editButton;
 
     /**
@@ -28,7 +28,7 @@ public class MasterViewController {
      * In addition a Flow action will be bound to the button. The action is defined by the unique id "remove"
      */
     @FXML
-    @FXMLFlowAction("remove")
+    @ActionTrigger("remove")
     private Button removeButton;
 
     /**
@@ -36,14 +36,14 @@ public class MasterViewController {
      * In addition a Flow action will be bound to the button. The action is defined by the unique id "load"
      */
     @FXML
-    @FXMLFlowAction("load")
+    @ActionTrigger("load")
     private Button loadButton;
 
     /**
      * The list that shows the data
      */
     @FXML
-    @FXMLFlowAction("edit")
+    @ActionTrigger("edit")
     private ListView dataList;
 
     /**
