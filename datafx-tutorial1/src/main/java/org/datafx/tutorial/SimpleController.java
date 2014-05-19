@@ -1,3 +1,29 @@
+/**
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ *     * Neither the name of DataFX, the website javafxdata.org, nor the
+ * names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.datafx.tutorial;
 
 import javafx.fxml.FXML;
@@ -10,12 +36,13 @@ import org.datafx.controller.flow.action.ActionTrigger;
 import javax.annotation.PostConstruct;
 
 /**
- * This is the controller class of the view this is used in this first tutorial. By using the @FXMLController annotation
- * the class defines its FXML file that contains the layout of the view and defines it's UI components.
- * By using the @FXML annotation that is part of the basic JavaFX API components that are defined in the FXML file can be easily
- * injected in the controller. Once the controller is created the init() methods will be called. This method is annoted by the
- *
- * @PostConstruct annotation. By doing so the DataFX flow container will call this method once all injectable values of the controller
+ * This is the controller class for the view used in this first tutorial. 
+ * By using the DataFX @FXMLController annotation
+ * the class defines its FXML file that contains the layout of the view and defines its UI components.
+ * By using the JavaFX @FXML annotation that is part of the basic JavaFX API, components that are defined in the FXML file can be easily
+ * injected in the controller. Once the controller is created the init() methods will be called by the Flow Framework. 
+ * This method is annotated by the @PostConstruct annotation. 
+ * By doing so the DataFX flow container will call this method once all injectable values of the controller
  * instance are injected. There three different types of values / fields that can be injected:
  * <ul>
  * <li>UI components that are annotated by @FXML</li>
@@ -27,11 +54,13 @@ import javax.annotation.PostConstruct;
  * <p/>
  * In this first example we will only use @FXML to inject FXML UI components to the controller.
  * <p/>
- * In addtion DataFX action handling is introduced in this example. The view contains a button named actionButton.
- * Once this button is clicked the onAction() method should be executed. To do so DataFX contains two annotation:
- * - The @ActionTrigger annotation defines a UI component that will trigger an action. Each action in DataFX is defined by a unique id.
- * In this example the "myAction" id is used. The id must be unique in on view controller.
- * - To handle the action a method of the controller can be annotated by the @ActionMethod annotation. The value of this annotation
+ * In addition DataFX action handling is introduced in this example. The view contains a button named actionButton.
+ * Once this button is clicked, the onAction() method will be executed. To do so DataFX contains two annotation:
+ * - The @ActionTrigger annotation annotates a UI component that will trigger an action. 
+ * Each action in DataFX is defined by a unique id, which is passed as the value of the @ActionTrigger annotation
+ * In this example the "myAction" id is used. The id must be unique in view controller.
+ * - To handle the action a method of the controller should be annotated with the @ActionMethod annotation. 
+ * The value of this annotation
  * must be the unique id of the defined action. Therefore @ActionMethod("myAction") is used here.
  * The method will be called in the JavaFX Application Thread
  * <p/>
@@ -43,8 +72,8 @@ import javax.annotation.PostConstruct;
  * Note: This example is quite easy and normally you could define the action binding by only one line of Java code in the init() method:
  * actionButton.setOnAction((e) -> onAction());
  * So why are these annotations used here?
- * As you will see in further tutorials that are more complex than this one it will make sense to use tha annotation to provide
- * a more readable code.
+ * As you will see in further tutorials that are more complex than this one it will make sense to use the annotations to provide
+ * more readable code.
  */
 @FXMLController("simpleView.fxml")
 public class SimpleController {
