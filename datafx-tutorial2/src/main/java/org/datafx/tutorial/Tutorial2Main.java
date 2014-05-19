@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import org.datafx.controller.flow.Flow;
 
 /**
+ * 
  * This tutorial shows how navigation between views can be done with the help of the DataFX Flow API. You should have understood the
  * first DataFX tutorial (see module DataFX-tutorial1) before you have a look at this example because the basics of the first tutorial
  * won't be explained here any more.
