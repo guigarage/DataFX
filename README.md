@@ -1,4 +1,5 @@
 ![ScreenShot](http://www.guigarage.com/wordpress/wp-content/uploads/2014/05/datafx_logo.png)
+
 What you’ve stumbled upon here is a project that intends to make retrieving, massaging, populating, viewing, and editing data in JavaFX UI controls easier. It’s all that boring kludge work you have to do between getting user requirements and delivering a rich user experience.
 
 ### Overview ###
