@@ -70,6 +70,7 @@
         <module>datafx-datareader</module>
         <module>datafx-tutorial1</module>
         <module>datafx-tutorial2</module>
+        <module>datafx-tutorial3</module>
     </modules>
 
     <profiles>

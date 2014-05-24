@@ -32,6 +32,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.datafx.controller.ViewConfiguration;
+import org.datafx.controller.context.ViewMetadata;
 import org.datafx.controller.flow.action.*;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
@@ -250,7 +251,22 @@ public class Flow {
     }
 
     public void startInStage(Stage stage) throws FlowException {
-        stage.setScene(new Scene(start()));
+        FlowHandler handler = createHandler();
+        stage.setScene(new Scene(handler.start(new DefaultFlowContainer())));
+        handler.getCurrentViewMetadata().addListener((e) -> {
+            stage.titleProperty().unbind();
+            ViewMetadata metadata =  handler.getCurrentViewMetadata().get();
+            if(metadata != null) {
+                stage.titleProperty().bind(metadata.titleProperty());
+            }
+        });
+
+        stage.titleProperty().unbind();
+        ViewMetadata metadata =  handler.getCurrentViewMetadata().get();
+        if(metadata != null) {
+            stage.titleProperty().bind(metadata.titleProperty());
+        }
+
         stage.show();
     }
 
