@@ -102,9 +102,7 @@ public class ViewFactory {
 
             // 2. load the FXML and make sure the @FXML annotations are injected
             FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
-            ObservableMap<String, Object> map1 = loader.getNamespace();
             Node viewNode = (Node) loader.load();
-            ObservableMap<String, Object> map2 = loader.getNamespace();
             ViewContext<T> context = new ViewContext<>(viewNode,
                     controller, metadata, viewConfiguration, viewContextResources);
             context.register(controller);
