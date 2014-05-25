@@ -133,7 +133,7 @@ public class FlowHandler {
         }
         try {
             FlowView<?> startView = new FlowView(ViewFactory.getInstance().createByController(flowWrapper.get().getStartViewControllerClass(), null, getViewConfiguration(), flowContextWrapper.get()));
-            setNewView(startView);
+            setNewView(startView, false);
         } catch (FxmlLoadException e) {
             throw new FlowException(e);
         }
@@ -211,9 +211,9 @@ public class FlowHandler {
         }
     }
 
-    public <U> ViewContext<U> setNewView(FlowView<U> newView)
+    public <U> ViewContext<U> setNewView(FlowView<U> newView, boolean addOldToHistory)
             throws FlowException {
-        if (getCurrentView() != null) {
+        if (getCurrentView() != null && addOldToHistory) {
             ViewHistoryDefinition<?> historyDefinition = new ViewHistoryDefinition(getCurrentView().getViewContext().getController().getClass(), "", null);
             controllerHistory.add(0, historyDefinition);
         }
@@ -247,7 +247,7 @@ public class FlowHandler {
     }
 
     public void navigateToHistoryIndex(int index) throws VetoException, FlowException {
-        handle(new FlowLink(controllerHistory.remove(index).getControllerClass()), "backAction-" + UUID.randomUUID().toString());
+        handle(new FlowLink(controllerHistory.remove(index).getControllerClass(), false), "backAction-" + UUID.randomUUID().toString());
     }
 
     public void attachAction(Node node, Runnable action) {

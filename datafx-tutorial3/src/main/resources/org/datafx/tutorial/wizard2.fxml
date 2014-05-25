@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<StackPane id="StackPane" maxHeight="-Infinity" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <BorderPane>
+            <bottom>
+                <fx:include source="actionBar.fxml" />
+            </bottom>
+            <center>
+                <StackPane BorderPane.alignment="CENTER">
+                    <children>
+                        <Label text="This is the first step.">
+                            <StackPane.margin>
+                                <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+                            </StackPane.margin>
+                        </Label>
+                    </children>
+                </StackPane>
+            </center></BorderPane>
+    </children>
+    <padding>
+        <Insets />
+    </padding>
+</StackPane>

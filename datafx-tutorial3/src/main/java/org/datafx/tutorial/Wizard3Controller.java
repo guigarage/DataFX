@@ -9,6 +9,6 @@ import org.datafx.controller.flow.action.LinkAction;
 public class Wizard3Controller extends AbstractWizardController {
 
     @FXML
-    @LinkAction(Wizard3Controller.class)
+    @LinkAction(WizardDoneController.class)
     private Button nextButton;
 }

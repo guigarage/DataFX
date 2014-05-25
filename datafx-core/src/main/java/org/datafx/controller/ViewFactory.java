@@ -1,5 +1,6 @@
 package org.datafx.controller;
 
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -97,7 +98,10 @@ public class ViewFactory {
             }
 
             // 2. load the FXML and make sure the @FXML annotations are injected
-            Node viewNode = (Node) createLoader(controller, fxmlName, viewConfiguration).load();
+            DataFXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
+            ObservableMap<String, Object> map1 = loader.getNamespace();
+            Node viewNode = (Node) loader.load();
+            ObservableMap<String, Object> map2 = loader.getNamespace();
             ViewContext<T> context = new ViewContext<>(viewNode,
                     controller, metadata, viewConfiguration, viewContextResources);
             context.register(controller);
@@ -123,7 +127,7 @@ public class ViewFactory {
         stage.show();
     }
 
-    private FXMLLoader createLoader(final Object controller, String fxmlName, ViewConfiguration viewConfiguration)
+    private DataFXMLLoader createLoader(final Object controller, String fxmlName, ViewConfiguration viewConfiguration)
             throws FxmlLoadException {
         Class<?> controllerClass = controller.getClass();
         String foundFxmlName = getFxmlName(controllerClass);
@@ -134,7 +138,7 @@ public class ViewFactory {
             throw new FxmlLoadException("No FXML File specified!");
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(
+        DataFXMLLoader fxmlLoader = new DataFXMLLoader(
                 controllerClass.getResource(foundFxmlName));
         fxmlLoader.setBuilderFactory(viewConfiguration.getBuilderFactory());
         fxmlLoader.setCharset(viewConfiguration.getCharset());

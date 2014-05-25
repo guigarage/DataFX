@@ -37,8 +37,15 @@ public class FlowLink<T> implements FlowAction {
 
     private Class<T> controllerClass;
 
+    private boolean addOldToHistory;
+
     public FlowLink(Class<T> controllerClass) {
+        this(controllerClass, true);
+    }
+
+    public FlowLink(Class<T> controllerClass, boolean addOldToHistory) {
         this.controllerClass = controllerClass;
+        this.addOldToHistory = addOldToHistory;
     }
 	
 	@Override
@@ -46,7 +53,7 @@ public class FlowLink<T> implements FlowAction {
 			throws FlowException {
 		try {
 			ViewContext<T> viewContext = ViewFactory.getInstance().createByController(controllerClass, null, flowHandler.getViewConfiguration(), flowHandler.getFlowContext());
-            flowHandler.setNewView(new FlowView<T>(viewContext));
+            flowHandler.setNewView(new FlowView<T>(viewContext), addOldToHistory);
         } catch (FxmlLoadException e) {
             throw new FlowException(e);
         }
