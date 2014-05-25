@@ -204,6 +204,17 @@ public class ViewFactory {
         return tab;
     }
 
+    /**
+     * Because of some restrictions in the FXMLLoader not all fields that are annotated with @FXML will be injected in
+     * a controller when using the FXMLLoader class. This helper methods injects all fields that were not injected by
+     * JavaFX basics.
+     * The following types will not be injected by FXMLLoader:
+     * - private fields in a superclass of the controller class
+     * - fields that defines a node that is part of a sub-fxml. This is a fxml definition that is included in the fxml
+     * file.
+     * @param context The context of the view
+     * @param <T> Type of the controller
+     */
     private <T> void injectFXMLNodes(ViewContext<T> context) {
         T controller = context.getController();
         Node n = context.getRootNode();
