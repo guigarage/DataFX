@@ -16,6 +16,6 @@ public class WizardStartController extends AbstractWizardController {
 
     @PostConstruct
     public void init() {
-        getBackButton().setVisible(false);
+        getBackButton().setDisable(true);
     }
 }

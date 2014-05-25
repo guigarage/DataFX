@@ -1,6 +1,7 @@
 package org.datafx.controller;
 
 import javafx.collections.ObservableMap;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,7 +15,9 @@ import org.datafx.util.DataFXUtils;
 import org.datafx.util.ExceptionHandler;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class ViewFactory {
 
@@ -98,7 +101,7 @@ public class ViewFactory {
             }
 
             // 2. load the FXML and make sure the @FXML annotations are injected
-            DataFXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
+            FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
             ObservableMap<String, Object> map1 = loader.getNamespace();
             Node viewNode = (Node) loader.load();
             ObservableMap<String, Object> map2 = loader.getNamespace();
@@ -106,6 +109,9 @@ public class ViewFactory {
                     controller, metadata, viewConfiguration, viewContextResources);
             context.register(controller);
             context.register("controller", controller);
+
+            injectFXMLNodes(context);
+
             // 3. Resolve the @Inject points in the Controller and call
             // @PostConstruct
             context.getResolver().injectResources(controller);
@@ -127,7 +133,7 @@ public class ViewFactory {
         stage.show();
     }
 
-    private DataFXMLLoader createLoader(final Object controller, String fxmlName, ViewConfiguration viewConfiguration)
+    private FXMLLoader createLoader(final Object controller, String fxmlName, ViewConfiguration viewConfiguration)
             throws FxmlLoadException {
         Class<?> controllerClass = controller.getClass();
         String foundFxmlName = getFxmlName(controllerClass);
@@ -138,7 +144,7 @@ public class ViewFactory {
             throw new FxmlLoadException("No FXML File specified!");
         }
 
-        DataFXMLLoader fxmlLoader = new DataFXMLLoader(
+        FXMLLoader fxmlLoader = new FXMLLoader(
                 controllerClass.getResource(foundFxmlName));
         fxmlLoader.setBuilderFactory(viewConfiguration.getBuilderFactory());
         fxmlLoader.setCharset(viewConfiguration.getCharset());
@@ -196,5 +202,25 @@ public class ViewFactory {
         });
         tab.setContent(context.getRootNode());
         return tab;
+    }
+
+    private <T> void injectFXMLNodes(ViewContext<T> context) {
+        T controller = context.getController();
+        Node n = context.getRootNode();
+
+        List<Field> fields = DataFXUtils.getInheritedPrivateFields(controller.getClass());
+        for (Field field : fields) {
+            if (field.getAnnotation(FXML.class) != null) {
+                if (DataFXUtils.getPrivileged(field, controller) == null) {
+                    if (Node.class.isAssignableFrom(field.getType())) {
+                        Node toInject = n.lookup("#" + field.getName());
+                        if(toInject != null) {
+                            DataFXUtils.setPrivileged(field, controller, toInject);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

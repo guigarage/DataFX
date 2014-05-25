@@ -14,7 +14,7 @@ public class WizardDoneController extends AbstractWizardController {
 
     @PostConstruct
     public void init() {
-        nextButton.setVisible(false);
-        getFinishButton().setVisible(false);
+        nextButton.setDisable(true);
+        getFinishButton().setDisable(true);
     }
 }
