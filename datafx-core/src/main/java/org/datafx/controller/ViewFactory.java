@@ -1,5 +1,7 @@
 package org.datafx.controller;
 
+import javafx.collections.ObservableMap;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -13,7 +15,9 @@ import org.datafx.util.DataFXUtils;
 import org.datafx.util.ExceptionHandler;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class ViewFactory {
 
@@ -97,11 +101,15 @@ public class ViewFactory {
             }
 
             // 2. load the FXML and make sure the @FXML annotations are injected
-            Node viewNode = (Node) createLoader(controller, fxmlName, viewConfiguration).load();
+            FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
+            Node viewNode = (Node) loader.load();
             ViewContext<T> context = new ViewContext<>(viewNode,
                     controller, metadata, viewConfiguration, viewContextResources);
             context.register(controller);
             context.register("controller", controller);
+
+            injectFXMLNodes(context);
+
             // 3. Resolve the @Inject points in the Controller and call
             // @PostConstruct
             context.getResolver().injectResources(controller);
@@ -192,5 +200,36 @@ public class ViewFactory {
         });
         tab.setContent(context.getRootNode());
         return tab;
+    }
+
+    /**
+     * Because of some restrictions in the FXMLLoader not all fields that are annotated with @FXML will be injected in
+     * a controller when using the FXMLLoader class. This helper methods injects all fields that were not injected by
+     * JavaFX basics.
+     * The following types will not be injected by FXMLLoader:
+     * - private fields in a superclass of the controller class
+     * - fields that defines a node that is part of a sub-fxml. This is a fxml definition that is included in the fxml
+     * file.
+     * @param context The context of the view
+     * @param <T> Type of the controller
+     */
+    private <T> void injectFXMLNodes(ViewContext<T> context) {
+        T controller = context.getController();
+        Node n = context.getRootNode();
+
+        List<Field> fields = DataFXUtils.getInheritedPrivateFields(controller.getClass());
+        for (Field field : fields) {
+            if (field.getAnnotation(FXML.class) != null) {
+                if (DataFXUtils.getPrivileged(field, controller) == null) {
+                    if (Node.class.isAssignableFrom(field.getType())) {
+                        Node toInject = n.lookup("#" + field.getName());
+                        if(toInject != null) {
+                            DataFXUtils.setPrivileged(field, controller, toInject);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

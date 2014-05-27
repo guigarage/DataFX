@@ -32,6 +32,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.datafx.controller.ViewConfiguration;
+import org.datafx.controller.context.ViewMetadata;
 import org.datafx.controller.flow.action.*;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
@@ -249,8 +250,47 @@ public class Flow {
         return start(new DefaultFlowContainer());
     }
 
+    /**
+     * Starts the flow directly in a Stage. This method is usefull if an application contains of one main flow. Because
+     * this flow can contain several sub-flows this is the prefered way to create a DataFX based application. The title
+     * of the Stage will be bound to the title of the flow metadata and will change whenever the flow title fill change.
+     * This can happen if a view of the flow defines its own title by using the title attribute of the @FXMLController
+     * annotation or the ViewMetadata of an view is changed in code.
+     *
+     * By using the method a flow based application can be created by only a few lines of code as shown in this example:
+     *
+     * public class Example extends Application {
+     *
+     *   public static void main(String[] args) {
+     *       launch(args);
+     *   }
+     *
+     *   @Override
+     *   public void start(Stage primaryStage) throws Exception {
+     *       new Flow(SimpleController.class).startInStage(primaryStage);
+     *   }
+     *}
+     *
+     * @param stage The stage in that the flow should be displayed.
+     * @throws FlowException If the flow can't be created or started
+     */
     public void startInStage(Stage stage) throws FlowException {
-        stage.setScene(new Scene(start()));
+        FlowHandler handler = createHandler();
+        stage.setScene(new Scene(handler.start(new DefaultFlowContainer())));
+        handler.getCurrentViewMetadata().addListener((e) -> {
+            stage.titleProperty().unbind();
+            ViewMetadata metadata = handler.getCurrentViewMetadata().get();
+            if (metadata != null) {
+                stage.titleProperty().bind(metadata.titleProperty());
+            }
+        });
+
+        stage.titleProperty().unbind();
+        ViewMetadata metadata = handler.getCurrentViewMetadata().get();
+        if (metadata != null) {
+            stage.titleProperty().bind(metadata.titleProperty());
+        }
+
         stage.show();
     }
 
