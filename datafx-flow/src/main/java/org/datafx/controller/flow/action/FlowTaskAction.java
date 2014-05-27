@@ -26,23 +26,24 @@
  */
 package org.datafx.controller.flow.action;
 
-import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.FlowHandler;
+import java.util.concurrent.Executor;
 
-public class FlowTaskAction implements FlowAction {
+public class FlowTaskAction extends AbstractFlowTaskAction {
 
-    private Class<? extends Runnable> runnableClass;
+    private Executor executorService;
 
     public FlowTaskAction(Class<? extends Runnable> runnableClass) {
-        this.runnableClass = runnableClass;
+        super(runnableClass);
     }
 
-    @Override public void handle(FlowHandler flowHandler, String actionId) throws FlowException{
-		try {
-			Runnable runnable = flowHandler.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
-			runnable.run();
-		} catch (Exception e) {
-			throw new FlowException(e);
-		}
+    public FlowTaskAction(Runnable runnable) {
+        super(runnable);
     }
+
+
+    @Override
+    protected void execute(Runnable r) throws Exception {
+        r.run();
+    }
+
 }

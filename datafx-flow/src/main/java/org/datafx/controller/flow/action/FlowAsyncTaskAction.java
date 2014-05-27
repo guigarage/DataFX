@@ -26,37 +26,38 @@
  */
 package org.datafx.controller.flow.action;
 
-import java.util.concurrent.Executor;
-
 import org.datafx.concurrent.ObservableExecutor;
-import org.datafx.controller.ViewFactory;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
+import org.datafx.util.Factory;
 
-public class FlowAsyncTaskAction implements FlowAction {
+import java.util.concurrent.Executor;
 
-    private Class<? extends Runnable> runnableClass;
-    
+public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
+
     private Executor executorService;
-    
+
     public FlowAsyncTaskAction(Class<? extends Runnable> runnableClass) {
-       this(runnableClass, new ObservableExecutor());
+       this(runnableClass, ObservableExecutor.getDefaultInstance());
     }
 	
     public FlowAsyncTaskAction(Class<? extends Runnable> runnableClass, Executor executorService) {
-        this.runnableClass = runnableClass;
+        super(runnableClass);
         this.executorService = executorService;
     }
-    
-	@Override
-	public void handle(FlowHandler flowHandler, String actionId)
-			throws FlowException {
-		try {
-			Runnable runnable = flowHandler.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
-			executorService.execute(runnable);
-		} catch (Exception e) {
-			throw new FlowException(e);
-		}
-	}
+
+    public FlowAsyncTaskAction(Runnable runnable) {
+        this(runnable, ObservableExecutor.getDefaultInstance());
+    }
+
+    public FlowAsyncTaskAction(Runnable runnable, Executor executorService) {
+        super(runnable);
+        this.executorService = executorService;
+    }
+
+    @Override
+    protected void execute(Runnable r) throws Exception {
+        executorService.execute(r);
+    }
 
 }
