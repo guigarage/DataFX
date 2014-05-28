@@ -2,13 +2,12 @@ package org.datafx.controller.flow.action;
 
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
-import org.datafx.util.Factory;
 
 public abstract class AbstractFlowTaskAction implements FlowAction {
 
     private Class<? extends Runnable> runnableClass;
 
-    private Factory<FlowHandler, Runnable> runnableFactory;
+    private TaskFactory runnableFactory;
 
     public AbstractFlowTaskAction(Class<? extends Runnable> runnableClass) {
         this.runnableFactory = (f) -> f.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
@@ -30,5 +29,11 @@ public abstract class AbstractFlowTaskAction implements FlowAction {
     }
 
     protected abstract void execute(Runnable r) throws Exception;
+
+    @FunctionalInterface
+    public interface TaskFactory {
+
+        Runnable create(FlowHandler flowHandler) throws Exception;
+    }
 
 }
