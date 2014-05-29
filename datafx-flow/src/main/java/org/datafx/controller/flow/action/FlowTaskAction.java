@@ -28,14 +28,29 @@ package org.datafx.controller.flow.action;
 
 import java.util.concurrent.Executor;
 
+/**
+ * Implementation of a {@link FlowAction} that calls the given {@link Runnable} whenever the action is triggered.
+ * The {@link Runnable} will be called in the JavaFX Application Thread.
+ */
 public class FlowTaskAction extends AbstractFlowTaskAction {
 
     private Executor executorService;
 
+    /**
+     * Defines a new {@link FlowTaskAction} instance that task is defined by a class that extends
+     * {@link Runnable}. Whenever a action is triggered a new instance of the given class will be created. Therefore the
+     * class needs a default constructor.  All injection that is working in a controller class will work in the given
+     * class that defines the task, too.
+     * @param runnableClass the class that defines the task
+     */
     public FlowTaskAction(Class<? extends Runnable> runnableClass) {
         super(runnableClass);
     }
 
+    /**
+     * Defines a new {@link FlowTaskAction} instance that task is defined by a {@link Runnable} instance.
+     * @param runnable defines the task and will be called whenever the action is triggered.
+     */
     public FlowTaskAction(Runnable runnable) {
         super(runnable);
     }

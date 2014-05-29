@@ -27,29 +27,63 @@
 package org.datafx.controller.flow.action;
 
 import org.datafx.concurrent.ObservableExecutor;
-import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.FlowHandler;
-import org.datafx.util.Factory;
 
 import java.util.concurrent.Executor;
 
+/**
+ * Implementation of a {@link FlowAction} that calls the given {@link Runnable} whenever the action is triggered.
+ * The {@link Runnable} will be called in a background thread.
+ */
 public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
 
     private Executor executorService;
 
+    /**
+     * Defines a new {@link FlowAsyncTaskAction} instance that task is defined by a class that extends
+     * {@link Runnable}. Whenever a action is triggered a new instance of the given class will be created. Therefore the
+     * class needs a default constructor.  All injection that is working in a controller class will work in the given
+     * class that defines the task, too. The task of the action will run on a background thread. Therefore the default
+     * instance of the {@link ObservableExecutor} will be used.
+     *
+     * @param runnableClass the class that defines the task
+     */
     public FlowAsyncTaskAction(Class<? extends Runnable> runnableClass) {
-       this(runnableClass, ObservableExecutor.getDefaultInstance());
+        this(runnableClass, ObservableExecutor.getDefaultInstance());
     }
-	
+
+    /**
+     * Defines a new {@link FlowAsyncTaskAction} instance that task is defined by a class that extends
+     * {@link Runnable}. Whenever a action is triggered a new instance of the given class will be created. Therefore the
+     * class needs a default constructor.  All injection that is working in a controller class will work in the given
+     * class that defines the task, too. The task of the action will run on a background thread. Therefore the given
+     * {@link Executor} will be used.
+     *
+     * @param runnableClass   the class that defines the task
+     * @param executorService  the executor that will execute the task
+     */
     public FlowAsyncTaskAction(Class<? extends Runnable> runnableClass, Executor executorService) {
         super(runnableClass);
         this.executorService = executorService;
     }
 
+    /**
+     * Defines a new {@link FlowAsyncTaskAction} instance that task is defined by a {@link Runnable} instance. The task
+     * of the action will run on a background thread. Therefore the default instance of the {@link ObservableExecutor}
+     * will be used.
+     *
+     * @param runnable defines the task and will be called whenever the action is triggered.
+     */
     public FlowAsyncTaskAction(Runnable runnable) {
         this(runnable, ObservableExecutor.getDefaultInstance());
     }
 
+    /**
+     * Defines a new {@link FlowAsyncTaskAction} instance that task is defined by a {@link Runnable} instance. The task
+     * of the action will run on a background thread. Therefore the given {@link Executor} will be used.
+     *
+     * @param runnable defines the task and will be called whenever the action is triggered.
+     * @param executorService the executor that will execute the task
+     */
     public FlowAsyncTaskAction(Runnable runnable, Executor executorService) {
         super(runnable);
         this.executorService = executorService;

@@ -33,16 +33,30 @@ import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.FlowView;
 import org.datafx.controller.FxmlLoadException;
 
+/**
+ * A {@Link FlowAction} implementation that navigates to a different view in a flow.
+ * @param <T> class of the controller of the target view
+ */
 public class FlowLink<T> implements FlowAction {
 
     private Class<T> controllerClass;
 
     private boolean addOldToHistory;
 
+    /**
+     * Default constructor of the class
+     * @param controllerClass controller class of the target view
+     */
     public FlowLink(Class<T> controllerClass) {
         this(controllerClass, true);
     }
 
+    /**
+     * This Constructor is needed for DataFX when calling a back action. In this case the navigation should not be added
+     * to the navigation history. Normally a developer should not use this constructor.
+     * @param controllerClass controller class of the target view
+     * @param addOldToHistory defines if the old view should be added to the view history of the flow
+     */
     public FlowLink(Class<T> controllerClass, boolean addOldToHistory) {
         this.controllerClass = controllerClass;
         this.addOldToHistory = addOldToHistory;
