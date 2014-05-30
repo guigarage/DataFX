@@ -29,7 +29,24 @@ package org.datafx.controller.flow.action;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 
+/**
+ * Basic interface for all actions that can be handled in a flow.
+ * Actions can be registered by using the Flow class. Here each action will be registered by a unique ID.
+ * Example:
+ * <tt>
+ * new Flow(StartController.class).addGlobalAction("actionID", new FlowAction(){
+ * ...
+ * });
+ * </tt>
+ */
 public interface FlowAction {
 
+    /**
+     * This method will be called by the {@link FlowHandler} of the current flow whenever the action is triggered.
+     *
+     * @param flowHandler the flowHandler of the current flow
+     * @param actionId    unique ID of this action in the current flow
+     * @throws FlowException if an error occures while handling the action
+     */
     public void handle(FlowHandler flowHandler, String actionId) throws FlowException;
 }

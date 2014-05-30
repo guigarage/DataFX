@@ -26,23 +26,39 @@
  */
 package org.datafx.controller.flow.action;
 
-import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.FlowHandler;
+import java.util.concurrent.Executor;
 
-public class FlowTaskAction implements FlowAction {
+/**
+ * Implementation of a {@link FlowAction} that calls the given {@link Runnable} whenever the action is triggered.
+ * The {@link Runnable} will be called in the JavaFX Application Thread.
+ */
+public class FlowTaskAction extends AbstractFlowTaskAction {
 
-    private Class<? extends Runnable> runnableClass;
+    private Executor executorService;
 
+    /**
+     * Defines a new {@link FlowTaskAction} instance that task is defined by a class that extends
+     * {@link Runnable}. Whenever a action is triggered a new instance of the given class will be created. Therefore the
+     * class needs a default constructor.  All injection that is working in a controller class will work in the given
+     * class that defines the task, too.
+     * @param runnableClass the class that defines the task
+     */
     public FlowTaskAction(Class<? extends Runnable> runnableClass) {
-        this.runnableClass = runnableClass;
+        super(runnableClass);
     }
 
-    @Override public void handle(FlowHandler flowHandler, String actionId) throws FlowException{
-		try {
-			Runnable runnable = flowHandler.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
-			runnable.run();
-		} catch (Exception e) {
-			throw new FlowException(e);
-		}
+    /**
+     * Defines a new {@link FlowTaskAction} instance that task is defined by a {@link Runnable} instance.
+     * @param runnable defines the task and will be called whenever the action is triggered.
+     */
+    public FlowTaskAction(Runnable runnable) {
+        super(runnable);
     }
+
+
+    @Override
+    protected void execute(Runnable r) throws Exception {
+        r.run();
+    }
+
 }

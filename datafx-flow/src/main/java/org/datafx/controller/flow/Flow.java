@@ -123,16 +123,22 @@ public class Flow {
     }
 
     /**
-     * Adds a run action as a global action to the flow. Internally a <tt>FlowTaskAction</tt> will be created and added to the flow
+     * Adds a run action as a global action to the flow. Internally a <tt>SimpleFlowAction</tt> will be created and added to the flow
      *
      * @param actionId    unique action id
      * @param actionClass a runnable that will be called whenever the action is called
      * @return returns this flow (for the fluent API)
      * @see FlowTaskAction
      */
-    public Flow withGlobalRunAction(String actionId,
-                                    Class<? extends Runnable> actionClass) {
+    public Flow withGlobalTaskAction(String actionId,
+                                     Class<? extends Runnable> actionClass) {
         addGlobalAction(actionId, new FlowTaskAction(actionClass));
+        return this;
+    }
+
+    public Flow withGlobalTaskAction(String actionId,
+                                     Runnable action) {
+        addGlobalAction(actionId, new FlowTaskAction(action));
         return this;
     }
 
@@ -179,6 +185,13 @@ public class Flow {
                                Class<? extends Runnable> actionClass) {
         addActionToView(controllerClass, actionId, new FlowTaskAction(
                 actionClass));
+        return this;
+    }
+
+    public Flow withTaskAction(Class<?> controllerClass, String actionId,
+                               Runnable action) {
+        addActionToView(controllerClass, actionId, new FlowTaskAction(
+                action));
         return this;
     }
 

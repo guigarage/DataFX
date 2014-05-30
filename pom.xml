@@ -71,6 +71,7 @@
         <module>datafx-tutorial1</module>
         <module>datafx-tutorial2</module>
         <module>datafx-tutorial3</module>
+        <module>datafx-tutorial4</module>
     </modules>
 
     <profiles>

@@ -3,12 +3,17 @@ package org.datafx.controller.flow.action;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 
-import java.lang.reflect.InvocationTargetException;
-
+/**
+ * Implementation of a {@link FlowAction} that calls a method in the current view controller instance.
+ */
 public class FlowMethodAction implements FlowAction {
 
     private String actionMethodName;
 
+    /**
+     * Default constructor
+     * @param actionMethodName defines the name of the method that should be called whenever the action is triggered.
+     */
     public FlowMethodAction(String actionMethodName) {
         this.actionMethodName = actionMethodName;
     }
