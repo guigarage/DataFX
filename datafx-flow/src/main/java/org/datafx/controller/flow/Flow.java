@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import org.datafx.controller.ViewConfiguration;
 import org.datafx.controller.context.ViewMetadata;
 import org.datafx.controller.flow.action.*;
+import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.ViewFlowContext;
 
 import java.lang.reflect.Method;

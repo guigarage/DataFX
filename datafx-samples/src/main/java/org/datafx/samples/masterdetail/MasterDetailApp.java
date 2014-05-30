@@ -31,13 +31,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import org.datafx.controller.flow.context.ViewFlowContext;
-import org.datafx.controller.flow.DefaultFlowContainer;
+import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
 import org.datafx.samples.masterdetail.action.DeleteAction;
 import org.datafx.samples.masterdetail.controller.DetailViewController;
 import org.datafx.samples.masterdetail.controller.MasterViewController;
-import org.datafx.samples.masterdetail.data.DataModel;
 
 public class MasterDetailApp extends Application {
 

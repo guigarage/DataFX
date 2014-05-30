@@ -24,10 +24,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.controller.flow;
+package org.datafx.controller.flow.container;
 
 import javafx.scene.layout.StackPane;
 import org.datafx.controller.context.ViewContext;
+import org.datafx.controller.flow.FlowContainer;
 
 public class DefaultFlowContainer implements FlowContainer<StackPane> {
 
