@@ -30,14 +30,25 @@ import javafx.scene.layout.StackPane;
 import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.flow.FlowContainer;
 
+/**
+ * Default implementation of the {@link FlowContainer} interface. The class will wrap a flow in a {@link StackPane}.
+ */
 public class DefaultFlowContainer implements FlowContainer<StackPane> {
 
     private final StackPane pane;
 
+    /**
+     * Creates a container that wraps the flow in the given {@link StackPane}
+     * @param pane the pane that will be used as parent node for the flow
+     */
     public DefaultFlowContainer(StackPane pane) {
         this.pane = pane;
     }
 
+    /**
+     * Default constructor that wraps the flow in a {@link StackPane}. The {@link StackPane} instance can be accessed by
+     * calling {@link #getView()}.
+     */
     public DefaultFlowContainer() {
         this(new StackPane());
     }
