@@ -27,7 +27,6 @@
 package org.datafx.controller.flow;
 
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import org.datafx.controller.context.ViewContext;
 
 /**
@@ -38,7 +37,7 @@ import org.datafx.controller.context.ViewContext;
  *
  * @author Hendrik Ebbers
  * @param <T> Controller type of the current view
- * @see DefaultFlowContainer
+ * @see org.datafx.controller.flow.container.DefaultFlowContainer
  */
 public interface FlowContainer<T extends Node> {
 

@@ -43,6 +43,7 @@ import org.datafx.controller.context.ViewContext;
 import org.datafx.controller.context.ViewMetadata;
 import org.datafx.controller.flow.action.FlowAction;
 import org.datafx.controller.flow.action.FlowLink;
+import org.datafx.controller.flow.container.DefaultFlowContainer;
 import org.datafx.controller.flow.context.FlowActionHandler;
 import org.datafx.controller.flow.context.ViewFlowContext;
 import org.datafx.controller.flow.event.*;
