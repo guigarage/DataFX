@@ -3,13 +3,15 @@ package org.datafx.tutorial;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import org.datafx.controller.FXMLController;
-import org.datafx.controller.flow.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowException;
 import org.datafx.controller.flow.FlowHandler;
 import org.datafx.controller.flow.action.ActionMethod;
 import org.datafx.controller.flow.action.ActionTrigger;
+import org.datafx.controller.flow.container.AnimatedFlowContainer;
+import org.datafx.controller.flow.container.ContainerAnimations;
 import org.datafx.controller.util.VetoException;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +28,10 @@ public class WizardController {
     @FXML
     @ActionTrigger("next")
     private Button nextButton;
+
     @FXML
     private StackPane centerPane;
+
     private FlowHandler flowHandler;
 
     @PostConstruct
@@ -39,7 +43,7 @@ public class WizardController {
                 withLink(WizardView4Controller.class, "next", WizardView5Controller.class);
 
         flowHandler = flow.createHandler();
-        flowHandler.start(new DefaultFlowContainer(centerPane));
+        centerPane.getChildren().add(flowHandler.start(new AnimatedFlowContainer(Duration.millis(320), ContainerAnimations.ZOOM_IN)));
 
         backButton.setDisable(true);
     }

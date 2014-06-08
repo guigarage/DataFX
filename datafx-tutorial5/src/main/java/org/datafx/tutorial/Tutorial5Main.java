@@ -4,9 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.datafx.controller.flow.DefaultFlowContainer;
 import org.datafx.controller.flow.Flow;
 import org.datafx.controller.flow.FlowHandler;
+import org.datafx.controller.flow.container.DefaultFlowContainer;
 
 public class Tutorial5Main  extends Application {
 
