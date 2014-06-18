@@ -42,7 +42,6 @@ import org.datafx.util.ExceptionHandler;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * A Executor that task can be observed. All current running and scheduled task
@@ -69,16 +68,28 @@ public class ObservableExecutor implements Executor {
 
     /**
      * Creates a new ObservableExecutor that uses a cached thread pool to handle
-     * all commited tasks.
+     * all commited tasks and the default DataFX {@link ExceptionHandler}
+     * @see ExceptionHandler
      */
     public ObservableExecutor() {
         this(ThreadPoolExecutorFactory.getThreadPoolExecutor());
     }
 
+    /**
+     * Creates a new ObservableExecutor that uses the given executor to handle all tasks  and the default
+     * DataFX {@link ExceptionHandler}
+     * @param executor the internal executor
+     * @see ExceptionHandler
+     */
     public ObservableExecutor(Executor executor) {
         this(executor, ExceptionHandler.getDefaultInstance());
     }
 
+    /**
+     * Creates a new ObservableExecutor that uses a cached thread pool to handle
+     * all commited tasks.
+     * @param exceptionHandler  a custom exception handler
+     */
     public ObservableExecutor(ExceptionHandler exceptionHandler) {
         this(ThreadPoolExecutorFactory.getThreadPoolExecutor(), exceptionHandler);
     }
@@ -86,9 +97,8 @@ public class ObservableExecutor implements Executor {
     /**
      * Creates a new ObservableExecutor that uses the given executor to handle
      * all commited tasks.
-     *
-     * @param executor wrapped executor. It will be used to handle all task that
-     * are commited to this executor.
+     * @param executor the internal executor
+     * @param exceptionHandler  a custom exception handler
      */
     public ObservableExecutor(Executor executor, ExceptionHandler exceptionHandler) {
         this.executor = executor;
