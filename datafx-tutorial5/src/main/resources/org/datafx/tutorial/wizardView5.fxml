@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<Label text="Done! :)">
+    <StackPane.margin>
+        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
+    </StackPane.margin>
+    <font>
+        <Font size="24.0"/>
+    </font>
+</Label>

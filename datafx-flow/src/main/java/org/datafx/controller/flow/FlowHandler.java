@@ -189,6 +189,14 @@ public class FlowHandler {
         return getCurrentView().getViewContext();
     }
 
+    /**
+     * Returns the controller class of the current visible
+     * @return the view controller class
+     */
+    public Class<?> getCurrentViewControllerClass() {
+        return getCurrentViewContext().getController().getClass();
+    }
+
     public void handle(FlowAction action, String actionId) throws FlowException, VetoException {
 
         if (beforeFlowActionHandler != null && beforeFlowActionHandler.getValue() != null) {
@@ -249,6 +257,16 @@ public class FlowHandler {
 
     public void navigateToHistoryIndex(int index) throws VetoException, FlowException {
         handle(new FlowLink(controllerHistory.remove(index).getControllerClass(), false), "backAction-" + UUID.randomUUID().toString());
+    }
+
+    /**
+     * Navigate to the view that is defined by the given controller class
+     * @param controllerClass the controller class of the view
+     * @throws VetoException
+     * @throws FlowException
+     */
+    public void navigateTo(Class<?> controllerClass) throws VetoException, FlowException {
+        handle(new FlowLink(controllerClass), "navigateAction-" + UUID.randomUUID().toString());
     }
 
     public void attachAction(Node node, Runnable action) {
