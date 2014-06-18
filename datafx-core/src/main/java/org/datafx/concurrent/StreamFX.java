@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * Stream Helper class for JavaFX. Combines the Stream API with the JavaFX platform thread
+ * Stream Helper class for JavaFX. Combines the {@link Stream} API with the JavaFX platform thread
  * @author Hendrik Ebbers
  *
  * @param <T> type of elements in Stream
@@ -45,7 +45,7 @@ public class StreamFX<T> {
     private Stream<T> stream;
 
     /**
-     * Create a StreamFX as a wrapper of a Stream
+     * Create a StreamFX as a wrapper of a {@link Stream}
      * @param stream the stream to wrap
      */
     public StreamFX(Stream<T> stream) {
@@ -54,7 +54,7 @@ public class StreamFX<T> {
 
     /**
      * Performs an action for each element of this stream.
-     * Each element is wrapped in a ObjectProperty and the action will run on the JavaFX Platform Thread
+     * Each element is wrapped in a {@link ObjectProperty} and the action will run on the JavaFX Platform Thread
      * @param action action to perform on the elements
      */
     public void forEach(final Consumer<ObjectProperty<? super T>> action) {
@@ -63,7 +63,7 @@ public class StreamFX<T> {
 
     /**
      * Performs an action for each element of this stream.
-     * Each element is wrapped in a ObjectProperty and the action will run on the JavaFX Platform Thread
+     * Each element is wrapped in a {@link ObjectProperty} and the action will run on the JavaFX Platform Thread
      * each element is processed in encounter order for streams that have a
      * defined encounter order
      * @param action action to perform on the elements
@@ -73,7 +73,7 @@ public class StreamFX<T> {
     }
 
     /**
-     * Publishes all elements of the stream to a ObservableList.
+     * Publishes all elements of the stream to a {@link ObservableList}.
      * the action for each element will run on the JavaFX Platform Thread
      * @param list List to publish all elements to
      */
@@ -82,7 +82,7 @@ public class StreamFX<T> {
     }
 
     /**
-     * Publishes all elements of the stream to a ObservableList.
+     * Publishes all elements of the stream to a {@link ObservableList}.
      * the action for each element will run on the JavaFX Platform Thread
      * each element is processed in encounter order for streams that have a
      * defined encounter order

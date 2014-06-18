@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A helper class that holds weak references of <tt>TaskStateHandler</tt> instances. The class is used to provide the functionality of the <tt>TaskStateHandler</tt> class for runnable and callable types.
+ * A helper class that holds weak references of {@link TaskStateHandler} instances. The class is used to provide the functionality of the {@link TaskStateHandler} class for runnable and callable types.
  *
  * @see TaskStateHandler
  * @see DataFxCallable
@@ -21,9 +21,9 @@ public class TaskStateHandlerManager {
     private TaskStateHandlerManager() {}
 
     /**
-     *  adds a <tt>TaskStateHandler</tt> for the given task to the internal weak map.
-     * @param task the task for that the <tt>TaskStateHandler</tt> instance should be registered
-     * @param stateHandler the <tt>TaskStateHandler</tt> instance
+     *  adds a {@link TaskStateHandler} for the given task to the internal weak map.
+     * @param task the task for that the {@link TaskStateHandler} instance should be registered
+     * @param stateHandler the {@link TaskStateHandler} instance
      */
     public static synchronized void add(Object task, TaskStateHandler stateHandler) {
         if (weakMap == null) {
@@ -33,9 +33,9 @@ public class TaskStateHandlerManager {
     }
 
     /**
-     * Returns the registered  <tt>TaskStateHandler</tt> instance for the given task
+     * Returns the registered  {@link TaskStateHandler} instance for the given task
      * @param task the task
-     * @return the <tt>TaskStateHandler</tt> instance
+     * @return the {@link TaskStateHandler} instance
      */
     public static synchronized TaskStateHandler get(Object task) {
         for (WeakReference ref : weakMap.keySet()) {

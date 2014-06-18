@@ -9,6 +9,12 @@ import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Factory to create a default thread pool for all background tasks. A developer can use the
+ * {@link #getThreadPoolExecutor()} method if a {@link ExecutorService} is needed. If a {@link Executor} can be used a
+ * developer should use the {@link ObservableExecutor} instead.
+ * @see ObservableExecutor
+ */
 public class ThreadPoolExecutorFactory {
 
     private static final Logger LOGGER = Logger.getLogger(ThreadPoolExecutorFactory.class.getName());
@@ -22,6 +28,13 @@ public class ThreadPoolExecutorFactory {
         ExceptionHandler.getDefaultInstance().setException(throwable);
     }
 
+    /**
+     * Returns the {@code ThreadPoolExecutor} that can be used for all background tasks. the returned
+     * {@link ExecutorService} is a singleton that will be used by all background operations of DataFX, too.
+     * The size of the thread pool can be configured by using the {@link DataFXConfiguration} class before this method
+     * will be called the first time.
+     * @return the executor service singleton
+     */
     public static synchronized ThreadPoolExecutor getThreadPoolExecutor() {
         if(defaultExecutor == null) {
 

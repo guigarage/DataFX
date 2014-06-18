@@ -1,7 +1,7 @@
 package org.datafx.concurrent;
 
 /**
- * A interface that adds support for <tt>TaskStateHandler</tt>
+ * A interface that adds support for {@link TaskStateHandler}
  *
  * @author Hendrik Ebbers
  * @see TaskStateHandler
@@ -9,7 +9,7 @@ package org.datafx.concurrent;
 public interface TaskWithStateHandler {
     /**
      * This method will be called by DataFX to inject a
-     * <code>TaskStateHandler</code> in this callable. The handler can be used
+     * {@link TaskStateHandler} in this callable. The handler can be used
      * to provide some more feedback of this callable.
      *
      * @param stateHandler the injected TaskStateHandler
@@ -19,8 +19,8 @@ public interface TaskWithStateHandler {
     }
 
     /**
-     * Returns the <tt>TaskStateHandler</tt> for this instance
-     * @return the <tt>TaskStateHandler</tt> for this instance
+     * Returns the {@link TaskStateHandler} for this instance
+     * @return the {@link TaskStateHandler} for this instance
      */
     default TaskStateHandler getStateHandler() {
         return TaskStateHandlerManager.get(this);

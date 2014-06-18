@@ -16,7 +16,9 @@ public class ProcessDescription<V, T> {
     private ThreadType threadType;
 
     /**
-     * Creates a new <tt>ProcessDescription</tt> with the given function and thread type. The functions defines what this process will do at runtime. The function will be called when the process will be executed. The thread type defines if the process should be executed om the JavaFX Platform Thread or on a background thread.
+     * Creates a new {@link ProcessDescription} with the given function and thread type. The functions defines what
+     * this process will do at runtime. The function will be called when the process will be executed. The thread type
+     * defines if the process should be executed om the JavaFX Platform Thread or on a background thread.
      * @param function defines what this process will do
      * @param threadType defines if the process should be executed om the JavaFX Platform Thread or on a background thread
      */
