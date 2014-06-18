@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
