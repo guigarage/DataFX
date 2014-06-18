@@ -16,6 +16,11 @@ import org.datafx.controller.util.VetoException;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * This class defines the main controller of the wizard. The complete action toolbar is managed here. In addition a
+ * flow that contains all the custom views of the wizard is added to the view. The navigation for this internal flow
+ * is managed here.
+ */
 @FXMLController("wizard.fxml")
 public class WizardController {
 
@@ -34,6 +39,11 @@ public class WizardController {
 
     private FlowHandler flowHandler;
 
+    /**
+     * The {@code init} method defines a internal flow that contains the steps of the wizard as separate views.
+     * This internal flow will use animations for the navigation between different views.
+     * @throws FlowException if the internal flow can't be created
+     */
     @PostConstruct
     public void init() throws FlowException {
         Flow flow = new Flow(WizardView1Controller.class).
@@ -48,6 +58,13 @@ public class WizardController {
         backButton.setDisable(true);
     }
 
+    /**
+     * This method will be called when the {@code back} action will be executed. The method handles the navigation of
+     * the internal flow that contains the steps of the wizard as separate views. In addition the states of the action
+     * buttons will be managed.
+     * @throws VetoException If the navigation can't be executed
+     * @throws FlowException If the navigation can't be executed
+     */
     @ActionMethod("back")
     public void onBack() throws VetoException, FlowException {
         flowHandler.navigateBack();
@@ -60,6 +77,13 @@ public class WizardController {
         nextButton.setDisable(false);
     }
 
+    /**
+     * This method will be called when the {@code next} action will be executed. The method handles the navigation of
+     * the internal flow that contains the steps of the wizard as separate views. In addition the states of the action
+     * buttons will be managed.
+     * @throws VetoException If the navigation can't be executed
+     * @throws FlowException If the navigation can't be executed
+     */
     @ActionMethod("next")
     public void onNext() throws VetoException, FlowException {
         flowHandler.handle("next");
@@ -72,6 +96,13 @@ public class WizardController {
         backButton.setDisable(false);
     }
 
+    /**
+     * This method will be called when the {@code finish} action will be executed. The method handles the navigation of
+     * the internal flow that contains the steps of the wizard as separate views. In addition the states of the action
+     * buttons will be managed.
+     * @throws VetoException If the navigation can't be executed
+     * @throws FlowException If the navigation can't be executed
+     */
     @ActionMethod("finish")
     public void onFinish() throws VetoException, FlowException {
         flowHandler.navigateTo(WizardView5Controller.class);
