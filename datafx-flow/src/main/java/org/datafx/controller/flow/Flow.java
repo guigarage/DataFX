@@ -59,7 +59,7 @@ public class Flow {
      * Creates a new Flow with the given controller for the start view and a
      * view configuration for all views.
      * The start view must be a view controller as specified in the DataFX-Controller API.
-     * See <tt>FXMLController</tt> for more information
+     * See {@link org.datafx.controller.FXMLController} for more information
      *
      * @param startViewControllerClass Controller class of the start view
      * @param viewConfiguration        Configuration for all views of the flow
@@ -75,9 +75,10 @@ public class Flow {
     /**
      * Creates a new Flow with the given controller for the start view.
      * The start view must be a view controller as specified in the DataFX-Controller API.
-     * See <tt>FXMLController</tt> for more information
+     * See {@link org.datafx.controller.FXMLController} for more information
      *
      * @param startViewControllerClass Controller class of the start view
+     * @see org.datafx.controller.FXMLController
      */
     public Flow(Class<?> startViewControllerClass) {
         this(startViewControllerClass, new ViewConfiguration());
@@ -93,7 +94,8 @@ public class Flow {
     }
 
     /**
-     * Creates a handler that can be used to run the flow. The Flow class provides only the definition of a flow. To run a flow in the JavaFX scene graph a <tt>FlowHandler</tt> is needed
+     * Creates a handler that can be used to run the flow. The Flow class provides only the definition of a flow.
+     * To run a flow in the JavaFX scene graph a{@link FlowHandler} is needed
      *
      * @param flowContext The context for the flow
      * @return a flow handler to run the flow
@@ -103,7 +105,8 @@ public class Flow {
     }
 
     /**
-     * Creates a handler that can be used to run the flow. The Flow class provides only the definition of a flow. To run a flow in the JavaFX scene graph a <tt>FlowHandler</tt> is needed
+     * Creates a handler that can be used to run the flow. The Flow class provides only the definition of a flow.
+     * To run a flow in the JavaFX scene graph a {@link FlowHandler} is needed
      *
      * @return a flow handler to run the flow
      */
@@ -112,7 +115,8 @@ public class Flow {
     }
 
     /**
-     * Adds a global action to the flow. The action is registered by the given unique ID and can be called at runtime by using the id. A global action can be called from each view and from outside of the flow.
+     * Adds a global action to the flow. The action is registered by the given unique ID and can be called at runtime
+     * by using the id. A global action can be called from each view and from outside of the flow.
      *
      * @param actionId unique action id
      * @param action   the action
@@ -124,10 +128,12 @@ public class Flow {
     }
 
     /**
-     * Adds a run action as a global action to the flow. Internally a <tt>SimpleFlowAction</tt> will be created and added to the flow
+     * Adds a task action as a global action to the flow. Internally a {@link FlowTaskAction} will be created and
+     * added to the flow. As you can read in the documentation of {@link FlowTaskAction} a instance of the given
+     * {@code actionClass} will be created and executed whenever the action will be called.
      *
      * @param actionId    unique action id
-     * @param actionClass a runnable that will be called whenever the action is called
+     * @param actionClass class that defines the runnable that will be called whenever the action is called
      * @return returns this flow (for the fluent API)
      * @see FlowTaskAction
      */
@@ -137,6 +143,14 @@ public class Flow {
         return this;
     }
 
+    /**
+     * Adds a task action as a global action to the flow. Internally a {@link FlowTaskAction} will be created and
+     * added to the flow.
+     * @param actionId unique action id
+     * @param action a runnable that will be called whenever the action is called
+     * @return returns this flow (for the fluent API)
+     * @see FlowTaskAction
+     */
     public Flow withGlobalTaskAction(String actionId,
                                      Runnable action) {
         addGlobalAction(actionId, new FlowTaskAction(action));
@@ -144,8 +158,8 @@ public class Flow {
     }
 
     /**
-     * Adds a link action as a global action to the flow. Internally a <tt>FlowLink</tt> will be created and added to the flow
-     *
+     * Adds a link action as a global action to the flow. Internally a {@link FlowLink} will be created and added
+     * to the flow.
      * @param actionId        unique action id
      * @param controllerClass the controller of the view that should be shown whenever the action will be called
      * @return returns this flow (for the fluent API)
@@ -156,13 +170,22 @@ public class Flow {
         return this;
     }
 
+    /**
+     * Adds a global back action to the flow that navigates back to the last view of a flow. Internally a
+     * {@link FlowBackAction} will be created and added to the flow.
+     * @param actionId unique action id
+     * @return returns this flow (for the fluent API)
+     * @see FlowBackAction
+     */
     public Flow withGlobalBackAction(String actionId) {
         addGlobalAction(actionId, new FlowBackAction());
         return this;
     }
 
     /**
-     * Adds a action to the view of the given view controller. The action is registered by the given unique ID and can be called at runtime by using the id. the action can only be called when the view of the given controller is the active view of the flow
+     * Adds a action to the view of the given view controller. The action is registered by the given unique ID and can
+     * be called at runtime by using the id. the action can only be called when the view of the given controller is the
+     * active view of the flow
      *
      * @param controllerClass controller class for the view of the action
      * @param actionId        unique action id
@@ -175,6 +198,16 @@ public class Flow {
         return this;
     }
 
+    /**
+     * Adds a navigation action to the flow that will navigate from one view to another. The two controller classes that
+     * must be passed as parameters defines the origin view and the destination. Internally a {@link FlowLink} will be
+     * created and added to the flow.
+     * @param fromControllerClass the controller class of the view that is the origin of the navigation
+     * @param actionId unique action id
+     * @param toControllerClass the controller class of the view that is the destination of the navigation
+     * @return returns this flow (for the fluent API)
+     * @see FlowLink
+     */
     public Flow withLink(Class<?> fromControllerClass, String actionId,
                          Class<?> toControllerClass) {
         addActionToView(fromControllerClass, actionId, new FlowLink<>(
@@ -182,6 +215,16 @@ public class Flow {
         return this;
     }
 
+    /**
+     * Adds a task action to the defined view of the flow. Internally a {@link FlowTaskAction} will be created and
+     * added to the flow. As you can read in the documentation of {@link FlowTaskAction} a instance of the given
+     * {@code actionClass} will be created and executed whenever the action will be called.
+     * @param controllerClass the controller class of the view to that the action will be registered
+     * @param actionId unique action id
+     * @param actionClass class that defines the runnable that will be called whenever the action is called
+     * @return returns this flow (for the fluent API)
+     * @see FlowTaskAction
+     */
     public Flow withTaskAction(Class<?> controllerClass, String actionId,
                                Class<? extends Runnable> actionClass) {
         addActionToView(controllerClass, actionId, new FlowTaskAction(
@@ -189,6 +232,15 @@ public class Flow {
         return this;
     }
 
+    /**
+     * Adds a task action to the defined view of the flow. Internally a {@link FlowTaskAction} will be created and
+     * added to the flow.
+     * @param controllerClass the controller class of the view to that the action will be registered
+     * @param actionId unique action id
+     * @param action a runnable that will be called whenever the action is called
+     * @return returns this flow (for the fluent API)
+     * @see FlowTaskAction
+     */
     public Flow withTaskAction(Class<?> controllerClass, String actionId,
                                Runnable action) {
         addActionToView(controllerClass, actionId, new FlowTaskAction(
@@ -196,43 +248,100 @@ public class Flow {
         return this;
     }
 
+    /**
+     * Adds a method call action as a global action to the flow. Internally a {@link FlowMethodAction} will be created and
+     * added to the flow. Whenever the action will be executed a method in the view controller will be called
+     * @param actionId unique action id
+     * @param actionMethodName name of the controller method that will be called
+     * @return returns this flow (for the fluent API)
+     * @see FlowMethodAction
+     */
     public Flow withGlobalCallMethodAction(String actionId,
                                            String actionMethodName) {
         addGlobalAction(actionId, new FlowMethodAction(actionMethodName));
         return this;
     }
 
+    /**
+     *  Adds a method call action to the defined view of the flow. Internally a {@link FlowMethodAction} will be created and
+     * added to the flow. Whenever the action will be executed a method in the view controller will be called
+     * @param controllerClass the controller class of the view to that the action will be registered
+     * @param actionId unique action id
+     * @param actionMethodName name of the controller method that will be called
+     * @return returns this flow (for the fluent API)
+     * @see FlowMethodAction
+     */
     public Flow withCallMethodAction(Class<?> controllerClass, String actionId,
                                      String actionMethodName) {
         addActionToView(controllerClass, actionId, new FlowMethodAction(actionMethodName));
         return this;
     }
 
+    /**
+     * Adds a back action to the defined view of the flow that navigates back to the last view of a flow. Internally a
+     * {@link FlowBackAction} will be created and added to the flow.
+     * @param controllerClass the controller class of the view to that the action will be registered
+     * @param actionId unique action id
+     * @return returns this flow (for the fluent API)
+     * @see FlowBackAction
+     */
     public Flow withBackAction(Class<?> controllerClass, String actionId) {
         addActionToView(controllerClass, actionId, new FlowBackAction());
         return this;
     }
 
-    public <U> void addActionToView(Class<?> controllerClass, String actionId,
+    /**
+     * Adds an action to the defined view of the flow.
+     * @param controllerClass the controller class of the view to that the action will be registered
+     * @param actionId unique action id
+     * @param action the action that will be added
+     * @return returns this flow (for the fluent API)
+     * @see FlowAction
+     */
+    public Flow addActionToView(Class<?> controllerClass, String actionId,
                                     FlowAction action) {
         if (viewFlowMap.get(controllerClass) == null) {
             viewFlowMap.put(controllerClass, new HashMap<String, FlowAction>());
         }
         viewFlowMap.get(controllerClass).put(actionId, action);
+        return this;
     }
 
-    public <U> void addGlobalAction(String actionId, FlowAction action) {
+    /**
+     * Adds a global action to the flow.
+     * @param actionId unique action id
+     * @param action the action that will be added
+     * @return returns this flow (for the fluent API)
+     * @see FlowAction
+     */
+    public Flow addGlobalAction(String actionId, FlowAction action) {
         globalFlowMap.put(actionId, action);
+        return this;
     }
 
+    /**
+     * Returns the action that is registered by the given unique id
+     * @param actionId the id
+     * @return the action that is registered by the given unique id
+     */
     public FlowAction getGlobalActionById(String actionId) {
         return globalFlowMap.get(actionId);
     }
 
+    /**
+     * Returns the class of the view controller that is defined as the start view.
+     * @return the class of the view controller that is defined as the start view
+     */
     public Class<?> getStartViewControllerClass() {
         return startViewControllerClass;
     }
 
+    /**
+     * This methods adds all registered actions to the given flow view. This method is needed by DataFX and should
+     * normally not called by a developer.
+     * @param newView the view that shoudl be prepaired
+     * @param <U> Class of the view controller
+     */
     public <U> void addActionsToView(FlowView<U> newView) {
         Map<String, FlowAction> viewActionMap = viewFlowMap.get(newView
                 .getViewContext().getController().getClass());
@@ -308,10 +417,23 @@ public class Flow {
         stage.show();
     }
 
+    /**
+     * Creates a {@link Tab} that contains a running instance of the flow. A {@link DefaultFlowContainer} is used as the flow
+     * container.
+     * @return the tab that contains the running flow.
+     * @throws FlowException if the flow instance can't be created
+     */
     public Tab startInTab() throws FlowException {
         return startInTab(new DefaultFlowContainer());
     }
 
+    /**
+     * Creates a {@link Tab} that contains a running instance of the flow.
+     * @param container the flow container in that the flow instance should run
+     * @param <T> node type of the flow container
+     * @return the tab that contains the running flow.
+     * @throws FlowException if the flow instance can't be created
+     */
     public <T extends Node> Tab startInTab(FlowContainer<T> container) throws FlowException {
         return createHandler().startInTab(container);
     }
@@ -319,7 +441,7 @@ public class Flow {
     /**
      * Start the flow with a default handler and a provided FlowContainer
      *
-     * @param <T>
+     * @param <T> node type of the flow container
      * @param flowContainer the FlowContainer used to visualize this flow
      * @return the <tt>Parent</tt> that will be used for rendering
      * @throws FlowException

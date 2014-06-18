@@ -11,7 +11,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="datafx-flow" />
-    <orderEntry type="library" name="Maven: org.javafxdata:datafx-core:8.0b6-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="datafx-core" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.18.1-GA" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
