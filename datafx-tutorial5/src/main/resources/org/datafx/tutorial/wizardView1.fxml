@@ -6,9 +6,6 @@
 <?import javafx.scene.text.Font?>
 
 <Label text="Welcome!">
-    <StackPane.margin>
-        <Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/>
-    </StackPane.margin>
     <font>
         <Font size="24.0"/>
     </font>
