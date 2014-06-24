@@ -68,7 +68,8 @@ public class DataSourceEnsemble extends Application {
        
 //        createTab("File-XML-Single", tabPane, new FileXmlSingleSample().getContent(scene));
 //        createTab("File-XML-List", tabPane, new FileXmlListSample().getContent(scene));
-        createTab("jdbc-list", tabPane, new JdbcSample().getContent(scene));
+    //    createTab("jdbc-list", tabPane, new JdbcSample().getContent(scene));
+        createTab("nestedList", tabPane, new NestedListSample().getContent(scene));
  //       createTab("Network-XML-List", tabPane, new RestSample().getContent(scene));
 
    
