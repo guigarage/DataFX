@@ -45,19 +45,24 @@ public abstract class JdbcConverter<T> implements Converter<ResultSet, T> {
 
     protected ResultSet resultSet;
     private boolean hasNext = true;
+    private static final Logger LOGGER = Logger.getLogger(JdbcConverter.class.getName());
     
     @Override
     public void initialize(ResultSet input) throws IOException {
+        LOGGER.fine("Initialize JdbcConverter");
         this.resultSet = input;
         try {
             hasNext = resultSet.next();
+            LOGGER.fine("Resultset has next? "+hasNext);
         } catch (SQLException ex) {
+            LOGGER.severe("Exception occured while initializing JDBC converter");
             throw new IOException ("Can't initialize Jdbc resultset", ex);
         }
     }
 
     @Override
     public T get() {
+        LOGGER.fine("Converting one row...");
         T entry = convertOneRow (resultSet);
         try {
             boolean hasNext = resultSet.next();

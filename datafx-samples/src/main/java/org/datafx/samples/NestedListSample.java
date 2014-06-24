@@ -49,7 +49,7 @@ import org.datafx.reader.converter.JsonConverter;
 
 /**
  *
- * @author johan
+ * Demo for retrieving JSON info containing a list of items inside a structure
  */
 public class NestedListSample {
 
@@ -79,7 +79,7 @@ public class NestedListSample {
 
     private void buildLocalTab(Tab tab) throws IOException {
         try {
-                   final     ListView<String> lv = new ListView<>();
+            final ListView<String> lv = new ListView<>();
 
             URL resource = this.getClass().getResource("responsewithlist.json");
             JsonConverter<Response> converter = new JsonConverter<>(null, Response.class);
@@ -90,19 +90,15 @@ public class NestedListSample {
             ObjectDataProvider provider = odpb.build();
             Worker worker = provider.retrieve();
             worker.stateProperty().addListener(new ChangeListener<Worker.State>() {
-                
+
                 @Override
                 public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                    System.out.println("list: change from " + oldValue + " to " + newValue);
                     if (newValue.equals(Worker.State.SUCCEEDED)) {
                         lv.setItems(resultProperty.get().getDetails());
                     }
-                    if (worker.getException()!= null) {
-                        worker.getException().printStackTrace();
-                    }
                 }
             }
-);
+            );
             tab.setContent(lv);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileXmlSingleSample.class.getName()).log(Level.SEVERE, null, ex);
