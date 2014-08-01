@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,7 +99,6 @@ public class XmlConverter<T> extends InputStreamConverter<T> {
         Node node = childNodes.item(currentNode);
         DOMSource source = new DOMSource(node);
         final T entry = (T) JAXB.unmarshal(source, clazz);
-        System.out.println("entry retrieved: "+entry);
         currentNode++;
         return entry;
 
