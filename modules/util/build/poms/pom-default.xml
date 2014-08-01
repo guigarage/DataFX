@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.datafx</groupId>
+  <artifactId>util</artifactId>
+  <version>8.0.7-SNAPSHOT</version>
+  <name>DataFX</name>
+  <description>Visualizing Enterprise Data in JavaFX</description>
+  <url>http://datafx.io</url>
+  <licenses>
+    <license>
+      <name>The 3-Clause BSD License</name>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Jonathan Giles</name>
+      <email>jonathan@jonathangiles.net</email>
+      <roles>
+        <role>author</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Johan Vos</name>
+      <email>johan@lodgon.com</email>
+      <roles>
+        <role>author</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Hendrik Ebbers</name>
+      <email>hendrik.ebbers@me.com</email>
+      <roles>
+        <role>author</role>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:hg:https://bitbucket.org/datafx/javafxdata</connection>
+    <developerConnection>scm:hg:https://bitbucket.org/datafx/javafxdata</developerConnection>
+    <url>https://bitbucket.org/datafx/javafxdata/overview</url>
+  </scm>
+</project>
