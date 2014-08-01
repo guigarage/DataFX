@@ -1,0 +1,5 @@
+include "core", "datasources", "flow", "tutorials"
+project(":core").projectDir = file("modules/core")
+project(":datasources").projectDir = file("modules/datasources")
+project(":flow").projectDir = file("modules/flow")
+project(":tutorials").projectDir = file("modules/tutorials")

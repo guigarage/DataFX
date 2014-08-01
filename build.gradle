@@ -1,0 +1,78 @@
+Properties commons = new Properties()
+commons.load(new FileInputStream("$rootDir/datafx-build.properties"))
+
+allprojects {
+    def pluginLoc = project.rootDir.path+"/mavenPublish.gradle"
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply from: pluginLoc
+
+    group = commons.datafx_group
+    version = commons.datafx_version
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.java
+        from sourceSets.main.resources
+        classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        dependsOn javadoc
+        from javadoc.destinationDir
+        classifier = 'javadoc'
+    }
+artifacts {
+    archives sourceJar
+    archives javadocJar
+}
+}
+
+project(':datasources') {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        compile project(':core')
+	compile group:'javax.json', name:'javax.json-api', version:'1.0'
+    }
+}
+
+project(':flow') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project (':tutorials') {
+    File dir = projectDir;
+    subdirs = projectDir.listFiles().each {File s ->
+        int ablen = projectDir.absolutePath.length()+1;
+        String abspath = s.absolutePath;
+        String relpath = abspath.substring(ablen);
+        if (relpath.startsWith("flow")) {
+            String idx = relpath.substring(4);
+            sourceSets {
+               "$relpath" {
+                    java {
+                        srcDir "$relpath/src/main/java"
+                    }
+                    resources {
+                        srcDir "$relpath/src/main/resources"
+                    }
+                }
+            }
+            String cpstr = relpath+"Compile";
+            dependencies {
+               "$cpstr" project(':flow')
+            }
+            tasks.create(name: "$relpath"+"Jar", type:Jar) {
+                from sourceSets."$relpath".output
+            }
+            tasks.create(name: "$relpath"+"Exec", type: JavaExec) {
+                classpath sourceSets."$relpath".runtimeClasspath
+                main "org.datafx.tutorial.Tutorial"+"$idx"+"Main"
+            }
+        }
+    };
+}
+
