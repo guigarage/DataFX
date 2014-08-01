@@ -39,16 +39,16 @@ import io.datafx.controller.context.ViewContext;
  * all views of a flow.
  * </p>
  * <p>
- * How to use a context<br/>
+ * How to use a context<br>
  * A context has a defined life time and can hold the data model of your
  * aplication or of a part of your application. To do so you can easily register
- * objects to your context:<br/>
+ * objects to your context:<br>
  * </p>
  * <p>
- * DataModel model = ... <br/>
- * context.register(model);<br/>
- * <br/>
- * In your controller: <br/>
+ * DataModel model = ... <br>
+ * context.register(model);<br>
+ * <br>
+ * In your controller: <br>
  * DataModel model = context.getRegisteredObject(DataModel.class);
  * </p>
  * <p>
@@ -56,12 +56,12 @@ import io.datafx.controller.context.ViewContext;
  * register the by using string based keys:
  * </p>
  * <p>
- * DataModel model1 = ... <br/>
- * DataModel model2 = ... <br/>
- * context.register("firstModel", model);<br/>
- * context.register("secondModel", model);<br/>
- * <br/>
- * In your controller: <br/>
+ * DataModel model1 = ... <br>
+ * DataModel model2 = ... <br>
+ * context.register("firstModel", model);<br>
+ * context.register("secondModel", model);<br>
+ * <br>
+ * In your controller: <br>
  * DataModel firstModel = context.getRegisteredObject("firstModel");
  * </p>
  * <p>
@@ -70,8 +70,8 @@ import io.datafx.controller.context.ViewContext;
  * </p>
  * <p>
  * 
- * "@FXMLApplicationContext" <br/>
- * ApplicationContext myApplicationContext;<br/>
+ * "@FXMLApplicationContext" <br>
+ * ApplicationContext myApplicationContext;<br>
  * </p>
  * <p>
  * By doing so you can easily access all your data in your controller and share

@@ -78,10 +78,10 @@ public class ViewFactory {
      * {@link FXMLController} annotation to link to the fxml file. You can skip
      * the annotation if you want to use the controller API conventions. By
      * doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link org.datafx.controller.FXMLController} for more
-     * informations). The method returns a {@link org.datafx.controller.context.ViewContext}. This is a
+     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController} for more
+     * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
-     * register your datamodel to the view. The doc of {@link org.datafx.controller.context.ViewContext} will
+     * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
      * provide more information about this topic.
      *
      * @param controllerClass the class of the controller.
@@ -99,10 +99,10 @@ public class ViewFactory {
      * {@link FXMLController} annotation to link to the fxml file. You can skip
      * the annotation if you want to use the controller API conventions. By
      * doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link org.datafx.controller.FXMLController} for more
-     * informations). The method returns a {@link org.datafx.controller.context.ViewContext}. This is a
+     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController} for more
+     * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
-     * register your datamodel to the view. The doc of {@link org.datafx.controller.context.ViewContext} will
+     * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
      * provide more information about this topic. By using this method you can
      * overwrite the path to your fxml file.
      *
@@ -121,19 +121,24 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. 
      * The class needs a default constructor (no parameters) and 
-     * a {@ link FXMLController} annotation to link to the fxml file. 
+     * a {@link FXMLController} annotation to link to the fxml file. 
      * You can skip the annotation if you want to use the controller API conventions. 
      * By doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@ link org.datafx.controller.FXMLController}
+     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController}
      * for more information). The method returns a 
-     * {@ link org.datafx.controller.context.ViewContext}. 
+     * {@link io.datafx.controller.context.ViewContext}. 
      * This is a wrapper around the view (view-node and controller) and can be 
      * used to register your datamodel to the view. The doc of 
-     * {@ link org.datafx.controller.context.ViewContext} will 
+     * {@link io.datafx.controller.context.ViewContext} will 
      * provide more information about this topic. By using this method you can
      * overwrite the path to your fxml file.
+     * @param <T>
+     * @param controllerClass
+     * @param fxmlName
      * @param viewConfiguration The configuration for the view
      * @param viewContextResources initial resources that will be added to the view context
+     * @return 
+     * @throws io.datafx.controller.FxmlLoadException
      */
     public <T> ViewContext<T> createByController(
             final Class<T> controllerClass, String fxmlName, ViewConfiguration viewConfiguration, Object... viewContextResources)

@@ -27,7 +27,7 @@
 package io.datafx.controller;
 
 /**
- * This Exception will by thrown by the {@link #ViewFactory} if a FXML file can't be loaded.
+ * This Exception will by thrown by the {@link ViewFactory} if a FXML file can't be loaded.
  * @author hendrikebbers
  *
  */

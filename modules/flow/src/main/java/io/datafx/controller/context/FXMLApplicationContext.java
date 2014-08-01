@@ -32,7 +32,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this Annotation to inject the {@link #ApplicationContext} in a controller
+ * Use this Annotation to inject the {@link ApplicationContext} in a controller
  * instance or a flow action.
  * 
  * @author Hendrik Ebbers

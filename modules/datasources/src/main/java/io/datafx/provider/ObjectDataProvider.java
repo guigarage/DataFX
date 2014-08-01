@@ -60,8 +60,8 @@ import io.datafx.core.concurrent.ObservableExecutor;
  * should be used. Instances of this class are typically used to populate Observable
  * objects.
  * <p>
- * This class requires a {@link org.datafx.io.DataReader} that either can be passed
- * with the constructor or using the {@link #setDataReader(org.datafx.io.DataReader) } 
+ * This class requires a {@link io.datafx.io.DataReader} that either can be passed
+ * with the constructor or using the {@link #setDataReader(io.datafx.io.DataReader) } 
  * method.
  * <br>
  * No external data will be retrieved until the {@link #retrieve()} method is called.
@@ -91,8 +91,8 @@ public class ObjectDataProvider<T> implements DataProvider<T>, WriteBackProvider
     /**
      * 
      * Create an ObjectDataProvider. Before calling the {@link #retrieve()} method, a
-     * {@link org.datafx.io.DataReader} instance should be set using 
-     * {@link #setDataReader(org.datafx.io.DataReader) }.
+     * {@link io.datafx.io.DataReader} instance should be set using 
+     * {@link #setDataReader(io.datafx.io.DataReader) }.
      */
     public ObjectDataProvider () {  
         this (null, null);

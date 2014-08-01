@@ -64,11 +64,11 @@ public class Flow {
      * Creates a new Flow with the given controller for the start view and a
      * view configuration for all views.
      * The start view must be a view controller as specified in the DataFX-Controller API.
-     * See {@link org.datafx.controller.FXMLController} for more information
+     * See {@link io.datafx.controller.FXMLController} for more information
      *
      * @param startViewControllerClass Controller class of the start view
      * @param viewConfiguration        Configuration for all views of the flow
-     * @see org.datafx.controller.FXMLController
+     * @see io.datafx.controller.FXMLController
      */
     public Flow(Class<?> startViewControllerClass, ViewConfiguration viewConfiguration) {
         this.startViewControllerClass = startViewControllerClass;
@@ -80,10 +80,10 @@ public class Flow {
     /**
      * Creates a new Flow with the given controller for the start view.
      * The start view must be a view controller as specified in the DataFX-Controller API.
-     * See {@link org.datafx.controller.FXMLController} for more information
+     * See {@link io.datafx.controller.FXMLController} for more information
      *
      * @param startViewControllerClass Controller class of the start view
-     * @see org.datafx.controller.FXMLController
+     * @see io.datafx.controller.FXMLController
      */
     public Flow(Class<?> startViewControllerClass) {
         this(startViewControllerClass, new ViewConfiguration());
@@ -115,7 +115,7 @@ public class Flow {
      *
      * @return a flow handler to run the flow
      */
-    public FlowHandler createHandler() throws FlowException {
+    public FlowHandler createHandler()  {
         return createHandler(new ViewFlowContext());
     }
 
@@ -372,7 +372,7 @@ public class Flow {
      * StackPane.
      *
      * @return the <tt>Parent</tt> that will be used for rendering
-     * @throws FlowException
+     * @throws FlowException in case something goes wrong
      */
     public StackPane start() throws FlowException {
         return start(new DefaultFlowContainer());
@@ -386,19 +386,18 @@ public class Flow {
      * annotation or the ViewMetadata of an view is changed in code.
      *
      * By using the method a flow based application can be created by only a few lines of code as shown in this example:
-     *
+     * <code>
      * public class Example extends Application {
      *
      *   public static void main(String[] args) {
      *       launch(args);
      *   }
      *
-     *   @Override
      *   public void start(Stage primaryStage) throws Exception {
      *       new Flow(SimpleController.class).startInStage(primaryStage);
      *   }
      *}
-     *
+     *</code>
      * @param stage The stage in that the flow should be displayed.
      * @throws FlowException If the flow can't be created or started
      */

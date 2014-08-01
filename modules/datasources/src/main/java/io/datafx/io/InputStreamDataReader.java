@@ -86,7 +86,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
      * Get the converter that is used by this InputStreamDataReader.
      * @return  the converter that is used by this InputStreamDataReader, 
      * either supplied with the constructor or using the 
-     * {@link #setConverter(org.datafx.io.converter.InputStreamConverter) }
+     * {@link #setConverter(io.datafx.io.converter.InputStreamConverter) }
      * method.
      */
     public InputStreamConverter<T> getConverter() {

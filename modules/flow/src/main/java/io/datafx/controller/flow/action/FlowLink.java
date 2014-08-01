@@ -34,7 +34,7 @@ import io.datafx.controller.flow.FlowView;
 import io.datafx.controller.FxmlLoadException;
 
 /**
- * A {@Link FlowAction} implementation that navigates to a different view in a flow.
+ * A {@link FlowAction} implementation that navigates to a different view in a flow.
  * @param <T> class of the controller of the target view
  */
 public class FlowLink<T> implements FlowAction {

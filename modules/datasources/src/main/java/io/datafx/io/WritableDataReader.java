@@ -31,7 +31,7 @@ package io.datafx.io;
  * entities from an external source, but also allows to write changes to an entity
  * back to the external source. 
  * <p>
- * A {@link org.datafx.provider.DataProvider} that supports writeback will first ask the client code
+ * A {@link io.datafx.provider.DataProvider} that supports writeback will first ask the client code
  * to create an instance of a WritableReader, and then will call the {@link #writeBack()}
  * method in order to write the change back to the external source.
  * 

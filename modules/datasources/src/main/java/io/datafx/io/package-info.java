@@ -27,13 +27,13 @@
  * 
  * This package contains the functionality required for retrieving external data.
  * The functionality required for providing the external data is contained in the
- * {@link org.datafx.provider} package.
+ * {@link io.datafx.provider} package.
  * <p>
- * Data is obtained by implementations of {@link org.datafx.io.DataReader}.
- * A {@link org.datafx.io.ServerSentEventReader} is a special DataReader that 
+ * Data is obtained by implementations of {@link io.datafx.io.DataReader}.
+ * A {@link io.datafx.io.ServerSentEventReader} is a special DataReader that 
  * keeps reading data, accordingly to the SSE protocol.
  * <p>
- * A {@link org.datafx.io.WritableDataReader} is a DataReader that is capable of 
+ * A {@link io.datafx.io.WritableDataReader} is a DataReader that is capable of 
  * writing changed data back to the external 
  * data source. In order to handle  
  */

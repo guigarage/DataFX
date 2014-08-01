@@ -36,25 +36,27 @@ import java.lang.reflect.Method;
 /**
  * <p>
  * The view context is the context with a life time of one view. For each view
- * there is exactly one ViewContext. By using the {@link #ViewFactory} to create
- * MVC views a ViewContext will be automatically created.<br/>
+ * there is exactly one ViewContext. By using the {@link io.datafx.controller.ViewFactory} to create
+ * MVC views a ViewContext will be automatically created.<br>
  * Example:
  * </p>
+ * <pre>
+ * <code>
+ * ViewContext&lt;MyController&gt; context =
+ * ViewFactory.getInstance().createByController(MyController.class);<br>
+ * </code>
+ * </pre>
  * <p>
- * ViewContext<MyController> context =
- * ViewFactory.getInstance().createByController(MyController.class);<br/>
- * </p>
- * <p>
- * How to use a context<br/>
+ * How to use a context<br>
  * A context has a defined life time and can hold the data model of your
- * aplication or of a part of your application. To do so you can easily register
- * objects to your context:<br/>
+ * application or of a part of your application. To do so you can easily register
+ * objects to your context:<br>
  * </p>
  * <p>
- * DataModel model = ... <br/>
- * context.register(model);<br/>
- * <br/>
- * In your controller: <br/>
+ * DataModel model = ... <br>
+ * context.register(model);<br>
+ * <br>
+ * In your controller: <br>
  * DataModel model = context.getRegisteredObject(DataModel.class);
  * </p>
  * <p>
@@ -62,12 +64,12 @@ import java.lang.reflect.Method;
  * register the by using string based keys:
  * </p>
  * <p>
- * DataModel model1 = ... <br/>
- * DataModel model2 = ... <br/>
- * context.register("firstModel", model);<br/>
- * context.register("secondModel", model);<br/>
- * <br/>
- * In your controller: <br/>
+ * DataModel model1 = ... <br>
+ * DataModel model2 = ... <br>
+ * context.register("firstModel", model);<br>
+ * context.register("secondModel", model);<br>
+ * <br>
+ * In your controller: <br>
  * DataModel firstModel = context.getRegisteredObject("firstModel");
  * </p>
  * <p>
@@ -75,9 +77,8 @@ import java.lang.reflect.Method;
  * provides annotations to inject all different context types:
  * </p>
  * <p>
- * <p/>
- * "@FXMLApplicationContext" <br/>
- * ApplicationContext myApplicationContext;<br/>
+ * "@FXMLApplicationContext" <br>
+ * ApplicationContext myApplicationContext;<br>
  * </p>
  * <p>
  * By doing so you can easily access all your data in your controller and share
@@ -100,12 +101,15 @@ public class ViewContext<U> extends AbstractContext {
     private ViewMetadata metadata;
 
     /**
-     * Create a new ViewContext for a (view-){@link #Node} and a controller.
-     * Normally this constructor is used by the {@link #ViewFactory} and should
+     * Create a new ViewContext for a (view-){@link Node} and a controller.
+     * Normally this constructor is used by the {@link io.datafx.controller.ViewFactory} and should
      * not be used in application code.
      *
      * @param rootNode   the (view-)node
      * @param controller the controller
+     * @param metadata
+     * @param configuration
+     * @param resources
      */
     public ViewContext(Node rootNode, U controller, ViewMetadata metadata, ViewConfiguration configuration, Object... resources) {
         this.rootNode = rootNode;

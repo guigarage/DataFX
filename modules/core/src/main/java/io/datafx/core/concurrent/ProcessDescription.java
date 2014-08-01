@@ -34,7 +34,7 @@ import java.util.function.Function;
  * @param <V> Input parameter type of the progress
  * @param <T> Return parameter type of the progress
  *
- * @see org.datafx.util.concurrent.ProcessChain
+ * @see io.datafx.core.concurrent.ProcessChain
  */
 public class ProcessDescription<V, T> {
 

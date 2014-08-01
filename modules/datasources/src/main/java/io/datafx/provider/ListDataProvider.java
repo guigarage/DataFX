@@ -64,8 +64,8 @@ import java.util.logging.Logger;
  * should be used. Instances of this class are typically used to populate ObservableList
  * instances.
  * <p>
- * This class requires a {@link org.datafx.io.DataReader} that either can be passed
- * with the constructor or using the {@link #setDataReader(org.datafx.io.DataReader) } 
+ * This class requires a {@link io.datafx.io.DataReader} that either can be passed
+ * with the constructor or using the {@link #setDataReader(io.datafx.io.DataReader) } 
  * method.
  * <br>
  * No external data will be retrieved until the {@link #retrieve()} method is called.

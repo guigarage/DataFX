@@ -37,7 +37,7 @@ import io.datafx.controller.context.ViewContext;
  *
  * @author Hendrik Ebbers
  * @param <T> Controller type of the current view
- * @see org.datafx.controller.flow.container.DefaultFlowContainer
+ * @see io.datafx.controller.flow.container.DefaultFlowContainer
  */
 public interface FlowContainer<T extends Node> {
 

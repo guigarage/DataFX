@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Abstract base class for all context classes. See {@link #ApplicationContext}
+ * Abstract base class for all context classes. See {@link ApplicationContext}
  * for more informations.
  *
  * @author hendrikebbers

@@ -46,7 +46,7 @@ public interface Converter<U, T> {
     /**
      * Initialize the raw data. In many cases, some initialization is required on
      * the raw data before the conversion to one or more objects can be performed.
-     * In the case of an {@link org.datafx.io.converter.XmlConverter}, for example,
+     * In the case of an {@link io.datafx.io.converter.XmlConverter}, for example,
      * the DOM-model is created in this method.
      * @param input the raw input.
      * @throws java.io.IOException in case the raw input can't be processed by this converter.

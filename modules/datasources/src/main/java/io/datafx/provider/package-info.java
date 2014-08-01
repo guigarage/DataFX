@@ -29,21 +29,21 @@
 * external sources.
 * Data can come from a variety of sources, in a variety of formats.
 * The retrieval of the data is achieved using one of the classes in 
-* the {@link org.datafx.io} package.
+* the {@link io.datafx.io} package.
 * <p>
 * DataFX distinguishes between 2 types of external data:
 * <ul>
 * <li>single item, containing a single instance of data. The data itself can
 * be very simple or very complex.
-* In case the {@link org.datafx.provider.ObjectDataProvider} is the
+* In case the {@link io.datafx.provider.ObjectDataProvider} is the
 * provider you have to use. If you prefer to configure this provider using
-* the builder pattern, you can leverage the {@link org.datafx.provider.ObjectDataProviderBuilder}
+* the builder pattern, you can leverage the {@link io.datafx.provider.ObjectDataProviderBuilder}
 * class.
 * <li>a list of items, containing instances that share the same characteristics
 * and that can be casted to a list of instances of the same Java Class.
 * If the external data you are retrieving contains a list of items, you should
-* use the {@link org.datafx.provider.ListDataProvider}, or the
-* corresponding builder class {@link org.datafx.provider.ListDataProviderBuilder}.
+* use the {@link io.datafx.provider.ListDataProvider}, or the
+* corresponding builder class {@link io.datafx.provider.ListDataProviderBuilder}.
 * </ul>
 */
 package io.datafx.provider;

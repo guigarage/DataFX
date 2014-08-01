@@ -53,7 +53,7 @@ public final class ObjectDataProviderBuilder<T> {
     }
     
     /**
-     * Provides the {@link org.datafx.io.DataReader} that contains the data
+     * Provides the {@link io.datafx.io.DataReader} that contains the data
      * @param dataReader the DataReader instance that should be used by the ObjectDataProvider
      * @return this builder instance
      */
@@ -75,7 +75,7 @@ public final class ObjectDataProviderBuilder<T> {
     /**
      * Provide a handler that will be called when the retrieved data is changed
      * locally.
-     * @param handler the {@link org.datafx.io.WriteBackHandler} instance
+     * @param handler the {@link io.datafx.io.WriteBackHandler} instance
      * @return this builder instance
      */
     public ObjectDataProviderBuilder writeBackHandler(WriteBackHandler<T> handler) {

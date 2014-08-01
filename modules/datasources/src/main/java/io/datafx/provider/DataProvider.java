@@ -33,7 +33,7 @@ import javafx.concurrent.Worker;
 /**
  *
  * The DataProvider interface defines how applications interact with the data
- * that is retrieved via a {@link org.datafx.io.DataReader}.
+ * that is retrieved via a {@link io.datafx.io.DataReader}.
  * <p>
  * Retrieved data is stored in a {@link javafx.beans.property.Property}.
  * There are three different ways for obtaining the retrieved data:

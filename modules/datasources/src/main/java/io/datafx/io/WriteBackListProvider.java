@@ -28,7 +28,7 @@ package io.datafx.io;
 
 /**
  * This interface should be implemented by a
- * {@link org.datafx.provider.DataProvider} that is capable of receiving lists
+ * {@link io.datafx.provider.DataProvider} that is capable of receiving lists
  * of entities, and that wants to write new entries (added locally) back to the
  * original data source.
  *
@@ -42,9 +42,9 @@ public interface WriteBackListProvider<T> {
      * handler. When the provider decides to add data back to the original
      * datasource (that is, when data has been added locally), the 
      * {@link WriteBackHandler#createDataSource(java.lang.Object) } method will
-     * be called. This method returns a {@link org.datafx.io.WritableDataReader}
+     * be called. This method returns a {@link io.datafx.io.WritableDataReader}
      * that will be used to send the data to the origin, by calling the
-     * {@link org.datafx.io.WritableDataReader#writeBack() } method.
+     * {@link io.datafx.io.WritableDataReader#writeBack() } method.
      *
      * @param handler the handler that will be used when the provider decides to
      * write data back to the original source.

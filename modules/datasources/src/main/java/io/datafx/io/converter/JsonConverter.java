@@ -53,7 +53,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * An implementation of {@link org.datafx.io.Converter} that converts JSON
+ * An implementation of {@link io.datafx.io.Converter} that converts JSON
  * data into Java Objects of type T.
  *
  * @param <T> the type of the resulting Java objects
