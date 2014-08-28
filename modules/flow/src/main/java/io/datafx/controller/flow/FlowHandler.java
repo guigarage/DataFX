@@ -157,6 +157,9 @@ public class FlowHandler {
         if (action == null) {
             action = flowWrapper.get().getGlobalActionById(actionId);
         }
+        if (action == null) {
+            throw new FlowException ("Can't find an action with id "+actionId);
+        }
         handle(action, actionId);
     }
 
