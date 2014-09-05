@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,16 +24,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
-import org.datafx.controller.FXMLController;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import io.datafx.controller.flow.Flow;
 
 /**
- * View controller for a view in the wizard. This class is only needed to define the binding between the class and the
- * fxml file.
- * @see WizardController
- * @see FXMLController
+ * Main class for the first tutorial of the DataFX API. This application will show only one view in the given Stage.
+ * The view is defined by the DataFX controller API and shown in a DataFX flow.
+ * As we will see later a flow definition in DataFX can contain several views that are linked internally. But in this
+ * first example we will only use one view.
  */
-@FXMLController("wizardView1.fxml")
-public class WizardView1Controller {
+public class Tutorial1Main extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // This is the most simple way to start a flow:
+        // The Controller class of the start view is always passed as parameter to the constructor of the Flow class.
+        // The Controller class should be annotated with @FXMLController
+        
+        // The Flow class provides a utility method (startInStage) that renders the Flow in a Stage. By doing so the Scene will be created
+        // automatically and the Stage will contain a Scene that only contains the flow.
+        // In this first tutorial the flow will only contain one view.
+        new Flow(SimpleController.class).startInStage(primaryStage);
+    }
 }

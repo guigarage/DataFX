@@ -24,14 +24,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import org.datafx.controller.FXMLController;
-import org.datafx.controller.flow.action.ActionMethod;
-import org.datafx.controller.flow.action.ActionTrigger;
+import io.datafx.controller.FXMLController;
+import io.datafx.controller.flow.action.ActionMethod;
+import io.datafx.controller.flow.action.ActionTrigger;
 
 import javax.annotation.PostConstruct;
 
@@ -49,11 +49,13 @@ import javax.annotation.PostConstruct;
  * <li>DataFX objects. Here DataFX provides several annotations</li>
  * <li>Custom implementations. These will be injected by using the @Inject annotation</li>
  * </ul>
- * <p/>
+ * <p>
  * The method that is annotated by @PostContruct will be called when all injections are finished.
- * <p/>
+ * </p>
+ * <p>
  * In this first example we will only use @FXML to inject FXML UI components to the controller.
- * <p/>
+ * </p>
+ * <p>
  * In addition DataFX action handling is introduced in this example. The view contains a button named actionButton.
  * Once this button is clicked, the onAction() method will be executed. To do so DataFX contains two annotation:
  * - The @ActionTrigger annotation annotates a UI component that will trigger an action. 
@@ -63,17 +65,20 @@ import javax.annotation.PostConstruct;
  * The value of this annotation
  * must be the unique id of the defined action. Therefore @ActionMethod("myAction") is used here.
  * The method will be called in the JavaFX Application Thread
- * <p/>
+ * </p>
+ * <p>
  * As you will see later there are other types of actions than simply calling a method. These will be shown later in other tutorial.
  * For now the most important point is that a component that is annotated with @ActionTrigger can trigger a method that is annotated with
- * @ActionMethod if both annotations define the same unique action id.
+ * {link @io.datafx.controller.flow.action.ActionMethod} if both annotations define the same unique action id.
  * So once the actionButton in this example is clicked the onAction() method will be called and the text of the label will change.
- * <p/>
+ * </p>
+ * <p>
  * Note: This example is quite easy and normally you could define the action binding by only one line of Java code in the init() method:
- * actionButton.setOnAction((e) -> onAction());
+ * actionButton.setOnAction((e) -&gt; onAction());
  * So why are these annotations used here?
  * As you will see in further tutorials that are more complex than this one it will make sense to use the annotations to provide
  * more readable code.
+ * </p>
  */
 @FXMLController("simpleView.fxml")
 public class SimpleController {

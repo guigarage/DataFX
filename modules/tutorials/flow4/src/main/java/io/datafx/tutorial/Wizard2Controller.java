@@ -1,6 +1,6 @@
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
-import org.datafx.controller.FXMLController;
+import io.datafx.controller.FXMLController;
 
 /**
  * This is a view controller for one of the steps in the wizard. All buttons of the action-bar that

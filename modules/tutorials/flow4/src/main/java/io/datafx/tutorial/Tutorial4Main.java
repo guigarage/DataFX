@@ -1,8 +1,8 @@
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.datafx.controller.flow.Flow;
+import io.datafx.controller.flow.Flow;
 
 /**
  * Main class for the tutorial. This application will show only a simple wizard in the given {@link Stage}. It's mainly
@@ -15,11 +15,11 @@ import org.datafx.controller.flow.Flow;
  * In difference to the last tutorials a lot of actions are directly defined in the {@link Flow} definition instead of
  * defining them in the view controller classes. Therefore the {@link Flow} class provides a fluent API that can be used
  * to define actions for single views or the complete flow. All actions that are added to a flow have to implement the
- * {@link org.datafx.controller.flow.action.FlowAction} interface. The {@link Flow} class provides a lot of methods
+ * {@link io.datafx.controller.flow.action.FlowAction} interface. The {@link Flow} class provides a lot of methods
  * to add specific action types the the flow. Examples are {@link Flow#withGlobalBackAction(String)} or
  *  {@link Flow#withLink(Class, String, Class)}. Some of them are used here to define the flow. As you can see in the
  *  view controller classes of the wizard the actions are bound to controls by using the
- *  {@link org.datafx.controller.flow.action.ActionTrigger} annotation with the unique id of the action that is defined
+ *  {@link io.datafx.controller.flow.action.ActionTrigger} annotation with the unique id of the action that is defined
  *  here. The flow defines two different types of actions: global actions that can be accessed in each view of the flow.
  *  Examples are the "back", "help" and "finish" action in this example. In addition a action can be defined for a
  *  specific view in the flow. To do so the view controller class of the view must be speficied. Examples are the "next"

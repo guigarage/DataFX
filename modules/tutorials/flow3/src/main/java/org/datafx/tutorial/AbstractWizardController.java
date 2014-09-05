@@ -2,8 +2,8 @@ package org.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.datafx.controller.flow.action.BackAction;
-import org.datafx.controller.flow.action.LinkAction;
+import io.datafx.controller.flow.action.BackAction;
+import io.datafx.controller.flow.action.LinkAction;
 
 /**
  * This is the base class for all view controllers in the wizard. Each view has a action-bar with an "back", "next" and

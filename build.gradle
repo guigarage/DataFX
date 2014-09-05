@@ -21,10 +21,10 @@ allprojects {
         from javadoc.destinationDir
         classifier = 'javadoc'
     }
-artifacts {
-    archives sourceJar
-    archives javadocJar
-}
+    artifacts {
+        archives sourceJar
+        archives javadocJar
+    }
 }
 
 project(':datasources') {
@@ -43,9 +43,44 @@ project(':flow') {
     }
 }
 
+project(':tutorials-flow1') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow2') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow3') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow4') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow5') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+/*
 project (':tutorials') {
+    dependencies {
+        compile project(":flow");
+    }
     File dir = projectDir;
-    subdirs = projectDir.listFiles().each {File s ->
+    def subdirs = projectDir.listFiles().each {File s ->
+logger.info("PROCESS SUBDIR $s");
         int ablen = projectDir.absolutePath.length()+1;
         String abspath = s.absolutePath;
         String relpath = abspath.substring(ablen);
@@ -60,19 +95,30 @@ project (':tutorials') {
                         srcDir "$relpath/src/main/resources"
                     }
                 }
+               main {
+                    java {
+                        srcDir "$relpath/src/main/java"
+                    }
+                    resources {
+                        srcDir "$relpath/src/main/resources"
+                    }
+                }
             }
             String cpstr = relpath+"Compile";
             dependencies {
                "$cpstr" project(':flow')
             }
-            tasks.create(name: "$relpath"+"Jar", type:Jar) {
+            def jartask = tasks.create(name: "$relpath"+"Jar", type:Jar) {
                 from sourceSets."$relpath".output
             }
             tasks.create(name: "$relpath"+"Exec", type: JavaExec) {
                 classpath sourceSets."$relpath".runtimeClasspath
                 main "org.datafx.tutorial.Tutorial"+"$idx"+"Main"
             }
+            artifacts {
+                archives jartask
+            }
         }
     };
 }
-
+*/

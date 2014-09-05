@@ -2,7 +2,7 @@ package org.datafx.tutorial;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.datafx.controller.flow.Flow;
+import io.datafx.controller.flow.Flow;
 
 /**
  * Main class for the tutorial. This application will show only a simple wizard in the given Stage / Window.

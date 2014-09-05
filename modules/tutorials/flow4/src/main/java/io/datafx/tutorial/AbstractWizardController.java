@@ -1,8 +1,8 @@
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.datafx.controller.flow.action.ActionTrigger;
+import io.datafx.controller.flow.action.ActionTrigger;
 
 /**
  * Note: Tutorial 4 depends on tutorial 3. To understand the complete tutorial please check tutorial 3 because some

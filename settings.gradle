@@ -1,5 +1,9 @@
-include "core", "datasources", "flow", "tutorials"
+include "core", "datasources", "flow", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5"
 project(":core").projectDir = file("modules/core")
 project(":datasources").projectDir = file("modules/datasources")
 project(":flow").projectDir = file("modules/flow")
-project(":tutorials").projectDir = file("modules/tutorials")
+project(":tutorials-flow1").projectDir = file("modules/tutorials/flow1")
+project(":tutorials-flow2").projectDir = file("modules/tutorials/flow2")
+project(":tutorials-flow3").projectDir = file("modules/tutorials/flow3")
+project(":tutorials-flow4").projectDir = file("modules/tutorials/flow4")
+project(":tutorials-flow5").projectDir = file("modules/tutorials/flow5")

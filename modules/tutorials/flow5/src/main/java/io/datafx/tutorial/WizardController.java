@@ -24,21 +24,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import org.datafx.controller.FXMLController;
-import org.datafx.controller.flow.Flow;
-import org.datafx.controller.flow.FlowException;
-import org.datafx.controller.flow.FlowHandler;
-import org.datafx.controller.flow.action.ActionMethod;
-import org.datafx.controller.flow.action.ActionTrigger;
-import org.datafx.controller.flow.container.AnimatedFlowContainer;
-import org.datafx.controller.flow.container.ContainerAnimations;
-import org.datafx.controller.util.VetoException;
+import io.datafx.controller.FXMLController;
+import io.datafx.controller.flow.Flow;
+import io.datafx.controller.flow.FlowException;
+import io.datafx.controller.flow.FlowHandler;
+import io.datafx.controller.flow.action.ActionMethod;
+import io.datafx.controller.flow.action.ActionTrigger;
+import io.datafx.controller.flow.container.AnimatedFlowContainer;
+import io.datafx.controller.flow.container.ContainerAnimations;
+import io.datafx.controller.util.VetoException;
 
 import javax.annotation.PostConstruct;
 

@@ -24,9 +24,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
-import org.datafx.controller.FXMLController;
+import io.datafx.controller.FXMLController;
 
 /**
  * View controller for a view in the wizard. This class is only needed to define the binding between the class and the
@@ -34,6 +34,6 @@ import org.datafx.controller.FXMLController;
  * @see WizardController
  * @see FXMLController
  */
-@FXMLController("wizardView4.fxml")
-public class WizardView4Controller {
+@FXMLController("wizardView2.fxml")
+public class WizardView2Controller {
 }

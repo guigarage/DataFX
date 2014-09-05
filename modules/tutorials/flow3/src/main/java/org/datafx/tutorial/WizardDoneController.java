@@ -2,7 +2,7 @@ package org.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.datafx.controller.FXMLController;
+import io.datafx.controller.FXMLController;
 
 import javax.annotation.PostConstruct;
 

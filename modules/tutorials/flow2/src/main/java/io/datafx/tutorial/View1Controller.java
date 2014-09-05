@@ -1,16 +1,18 @@
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import org.datafx.controller.FXMLController;
-import org.datafx.controller.flow.action.LinkAction;
+import io.datafx.controller.FXMLController;
+import io.datafx.controller.flow.action.LinkAction;
 
 /**
+ * <p>
  * This class defines the controller for the first view of this example. The @FXMLController annotation defines that the
  * view1.fxml file contains the definition of the UI of this view.
  * As described in the Tutorial2Main class this example will show how you can navigate between several views in flow. In
  * this example there are only two views that are defined by its controller classes: View1Controller and View2Controller.
- * <p/>
+ * </p>
+ * <p>
  * The only object that is needed in the controller is the instance if the Button that should trigger the navigation action.
  * By using the @FXML annotation the Button instance is injected in the controller. Whenever this button is pressed the flow should
  * navigate to the second view that is defined by the View2Controller class. DataFX provides the @LinkAction annotation
@@ -20,10 +22,12 @@ import org.datafx.controller.flow.action.LinkAction;
  * class of the target view must be specified. The @LinkAction can be added to any JavaFX Node. If the component extends the ButtonBase
  * class or the MenuItem class a handler for action events will be added to the control. Otherwise the action will be called once
  * the control is clicked by mouse.
- * <p/>
+ * </p>
+ * <p>
  * By using the annotation a developer doesn't need to handle the complete navigation like changing the view or create a new data model.
  * DataFX will handle all these steps automatically and the defined view will appear on screen once the action is triggered.
- * <p/>
+ * </p>
+ * <p>
  * As said in the first example each action in DataFX is defined by an unique ID. In the case of a LinkAction, the developer doesn't need to define an
  * ID on its own. DataFX will create a unique ID once the controller will be initialized. 
  * By doing so the source code is much shorter and cleaner.
