@@ -1,8 +1,9 @@
-include "core", "datasources", "flow", "injection", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5"
+include "core", "datasources", "flow", "injection", "validation", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5"
 project(":core").projectDir = file("modules/core")
 project(":datasources").projectDir = file("modules/datasources")
 project(":flow").projectDir = file("modules/flow")
 project(":injection").projectDir = file("modules/injection")
+project(":validation").projectDir = file("modules/incubator/validation")
 project(":tutorials-flow1").projectDir = file("modules/tutorials/flow1")
 project(":tutorials-flow2").projectDir = file("modules/tutorials/flow2")
 project(":tutorials-flow3").projectDir = file("modules/tutorials/flow3")

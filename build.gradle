@@ -45,6 +45,13 @@ project(':injection') {
     }
 }
 
+project(':validation') {
+    dependencies {
+        compile project(':flow')
+        compile group:'javax.validation', name:'validation-api', version:'1.1.0.Final'
+    }
+}
+
 project(':flow') {
     dependencies {
         compile project(':core')
