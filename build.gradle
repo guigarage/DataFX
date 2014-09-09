@@ -37,6 +37,14 @@ project(':datasources') {
     }
 }
 
+project(':injection') {
+    dependencies {
+        compile project(':flow')
+        compile group:'org.javassist', name:'javassist', version:'3.18.1-GA'
+        compile group:'javax.inject', name:'javax.inject', version:'1'
+    }
+}
+
 project(':flow') {
     dependencies {
         compile project(':core')

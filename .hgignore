@@ -34,3 +34,5 @@ datafx-websocket/datafx-websocket.iml
 .idea
 build
 gradle
+datafx.iml
+*.iml
