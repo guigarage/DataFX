@@ -30,3 +30,7 @@ datafx-websocket/datafx-websocket.iml
 .project
 .classpath
 .settings
+.gradle
+.idea
+build
+gradle

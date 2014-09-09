@@ -167,6 +167,14 @@ public class FlowHandler {
         return exceptionHandler;
     }
 
+    /**
+     * Set the exception handler for this flow.
+     * @param exceptionHandler the exception handler
+     */
+    public void setExceptionHandler(ExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
+    }
+
     public ViewFlowContext getFlowContext() {
         return flowContextWrapper.get();
     }
