@@ -26,41 +26,44 @@
  */
 package io.datafx.core.concurrent;
 
+import io.datafx.core.ExceptionHandler;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * The class defines a chain of processes. 
- * All processes will be running in a queue and the result of a process will be 
+ * The class defines a chain of processes.
+ * All processes will be running in a queue and the result of a process will be
  * used as the input parameter for the next process.
- * 
- * @param <T>  Return value of the chain.
  *
+ * @param <T> Return value of the chain.
  */
 public class ProcessChain<T> {
 
     private List<ProcessDescription<?, ?>> processes;
     private Executor executorService;
+    private ExceptionHandler exceptionHandler;
+    private Runnable finalRunnable;
 
     public ProcessChain() {
-        this(Executors.newCachedThreadPool(), null);
+        this(ObservableExecutor.getDefaultInstance());
     }
 
     public ProcessChain(Executor executorService) {
-        this(executorService, null);
+        this(executorService, null, null, null);
     }
 
-    private ProcessChain(Executor executorService, List<ProcessDescription<?, ?>> processes) {
+    private ProcessChain(Executor executorService, List<ProcessDescription<?, ?>> processes, ExceptionHandler exceptionHandler, Runnable finalRunnable) {
         this.executorService = executorService;
         this.processes = new ArrayList<>();
         if (processes != null) {
@@ -77,8 +80,12 @@ public class ProcessChain<T> {
     }
 
     public <V> ProcessChain<V> addFunction(Function<T, V> function, ThreadType type) {
-        processes.add(new ProcessDescription<T, V>(function, type));
-        return new ProcessChain<V>(executorService, processes);
+        return addProcessDescription(new ProcessDescription<T, V>(function, type));
+    }
+
+    public <V> ProcessChain<V> addProcessDescription(ProcessDescription<T, V> processDescription) {
+        processes.add(processDescription);
+        return new ProcessChain<V>(executorService, processes, exceptionHandler, finalRunnable);
     }
 
     public <V> ProcessChain<V> addFunctionInPlatformThread(Function<T, V> function) {
@@ -90,10 +97,10 @@ public class ProcessChain<T> {
     }
 
     public ProcessChain<Void> addRunnable(Runnable runnable, ThreadType type) {
-           return addFunction((Function<T, Void>) (e) -> {
-               runnable.run();
-               return null;
-           }, type);
+        return addFunction((Function<T, Void>) (e) -> {
+            runnable.run();
+            return null;
+        }, type);
     }
 
     public ProcessChain<Void> addRunnableInPlatformThread(Runnable runnable) {
@@ -133,18 +140,51 @@ public class ProcessChain<T> {
         }, type);
     }
 
+    public <V> ProcessChain<List<V>> addPublishingTask(Supplier<List<V>> supplier, Consumer<Publisher<V>> consumer) {
+        return addFunction((Function<T, List<V>>) (e) -> {
+            List<V> list = supplier.get();
+            Publisher<V> publisher = p -> {
+                try {
+                    ConcurrentUtils.runAndWait(() -> list.addAll(Arrays.asList(p)));
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+            };
+            consumer.accept(publisher);
+            return list;
+        }, ThreadType.EXECUTOR);
+    }
+
+    public <V> ProcessChain<List<V>> addPublishingTask(List<V> list, Consumer<Publisher<V>> consumer) {
+        return addPublishingTask(() -> list, consumer);
+    }
+
+    public <V> ProcessChain<List<V>> addPublishingTask(Consumer<Publisher<V>> consumer) {
+        return addPublishingTask(() -> FXCollections.<V>observableArrayList(), consumer);
+    }
+
+    public ProcessChain<T> onException(Consumer<Throwable> c) {
+        this.exceptionHandler = new ExceptionHandler();
+        exceptionHandler.exceptionProperty().addListener(e -> c.accept(exceptionHandler.getException()));
+        return this;
+    }
+
+    public ProcessChain<T> onException(ExceptionHandler handler) {
+        this.exceptionHandler = handler;
+        return this;
+    }
+
+    public ProcessChain<T> withFinal(Runnable finalRunnable) {
+        this.finalRunnable = finalRunnable;
+        return this;
+    }
+
     @SuppressWarnings("unchecked")
-    private <U, V> V execute(U inputParameter, ProcessDescription<U, V> processDescription, Executor executorService) throws InterruptedException, ExecutionException {
+    private <U, V> V execute(U inputParameter, ProcessDescription<U, V> processDescription) throws InterruptedException, ExecutionException {
         if (processDescription.getThreadType().equals(ThreadType.EXECUTOR)) {
-            FutureTask<V> task = new FutureTask<V>(() -> {
-                return processDescription.getFunction().apply(inputParameter);
-            });
-            executorService.execute(task);
-            return task.get();
+            return processDescription.getFunction().apply(inputParameter);
         } else {
-            return ConcurrentUtils.runCallableAndWait(() -> {
-                return processDescription.getFunction().apply(inputParameter);
-            });
+            return ConcurrentUtils.runCallableAndWait(() -> processDescription.getFunction().apply(inputParameter));
         }
     }
 
@@ -165,25 +205,36 @@ public class ProcessChain<T> {
 
             @Override
             protected T call() throws Exception {
-                Object lastResult = null;
-                if(count == Integer.MAX_VALUE) {
-                    while(true) {
-                        lastResult = null;
-                        for (ProcessDescription<?, ?> processDescription : processes) {
-                            lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription, executorService);
+                try {
+                    Object lastResult = null;
+                    if (count == Integer.MAX_VALUE) {
+                        while (true) {
+                            lastResult = null;
+                            for (ProcessDescription<?, ?> processDescription : processes) {
+                                lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription);
+                            }
+                            Thread.sleep((long) pauseTime.toMillis());
                         }
-                        Thread.sleep((long) pauseTime.toMillis());
+                    } else {
+                        for (int i = 0; i < count; i++) {
+                            lastResult = null;
+                            for (ProcessDescription<?, ?> processDescription : processes) {
+                                lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription);
+                            }
+                            Thread.sleep((long) pauseTime.toMillis());
+                        }
                     }
-                } else {
-                    for(int i = 0; i < count; i++) {
-                        lastResult = null;
-                        for (ProcessDescription<?, ?> processDescription : processes) {
-                            lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription, executorService);
-                        }
-                        Thread.sleep((long) pauseTime.toMillis());
+                    return (T) lastResult;
+                } catch (Exception e) {
+                    if (exceptionHandler != null) {
+                        ConcurrentUtils.runAndWait(() -> exceptionHandler.setException(e));
+                    }
+                    throw e;
+                } finally {
+                    if (finalRunnable != null) {
+                        ConcurrentUtils.runAndWait(() -> finalRunnable.run());
                     }
                 }
-                return (T) lastResult;
             }
 
         };
@@ -192,19 +243,6 @@ public class ProcessChain<T> {
     }
 
     public Task<T> run() {
-        Task<T> task = new Task<T>() {
-
-            @Override
-            protected T call() throws Exception {
-                Object lastResult = null;
-                for (ProcessDescription<?, ?> processDescription : processes) {
-                    lastResult = execute(lastResult, (ProcessDescription<Object, ?>) processDescription, executorService);
-                }
-                return (T) lastResult;
-            }
-
-        };
-        executorService.execute(task);
-        return task;
+        return repeat(1);
     }
 }

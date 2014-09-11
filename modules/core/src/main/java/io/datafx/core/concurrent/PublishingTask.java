@@ -26,21 +26,23 @@
  */
 package io.datafx.core.concurrent;
 
-import java.util.Arrays;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
+import java.util.Arrays;
+
 /**
  * A PublishingTask is used to obtain a number of values, and store them in an
  * ObservableList. The values that are already available can be obtained
  * using the {@link #getPublishedValues()} call.
+ *
  * @param <T> The type of the values that are obtained.
  */
-public abstract class PublishingTask<T> extends Task<ObservableList<T>> {
-    private final  ObservableList<T> publishedValues;
+public abstract class PublishingTask<T> extends Task<ObservableList<T>> implements Publisher<T> {
+    private final ObservableList<T> publishedValues;
 
     public PublishingTask() {
         this(new SimpleListProperty<T>(FXCollections.<T>observableArrayList()));
@@ -54,7 +56,7 @@ public abstract class PublishingTask<T> extends Task<ObservableList<T>> {
         return publishedValues;
     }
 
-    @Override 
+    @Override
     protected final ObservableList<T> call() throws Exception {
         callTask();
         return publishedValues;
@@ -64,11 +66,7 @@ public abstract class PublishingTask<T> extends Task<ObservableList<T>> {
 
     public void publish(final T... values) {
         if (values != null && values.length > 0) {
-            Platform.runLater(new Runnable() {
-                @Override public void run() {
-                    publishedValues.addAll(Arrays.asList(values));
-                }
-            });
+            Platform.runLater(() -> publishedValues.addAll(Arrays.asList(values)));
         }
     }
 }
