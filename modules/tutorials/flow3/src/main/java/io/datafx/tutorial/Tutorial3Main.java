@@ -1,4 +1,4 @@
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

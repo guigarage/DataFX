@@ -1,4 +1,4 @@
-package org.datafx.tutorial;
+package io.datafx.tutorial;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,10 +18,10 @@ import io.datafx.controller.flow.action.LinkAction;
  * defined title of the view. As you will learn in future tutorial you can easily change the title of a view in code.
  * In addition to the title other metadata like a icon can be defined for a view or flow.
  */
-@FXMLController(value="wizard1.fxml", title = "Wizard: Step 1")
-public class Wizard1Controller extends AbstractWizardController {
+@FXMLController(value="wizard2.fxml", title = "Wizard: Step 2")
+public class Wizard2Controller extends AbstractWizardController {
 
     @FXML
-    @LinkAction(Wizard2Controller.class)
+    @LinkAction(Wizard3Controller.class)
     private Button nextButton;
 }

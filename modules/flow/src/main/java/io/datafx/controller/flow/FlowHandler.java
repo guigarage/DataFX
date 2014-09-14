@@ -40,6 +40,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import io.datafx.controller.FxmlLoadException;
 import io.datafx.controller.ViewConfiguration;
@@ -304,6 +305,8 @@ public class FlowHandler {
     public void attachEventHandler(Node node, String actionId) {
         if (node instanceof ButtonBase) {
             ((ButtonBase) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
+        } else if (node instanceof TextField) {
+            ((TextField) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
         } else {
             node.setOnMouseClicked((e) -> {
                 if (e.getClickCount() > 1) {

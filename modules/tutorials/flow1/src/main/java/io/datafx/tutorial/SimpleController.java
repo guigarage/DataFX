@@ -91,9 +91,11 @@ public class SimpleController {
      */
     @FXML
     private Label resultLabel;
+
     @FXML
     @ActionTrigger("myAction")
     private Button actionButton;
+
     private int clickCount = 0;
 
     @PostConstruct
