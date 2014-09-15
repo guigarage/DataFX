@@ -90,6 +90,10 @@ public class AbstractContext {
         register(value.getClass().toString(), value);
     }
 
+    public <S, T extends S> void register(T value, Class<S> asClass) {
+        register(asClass.toString(), value);
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("AbstractContext{");

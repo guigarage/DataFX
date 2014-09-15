@@ -62,7 +62,6 @@ import java.util.UUID;
 
 public class FlowHandler {
 
-
     private final ObservableList<ViewHistoryDefinition<?>> controllerHistory;
     private ReadOnlyObjectWrapper<FlowView<?>> currentViewWrapper;
     private ReadOnlyObjectWrapper<FlowContainer> containerWrapper;
@@ -192,7 +191,6 @@ public class FlowHandler {
         return currentViewWrapper.getReadOnlyProperty();
     }
 
-
     public ReadOnlyObjectProperty<FlowContainer> getContainerProperty() {
         return containerWrapper.getReadOnlyProperty();
     }
@@ -297,7 +295,6 @@ public class FlowHandler {
         }
     }
 
-
     public void attachAction(MenuItem menuItem, Runnable action) {
         menuItem.setOnAction((e) -> action.run());
     }
@@ -350,5 +347,41 @@ public class FlowHandler {
         } catch (VetoException | FlowException e) {
             getExceptionHandler().setException(e);
         }
+    }
+
+    public <T> void registerInViewContext(T object) {
+        getFlowContext().getCurrentViewContext().register(object);
+    }
+
+    public <T> void registerInViewContext(String key, T object) {
+        getFlowContext().getCurrentViewContext().register(object);
+    }
+
+    public <S, T extends S> void registerInViewContext(Class<S> toRegister, T object) {
+        getFlowContext().getCurrentViewContext().register(object, toRegister);
+    }
+
+    public <T> void registerInFlowContext(T object) {
+        getFlowContext().register(object);
+    }
+
+    public <T> void registerInFlowContext(String key, T object) {
+        getFlowContext().register(object);
+    }
+
+    public <S, T extends S> void registerInFlowContext(Class<S> toRegister, T object) {
+        getFlowContext().register(object, toRegister);
+    }
+
+    public <T> void registerInApplicationContext(T object) {
+        getFlowContext().getApplicationContext().register(object);
+    }
+
+    public <T> void registerInApplicationContext(String key, T object) {
+        getFlowContext().getApplicationContext().register(object);
+    }
+
+    public <S, T extends S> void registerInApplicationContext(Class<S> toRegister, T object) {
+        getFlowContext().getApplicationContext().register(object, toRegister);
     }
 }
