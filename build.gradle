@@ -33,7 +33,14 @@ project(':datasources') {
     }
     dependencies {
         compile project(':core')
-	compile group:'javax.json', name:'javax.json-api', version:'1.0'
+        compile group:'javax.json', name:'javax.json-api', version:'1.0'
+    }
+}
+
+project(':websocket') {
+    dependencies {
+        compile project(':datasources')
+        compile group:'javax.websocket', name:'javax.websocket-client-api', version:'1.0'
     }
 }
 
