@@ -1,4 +1,0 @@
-org.datafx.controller.injection.provider.ApplicationContextProvider
-org.datafx.controller.flow.injection.FlowContextProvider
-org.datafx.controller.injection.provider.SingletonContextProvider
-org.datafx.controller.injection.provider.ViewContextProvider
