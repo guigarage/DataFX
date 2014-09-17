@@ -203,10 +203,12 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                     JsonObject object = (JsonObject) value;
 
                     for (String property : settersMappedByPropertyName.keySet()) {
+                        System.out.println("Evaluate property "+property);
                         if (object.containsKey(property)) {
                             Method setter = settersMappedByPropertyName.get(property);
 
                             JsonValue propertyValue = (JsonValue) object.get(property);
+                            System.out.println("[JVDBG] we have to set the propval to "+propertyValue);
                             Object[] args = new Object[1];
                             switch (propertyValue.getValueType()) {
                                 case NULL:
@@ -248,6 +250,9 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                             case "java.lang.Float":
                                                 args[0] = (float) numberProperty.doubleValue();
                                                 break;
+                                            case "java.lang.String":
+                                            case "javafx.beans.property.StringProperty":
+                                                args[0] = numberProperty.toString();
                                         }
                                     }
                                     break;
