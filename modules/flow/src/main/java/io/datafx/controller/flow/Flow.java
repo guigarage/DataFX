@@ -67,7 +67,7 @@ public class Flow {
      * See {@link io.datafx.controller.FXMLController} for more information
      *
      * @param startViewControllerClass Controller class of the start view
-     * @param viewConfiguration        Configuration for all views of the flow
+     * @param viewConfiguration Configuration for all views of the flow
      * @see io.datafx.controller.FXMLController
      */
     public Flow(Class<?> startViewControllerClass, ViewConfiguration viewConfiguration) {
@@ -79,8 +79,11 @@ public class Flow {
 
     /**
      * Creates a new Flow with the given controller for the start view.
-     * The start view must be a view controller as specified in the DataFX-Controller API.
-     * See {@link io.datafx.controller.FXMLController} for more information
+     * The startViewControllerClass must be a view controller as specified 
+     * in the DataFX-Controller API, which means it must be a class
+     * annotated with {@link io.datafx.controller.FXMLController}.
+     * See {@link io.datafx.controller.FXMLController} for more information.
+     * Using this constructor will create a new {@link ViewConfiguration}. 
      *
      * @param startViewControllerClass Controller class of the start view
      * @see io.datafx.controller.FXMLController
@@ -379,8 +382,8 @@ public class Flow {
     }
 
     /**
-     * Starts the flow directly in a Stage. This method is usefull if an application contains of one main flow. Because
-     * this flow can contain several sub-flows this is the prefered way to create a DataFX based application. The title
+     * Starts the flow directly in a Stage. This method is useful if an application contains of one main flow. Because
+     * this flow can contain several sub-flows this is the preferred way to create a DataFX based application. The title
      * of the Stage will be bound to the title of the flow metadata and will change whenever the flow title fill change.
      * This can happen if a view of the flow defines its own title by using the title attribute of the @FXMLController
      * annotation or the ViewMetadata of an view is changed in code.
