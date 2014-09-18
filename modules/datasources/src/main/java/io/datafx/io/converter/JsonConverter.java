@@ -272,8 +272,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                     List values;
                                     if (parameterType.isAssignableFrom(ObservableList.class)) {
                                         values = FXCollections.observableArrayList();
-                                    }
-                                    else {
+                                    } else {
                                         values = new ArrayList();
                                     }
                                     for (int i = 0; i < arrayProperty.size(); i++) {
@@ -293,8 +292,13 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                                 values.add(stringArrayValue.getString());
                                                 break;
                                             case NUMBER:
-                                                // TODO: find out how to know what type of numbers are contained the list
-                                                throw new UnsupportedOperationException("Arrays of numbers not yet supported.");
+                                                JsonNumber numberArrayValue = (JsonNumber) arrayValue;
+                                                if (numberArrayValue.isIntegral()) {
+                                                    values.add(numberArrayValue.longValue());
+                                                } else {
+                                                    values.add(numberArrayValue.doubleValue());
+                                                }
+                                                break;
                                             default:
                                                 // TODO: implement nested arrays and objects in arrays
                                                 throw new UnsupportedOperationException("Arrays or objects within arrays not yet supported.");
