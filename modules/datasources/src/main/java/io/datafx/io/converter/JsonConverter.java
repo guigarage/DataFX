@@ -49,6 +49,7 @@ import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -187,6 +188,14 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                         String finalName = bareMethodName.substring(0, 1).toLowerCase();
                         if (bareMethodName.length() > 1) {
                             finalName += bareMethodName.substring(1);
+                        }
+
+                        if (getter.isAnnotationPresent(XmlElement.class) || method.isAnnotationPresent(XmlElement.class)) {
+                            XmlElement xmlElement = getter.isAnnotationPresent(XmlElement.class) ? getter.getAnnotation(XmlElement.class) : method.getAnnotation(XmlElement.class);
+                            String annotatedName = xmlElement.name();
+                            if (annotatedName != null && !annotatedName.isEmpty()) {
+                                finalName = annotatedName;
+                            }
                         }
 
                         settersMappedByPropertyName.put(finalName, method);
