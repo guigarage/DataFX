@@ -253,6 +253,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                             case "java.lang.String":
                                             case "javafx.beans.property.StringProperty":
                                                 args[0] = numberProperty.toString();
+                                                break;
                                         }
                                     }
                                     break;
