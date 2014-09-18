@@ -49,6 +49,7 @@ import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonStructure;
 import javax.json.JsonValue;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -189,6 +190,14 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                             finalName += bareMethodName.substring(1);
                         }
 
+                        if (getter.isAnnotationPresent(XmlElement.class) || method.isAnnotationPresent(XmlElement.class)) {
+                            XmlElement xmlElement = getter.isAnnotationPresent(XmlElement.class) ? getter.getAnnotation(XmlElement.class) : method.getAnnotation(XmlElement.class);
+                            String annotatedName = xmlElement.name();
+                            if (annotatedName != null && !annotatedName.isEmpty()) {
+                                finalName = annotatedName;
+                            }
+                        }
+
                         settersMappedByPropertyName.put(finalName, method);
                     }
                 }
@@ -253,6 +262,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                             case "java.lang.String":
                                             case "javafx.beans.property.StringProperty":
                                                 args[0] = numberProperty.toString();
+                                                break;
                                         }
                                     }
                                     break;
@@ -262,8 +272,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                     List values;
                                     if (parameterType.isAssignableFrom(ObservableList.class)) {
                                         values = FXCollections.observableArrayList();
-                                    }
-                                    else {
+                                    } else {
                                         values = new ArrayList();
                                     }
                                     for (int i = 0; i < arrayProperty.size(); i++) {
@@ -283,8 +292,13 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                                 values.add(stringArrayValue.getString());
                                                 break;
                                             case NUMBER:
-                                                // TODO: find out how to know what type of numbers are contained the list
-                                                throw new UnsupportedOperationException("Arrays of numbers not yet supported.");
+                                                JsonNumber numberArrayValue = (JsonNumber) arrayValue;
+                                                if (numberArrayValue.isIntegral()) {
+                                                    values.add(numberArrayValue.longValue());
+                                                } else {
+                                                    values.add(numberArrayValue.doubleValue());
+                                                }
+                                                break;
                                             default:
                                                 // TODO: implement nested arrays and objects in arrays
                                                 throw new UnsupportedOperationException("Arrays or objects within arrays not yet supported.");
