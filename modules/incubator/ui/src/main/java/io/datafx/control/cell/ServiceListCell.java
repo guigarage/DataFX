@@ -97,8 +97,6 @@ public class ServiceListCell<T> extends ListCell<Service<T>> {
                         taskMessageLabel.textProperty().bind(newValue.messageProperty());
                         taskProgress.progressProperty().bind(newValue.progressProperty());
 
-                        newValue.progressProperty().addListener((e) -> System.out.println("Changed: " + newValue.progressProperty().get()));
-
                         if (newValue instanceof DataFxService<?>) {
                             killTaskButton.visibleProperty().bind(((DataFxService<?>) newValue).cancelableProperty());
                         } else {
