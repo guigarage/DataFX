@@ -26,7 +26,6 @@
  */
 package io.datafx.controller;
 
-import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -161,6 +160,8 @@ public class ViewFactory {
             Node viewNode = (Node) loader.load();
             ViewContext<T> context = new ViewContext<>(viewNode,
                     controller, metadata, viewConfiguration, viewContextResources);
+
+            //TODO: Why??? context.getController() can be called...
             context.register(controller);
             context.register("controller", controller);
 
@@ -310,7 +311,7 @@ public class ViewFactory {
         T controller = context.getController();
         Node n = context.getRootNode();
 
-        List<Field> fields = DataFXUtils.getInheritedPrivateFields(controller.getClass());
+        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
         for (Field field : fields) {
             if (field.getAnnotation(FXML.class) != null) {
                 if (DataFXUtils.getPrivileged(field, controller) == null) {

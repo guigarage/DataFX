@@ -1,10 +1,11 @@
-include "core", "datasources", "websocket", "flow", "injection", "validation", "ui", "crud", "featuretoggle", "ejb", "ejb-wildfly", "samples-ejb", "samples", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5"
+include "core", "datasources", "websocket", "flow", "injection", "validation", "messages", "ui", "crud", "featuretoggle", "ejb", "ejb-wildfly", "samples-ejb", "samples", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5"
 project(":core").projectDir = file("modules/core")
 project(":datasources").projectDir = file("modules/datasources")
 project(":websocket").projectDir = file("modules/websocket")
 project(":flow").projectDir = file("modules/flow")
 project(":injection").projectDir = file("modules/injection")
 project(":validation").projectDir = file("modules/incubator/validation")
+project(":messages").projectDir = file("modules/incubator/messages")
 project(":ui").projectDir = file("modules/incubator/ui")
 project(":crud").projectDir = file("modules/incubator/crud")
 project(":featuretoggle").projectDir = file("modules/incubator/featuretoggle")

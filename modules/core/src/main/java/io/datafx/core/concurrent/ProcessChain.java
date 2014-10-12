@@ -29,6 +29,7 @@ package io.datafx.core.concurrent;
 import io.datafx.core.ExceptionHandler;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -177,6 +177,16 @@ public class ProcessChain<T> {
     public ProcessChain<T> withFinal(Runnable finalRunnable) {
         this.finalRunnable = finalRunnable;
         return this;
+    }
+
+    public <V> ProcessChain<V> waitFor(Worker<V> worker) {
+        return addSupplierInExecutor(() -> {
+            try {
+                return ConcurrentUtils.waitFor(worker);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

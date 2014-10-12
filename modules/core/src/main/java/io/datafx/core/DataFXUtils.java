@@ -1,6 +1,8 @@
 package io.datafx.core;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -63,14 +65,14 @@ public class DataFXUtils {
      * @param bean the bean
      * @return the value
      */
-    public static Object getPrivileged(final Field field, final Object bean) {
-        return AccessController.doPrivileged(new PrivilegedAction<Object>() {
+    public static <T> T getPrivileged(final Field field, final Object bean) {
+        return AccessController.doPrivileged(new PrivilegedAction<T>() {
             @Override
-            public Object run() {
+            public T run() {
                 boolean wasAccessible = field.isAccessible();
                 try {
                     field.setAccessible(true);
-                    return field.get(bean);
+                    return (T) field.get(bean);
                 } catch (IllegalArgumentException | IllegalAccessException ex) {
                     throw new IllegalStateException("Cannot access field: "
                             + field, ex);
@@ -81,11 +83,39 @@ public class DataFXUtils {
         });
     }
 
-    public static List<Field> getInheritedPrivateFields(Class<?> type) {
-        List<Field> result = new ArrayList<Field>();
+    public static <T> T callPrivileged(final Method method, final Object bean, Object... args) {
+        return AccessController.doPrivileged(new PrivilegedAction<T>() {
+            @Override
+            public T run() {
+                boolean wasAccessible = method.isAccessible();
+                try {
+                    method.setAccessible(true);
+                    return (T) method.invoke(bean, args);
+                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException ex) {
+                    throw new IllegalStateException("Cannot call Method: "
+                            + method, ex);
+                } finally {
+                    method.setAccessible(wasAccessible);
+                }
+            }
+        });
+    }
+
+    public static List<Field> getInheritedDeclaredFields(Class<?> type) {
+        List<Field> result = new ArrayList<>();
         Class<?> i = type;
         while (i != null && i != Object.class) {
             result.addAll(Arrays.asList(i.getDeclaredFields()));
+            i = i.getSuperclass();
+        }
+        return result;
+    }
+
+    public static List<Method> getInheritedDeclaredMethods(Class<?> type) {
+        List<Method> result = new ArrayList<>();
+        Class<?> i = type;
+        while (i != null && i != Object.class) {
+            result.addAll(Arrays.asList(i.getDeclaredMethods()));
             i = i.getSuperclass();
         }
         return result;

@@ -26,6 +26,9 @@
  */
 package io.datafx.controller.context;
 
+import io.datafx.controller.context.event.ContextDestroyedListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import io.datafx.controller.ViewConfiguration;
 
@@ -100,6 +103,8 @@ public class ViewContext<U> extends AbstractContext {
 
     private ViewMetadata metadata;
 
+    private ObservableList<ContextDestroyedListener<U>> contextDestroyedListeners;
+
     /**
      * Create a new ViewContext for a (view-){@link Node} and a controller.
      * Normally this constructor is used by the {@link io.datafx.controller.ViewFactory} and should
@@ -116,6 +121,7 @@ public class ViewContext<U> extends AbstractContext {
         this.controller = controller;
         this.configuration = configuration;
         this.metadata = metadata;
+        this.contextDestroyedListeners = FXCollections.observableArrayList();
 
         if (resources != null) {
             for (Object resource : resources) {
@@ -177,6 +183,15 @@ public class ViewContext<U> extends AbstractContext {
                 }
             }
         }
+        contextDestroyedListeners.forEach(l -> l.contextDestroyed(this));
+    }
+
+    public void addContextDestroyedListener(ContextDestroyedListener<U> listener) {
+        contextDestroyedListeners.add(listener);
+    }
+
+    public void removeContextDestroyedListener(ContextDestroyedListener<U> listener) {
+        contextDestroyedListeners.remove(listener);
     }
 
     public ViewConfiguration getConfiguration() {
