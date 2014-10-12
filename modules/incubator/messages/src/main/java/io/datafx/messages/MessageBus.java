@@ -92,34 +92,34 @@ public final class MessageBus {
         return sendMessage("", message);
     }
 
-    public void addConsumer(String address, Consumer<Message> consumer, ThreadType type) {
+    public void addReceiver(String address, Consumer<Message> receiver, ThreadType type) {
         if (type.equals(ThreadType.EXECUTOR)) {
             if (!asyncConsumers.containsKey(address)) {
                 asyncConsumers.put(address, FXCollections.observableArrayList());
             }
-            asyncConsumers.get(address).add(consumer);
+            asyncConsumers.get(address).add(receiver);
         } else {
             if (!consumers.containsKey(address)) {
                 consumers.put(address, FXCollections.observableArrayList());
             }
-            consumers.get(address).add(consumer);
+            consumers.get(address).add(receiver);
         }
     }
 
-    public void addGlobalConsumer(Consumer<Message> consumer, ThreadType type) {
-        addConsumer("", consumer, type);
+    public void addGlobalReceiver(Consumer<Message> receiver, ThreadType type) {
+        addReceiver("", receiver, type);
     }
 
-    public void removeConsumer(String address, Consumer<Message> consumer) {
+    public void removeReceiver(String address, Consumer<Message> receiver) {
         if (asyncConsumers.containsKey(address)) {
-            asyncConsumers.get(address).remove(consumer);
+            asyncConsumers.get(address).remove(receiver);
         }
         if (consumers.containsKey(address)) {
-            consumers.get(address).remove(consumer);
+            consumers.get(address).remove(receiver);
         }
     }
 
-    public void removeGlobalConsumer(Consumer<Message> consumer) {
-        removeConsumer("", consumer);
+    public void removeGlobalReceiver(Consumer<Message> receiver) {
+        removeReceiver("", receiver);
     }
 }

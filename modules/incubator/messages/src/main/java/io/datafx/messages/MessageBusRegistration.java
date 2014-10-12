@@ -28,10 +28,12 @@ public class MessageBusRegistration {
                     }
                     String adress = field.getAnnotation(OnMessage.class).value();
                     Consumer<Message> consumer = DataFXUtils.getPrivileged(field, controller);
-                    MessageBus.getInstance().addConsumer(adress, consumer, threadType);
+                    MessageBus.getInstance().addReceiver(adress, consumer, threadType);
                     context.addContextDestroyedListener(c -> {
-                        MessageBus.getInstance().removeConsumer(adress, consumer);
+                        MessageBus.getInstance().removeReceiver(adress, consumer);
                     });
+                } else {
+                    throw new RuntimeException("Field can't be used as message receiver! " + field);
                 }
             }
         });
@@ -54,12 +56,12 @@ public class MessageBusRegistration {
                         consumer = m -> DataFXUtils.callPrivileged(method, controller, m.getContent());
                     }
                 } else {
-                    throw new RuntimeException("Method can't be used as message receiver!");
+                    throw new RuntimeException("Method can't be used as message receiver! " + method);
                 }
-                MessageBus.getInstance().addConsumer(adress, consumer, threadType);
+                MessageBus.getInstance().addReceiver(adress, consumer, threadType);
                 final Consumer<Message> finalConsumer = consumer;
                 context.addContextDestroyedListener(c -> {
-                    MessageBus.getInstance().removeConsumer(adress, finalConsumer);
+                    MessageBus.getInstance().removeReceiver(adress, finalConsumer);
                 });
             }
         });
