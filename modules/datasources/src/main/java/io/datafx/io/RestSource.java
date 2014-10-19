@@ -41,6 +41,12 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import io.datafx.io.converter.InputStreamConverter;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Client class that is used to create a request to an external REST endpoint.
@@ -63,8 +69,8 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     private int timeout = -1;
     private String contentType;
 
-    private int responseCode = -1;
-    private String responseMessage;
+    private IntegerProperty responseCode = new SimpleIntegerProperty(-1);
+    private StringProperty responseMessage = new SimpleStringProperty();
 
     private static final Logger LOGGER = Logger.getLogger(RestSource.class.getName());
 
@@ -239,8 +245,8 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
         // try to get the response code and response message that was returned
         // from the server. when this code is not available, the original
         // IOException will be thrown instead
-        this.responseCode = connection.getResponseCode();
-        this.responseMessage = connection.getResponseMessage();
+        this.responseCode.set(connection.getResponseCode());
+        this.responseMessage.set(connection.getResponseMessage());
 
         return is;
     }
@@ -447,13 +453,31 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     }
 
     /**
-     * Gets the status code from an HTTP response message.
+     * Gets the value of the property responseCode.
      *
+     * @return the value of the property responseCode
+     */
+    public int getResponseCode() {
+        return responseCode.get();
+    }
+
+    /**
+     * Gets the status code from an HTTP response message.
+     * 
      * @return the HTTP Status-Code, or -1
      * @see HttpURLConnection#getResponseCode()
      */
-    public int getResponseCode() {
+    public ReadOnlyIntegerProperty responseCodeProperty() {
         return responseCode;
+    }
+
+    /**
+     * Gets the value of the property responseMessage.
+     *
+     * @return the value of the property responseMessage
+     */
+    public String getResponseMessage() {
+        return responseMessage.get();
     }
 
     /**
@@ -463,7 +487,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
      * @return the HTTP response message, or <code>null</code>
      * @see HttpURLConnection#getResponseMessage()
      */
-    public String getResponseMessage() {
+    public ReadOnlyStringProperty responseMessageProperty() {
         return responseMessage;
     }
 
