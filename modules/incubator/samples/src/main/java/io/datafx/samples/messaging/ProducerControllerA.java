@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
 public class ProducerControllerA {
 
     @FXML
-    @MessageTrigger("chat-message")
+    @MessageTrigger()
     private Button sendButton;
 
     @FXML

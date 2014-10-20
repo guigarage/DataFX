@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 public class ProducerControllerC {
 
     @FXML
-    @MessageTrigger("error-message")
+    @MessageTrigger()
     private Button sendButton;
 
     @FXML

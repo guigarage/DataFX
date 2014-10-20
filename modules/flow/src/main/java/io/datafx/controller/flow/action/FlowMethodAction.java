@@ -28,6 +28,10 @@ package io.datafx.controller.flow.action;
 
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
+import io.datafx.core.concurrent.Async;
+import io.datafx.core.concurrent.ObservableExecutor;
+
+import java.lang.reflect.Method;
 
 /**
  * Implementation of a {@link FlowAction} that calls a method in the current view controller instance.
@@ -38,6 +42,7 @@ public class FlowMethodAction implements FlowAction {
 
     /**
      * Default constructor
+     *
      * @param actionMethodName defines the name of the method that should be called whenever the action is triggered.
      */
     public FlowMethodAction(String actionMethodName) {
@@ -48,9 +53,21 @@ public class FlowMethodAction implements FlowAction {
     public void handle(FlowHandler flowHandler, String actionId) throws FlowException {
         Object controller = flowHandler.getCurrentViewContext().getController();
         try {
-            controller.getClass().getMethod(actionMethodName).invoke(controller);
+            Method method = controller.getClass().getMethod(actionMethodName);
+            if (method.isAnnotationPresent(Async.class)) {
+                ObservableExecutor.getDefaultInstance().execute(() -> {
+                    try {
+                        method.invoke(controller);
+                    } catch (Exception e) {
+                        flowHandler.getExceptionHandler().setException(e);
+                    }
+                });
+            } else {
+                method.invoke(controller);
+            }
         } catch (Exception e) {
             throw new FlowException(e);
         }
+
     }
 }
