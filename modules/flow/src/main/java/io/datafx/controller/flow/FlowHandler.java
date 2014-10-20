@@ -31,6 +31,7 @@ import io.datafx.controller.flow.event.BeforeFlowActionHandler;
 import io.datafx.controller.flow.event.AfterFlowActionEvent;
 import io.datafx.controller.flow.event.BeforeFlowActionEvent;
 import io.datafx.controller.flow.event.VetoableBeforeFlowActionHandler;
+import io.datafx.core.DataFXUtils;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -284,53 +285,27 @@ public class FlowHandler {
     }
 
     public void attachAction(Node node, Runnable action) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> action.run());
-        } else {
-            node.setOnMouseClicked((ev) -> {
-                if (ev.getClickCount() > 1) {
-                    action.run();
-                }
-            });
-        }
+        DataFXUtils.defineNodeAction(node, action);
     }
 
     public void attachAction(MenuItem menuItem, Runnable action) {
-        menuItem.setOnAction((e) -> action.run());
+        DataFXUtils.defineItemAction(menuItem, action);
     }
 
     public void attachEventHandler(Node node, String actionId) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
-        } else if (node instanceof TextField) {
-            ((TextField) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
-        } else {
-            node.setOnMouseClicked((e) -> {
-                if (e.getClickCount() > 1) {
-                    handleActionWithExceptionHandler(actionId);
-                }
-            });
-        }
+        DataFXUtils.defineNodeAction(node, () -> handleActionWithExceptionHandler(actionId));
     }
 
     public void attachBackEventHandler(MenuItem menuItem) {
-        menuItem.setOnAction((e) -> handleBackActionWithExceptionHandler());
+        DataFXUtils.defineItemAction(menuItem, () -> handleBackActionWithExceptionHandler());
     }
 
     public void attachBackEventHandler(Node node) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> handleBackActionWithExceptionHandler());
-        } else {
-            node.setOnMouseClicked((e) -> {
-                if (e.getClickCount() > 1) {
-                    handleBackActionWithExceptionHandler();
-                }
-            });
-        }
+        DataFXUtils.defineNodeAction(node, () -> handleBackActionWithExceptionHandler());
     }
 
     public void attachEventHandler(MenuItem menuItem, String actionId) {
-        menuItem.setOnAction((e) -> handleActionWithExceptionHandler(actionId));
+        DataFXUtils.defineItemAction(menuItem, () -> handleActionWithExceptionHandler(actionId));
     }
 
     private void handleActionWithExceptionHandler(String id) {

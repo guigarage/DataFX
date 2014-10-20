@@ -14,4 +14,6 @@ public @interface MessageProducer {
 
     String value() default "";
 
+    String id() default "";
+
 }

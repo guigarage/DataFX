@@ -26,6 +26,7 @@
  */
 package io.datafx.controller;
 
+import io.datafx.controller.context.event.ContextPostConstructListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -43,6 +44,7 @@ import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * This class contains static methods to create views in the DataFX Container context. 
@@ -158,19 +160,23 @@ public class ViewFactory {
             // 2. load the FXML and make sure the @FXML annotations are injected
             FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
             Node viewNode = (Node) loader.load();
+            injectFXMLNodes(controller, viewNode);
+
+            // 3. create the context
             ViewContext<T> context = new ViewContext<>(viewNode,
                     controller, metadata, viewConfiguration, viewContextResources);
 
-            //TODO: Why??? context.getController() can be called...
-            context.register(controller);
-            context.register("controller", controller);
 
-            injectFXMLNodes(context);
 
-            // 3. Resolve the @Inject points in the Controller and call
+            // 4. Resolve the @Inject points in the Controller and call
             // @PostConstruct
             context.getResolver().injectResources(controller);
 
+            // 5. Call listeners
+            ServiceLoader<ContextPostConstructListener> postConstructLoader = ServiceLoader.load(ContextPostConstructListener.class);
+            postConstructLoader.forEach((l) -> l.postConstruct(context));
+
+            // 6. call PostConstruct methods
             for (final Method method : controller.getClass().getMethods()) {
                 if (method.isAnnotationPresent(PostConstruct.class)) {
                     method.invoke(controller);
@@ -230,7 +236,7 @@ public class ViewFactory {
             }
         }
 
-        FXMLController controllerAnnotation = (FXMLController) controllerClass
+        FXMLController controllerAnnotation = controllerClass
                 .getAnnotation(FXMLController.class);
         if (controllerAnnotation != null) {
             foundFxmlName = controllerAnnotation.value();
@@ -304,19 +310,18 @@ public class ViewFactory {
      * - private fields in a superclass of the controller class
      * - fields that defines a node that is part of a sub-fxml. This is a fxml definition that is included in the fxml
      * file.
-     * @param context The context of the view
+     * @param controller The controller instance
+     * @param root The root Node
      * @param <T> Type of the controller
      */
-    private <T> void injectFXMLNodes(ViewContext<T> context) {
-        T controller = context.getController();
-        Node n = context.getRootNode();
+    private <T> void injectFXMLNodes(T controller, Node root) {
 
         List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
         for (Field field : fields) {
             if (field.getAnnotation(FXML.class) != null) {
                 if (DataFXUtils.getPrivileged(field, controller) == null) {
                     if (Node.class.isAssignableFrom(field.getType())) {
-                        Node toInject = n.lookup("#" + field.getName());
+                        Node toInject = root.lookup("#" + field.getName());
                         if(toInject != null) {
                             DataFXUtils.setPrivileged(field, controller, toInject);
                         }

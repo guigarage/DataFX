@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface MessageTrigger {
 
-    String value() default "";
+    String id() default "";
 }

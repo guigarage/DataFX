@@ -1,5 +1,10 @@
 package io.datafx.core;
 
+import javafx.scene.Node;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -119,5 +124,23 @@ public class DataFXUtils {
             i = i.getSuperclass();
         }
         return result;
+    }
+
+    public static void defineNodeAction(Node node, Runnable action) {
+        if (node instanceof ButtonBase) {
+            ((ButtonBase) node).setOnAction((e) -> action.run());
+        } else if (node instanceof TextField) {
+            ((TextField) node).setOnAction((e) -> action.run());
+        } else {
+            node.setOnMouseClicked((e) -> {
+                if (e.getClickCount() > 1) {
+                    action.run();
+                }
+            });
+        }
+    }
+
+    public static void defineItemAction(MenuItem menuItem, Runnable action) {
+        menuItem.setOnAction((e) -> action.run());
     }
 }
