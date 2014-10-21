@@ -1,4 +1,4 @@
-package io.datafx.samples.messaging;
+package io.datafx.samples.messagebus;
 
 import io.datafx.controller.FXMLController;
 import io.datafx.messages.MessageProducer;
@@ -10,8 +10,8 @@ import javafx.scene.control.TextField;
 /**
  * Created by hendrikebbers on 10.10.14.
  */
-@FXMLController("view.fxml")
-public class ProducerControllerA {
+@FXMLController("producer.fxml")
+public class ProducerController {
 
     @FXML
     @MessageTrigger()
@@ -20,7 +20,7 @@ public class ProducerControllerA {
     @FXML
     private TextField textField;
 
-    @MessageProducer("chat-message")
+    @MessageProducer("test-message")
     private String getMessage() {
         return textField.getText();
     }

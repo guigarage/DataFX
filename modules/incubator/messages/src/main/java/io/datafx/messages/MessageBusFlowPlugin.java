@@ -169,7 +169,7 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
             if (field.isAnnotationPresent(MessageTrigger.class)) {
                 if (Node.class.isAssignableFrom(field.getType()) || MenuItem.class.isAssignableFrom(field.getType())) {
                     String producerId = field.getAnnotation(MessageTrigger.class).id();
-                    List<MessageProducerImpl> messageProducers = findMessageProducer(context, producerId);
+                    List<MessageProducerImpl> messageProducers = findMessageProducer(context.getController(), producerId);
 
                     Runnable action = () -> {
                         for (MessageProducerImpl messageProducer : messageProducers) {

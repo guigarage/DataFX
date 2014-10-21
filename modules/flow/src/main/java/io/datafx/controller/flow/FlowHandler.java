@@ -102,6 +102,10 @@ public class FlowHandler {
         return start(new DefaultFlowContainer());
     }
 
+    public void startInPane(StackPane pane) throws FlowException {
+        start(new DefaultFlowContainer(pane));
+    }
+
     public Tab startInTab() throws FlowException {
         return startInTab(new DefaultFlowContainer());
     }

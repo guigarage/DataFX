@@ -1,4 +1,4 @@
-package io.datafx.samples.messaging;
+package io.datafx.samples.messagebus;
 
 import io.datafx.controller.FXMLController;
 import io.datafx.messages.Message;
@@ -9,13 +9,13 @@ import javafx.scene.control.Label;
 /**
  * Created by hendrikebbers on 10.10.14.
  */
-@FXMLController("view.fxml")
-public class ReceiverControllerA {
+@FXMLController("receiver.fxml")
+public class ReceiverController {
 
     @FXML
     private Label messageLabel;
 
-    @OnMessage("chat-message")
+    @OnMessage("test-message")
     private void onNewChatMessage(Message<String> e) {
         messageLabel.setText(e.getContent());
     }

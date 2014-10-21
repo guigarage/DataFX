@@ -43,6 +43,7 @@ import io.datafx.core.ExceptionHandler;
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -184,7 +185,7 @@ public class ViewFactory {
             }
             return context;
         } catch (Exception e) {
-            throw new FxmlLoadException(e);
+            throw new FxmlLoadException("Can't create controller for class " + controllerClass, e);
         }
     }
 
@@ -211,8 +212,13 @@ public class ViewFactory {
             throw new FxmlLoadException("No FXML File specified!");
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                controllerClass.getResource(foundFxmlName));
+        URL fxmlUrl = controllerClass.getResource(foundFxmlName);
+
+        if(fxmlUrl == null) {
+            throw new FxmlLoadException("Can't find FXML file for controller " + controller.getClass());
+        }
+
+        FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
         fxmlLoader.setBuilderFactory(viewConfiguration.getBuilderFactory());
         fxmlLoader.setCharset(viewConfiguration.getCharset());
         fxmlLoader.setResources(viewConfiguration.getResources());

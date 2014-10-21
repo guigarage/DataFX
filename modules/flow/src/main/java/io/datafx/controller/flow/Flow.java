@@ -424,6 +424,13 @@ public class Flow {
         stage.show();
     }
 
+    public void startInPane(StackPane pane) throws FlowException {
+        FlowHandler handler = createHandler();
+        handler.startInPane(pane);
+    }
+
+
+
     /**
      * Creates a {@link Tab} that contains a running instance of the flow. A {@link DefaultFlowContainer} is used as the flow
      * container.
