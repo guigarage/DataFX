@@ -1,8 +1,8 @@
 package io.datafx.tutorial;
 
+import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.action.LinkAction;
 
 /**
@@ -18,7 +18,7 @@ import io.datafx.controller.flow.action.LinkAction;
  * by the View1Controller class.
  * </p>
  */
-@FXMLController("view2.fxml")
+@ViewController("view2.fxml")
 public class View2Controller {
 
     @FXML

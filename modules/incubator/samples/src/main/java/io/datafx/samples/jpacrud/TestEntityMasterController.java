@@ -1,6 +1,6 @@
 package io.datafx.samples.jpacrud;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.core.concurrent.ConcurrentUtils;
@@ -15,7 +15,7 @@ import javafx.scene.control.TableView;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-@FXMLController(value = "master.fxml", title = "CRUD")
+@ViewController(value = "master.fxml", title = "CRUD")
 public class TestEntityMasterController {
 
     @FXML

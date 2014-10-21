@@ -1,11 +1,11 @@
 package io.datafx.samples.inheritance;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 
 import javax.annotation.PostConstruct;
 
 
-@FXMLController("inheritance.fxml")
+@ViewController("inheritance.fxml")
 public class ControllerImpl extends AbstractController {
 
     @PostConstruct

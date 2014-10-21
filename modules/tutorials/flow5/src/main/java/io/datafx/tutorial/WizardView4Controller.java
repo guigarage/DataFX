@@ -26,14 +26,14 @@
  */
 package io.datafx.tutorial;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 
 /**
  * View controller for a view in the wizard. This class is only needed to define the binding between the class and the
  * fxml file.
  * @see WizardController
- * @see FXMLController
+ * @see io.datafx.controller.ViewController
  */
-@FXMLController("wizardView4.fxml")
+@ViewController("wizardView4.fxml")
 public class WizardView4Controller {
 }

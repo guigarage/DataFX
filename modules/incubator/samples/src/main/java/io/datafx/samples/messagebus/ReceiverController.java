@@ -1,6 +1,6 @@
 package io.datafx.samples.messagebus;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.messages.Message;
 import io.datafx.messages.OnMessage;
 import javafx.fxml.FXML;
@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 /**
  * Created by hendrikebbers on 10.10.14.
  */
-@FXMLController("receiver.fxml")
+@ViewController("receiver.fxml")
 public class ReceiverController {
 
     @FXML

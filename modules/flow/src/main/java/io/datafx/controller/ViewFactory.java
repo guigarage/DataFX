@@ -27,6 +27,7 @@
 package io.datafx.controller;
 
 import io.datafx.controller.context.event.ContextPostConstructListener;
+import io.datafx.controller.util.NullNode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -77,10 +78,10 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. The
      * class needs a default constructor (no parameters) and a
-     * {@link FXMLController} annotation to link to the fxml file. You can skip
+     * {@link ViewController} annotation to link to the fxml file. You can skip
      * the annotation if you want to use the controller API conventions. By
      * doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController} for more
+     * must fit to a naming convention (see {@link ViewController} for more
      * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
      * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
@@ -98,10 +99,10 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. The
      * class needs a default constructor (no parameters) and a
-     * {@link FXMLController} annotation to link to the fxml file. You can skip
+     * {@link ViewController} annotation to link to the fxml file. You can skip
      * the annotation if you want to use the controller API conventions. By
      * doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController} for more
+     * must fit to a naming convention (see {@link ViewController} for more
      * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
      * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
@@ -123,10 +124,10 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. 
      * The class needs a default constructor (no parameters) and 
-     * a {@link FXMLController} annotation to link to the fxml file. 
+     * a {@link ViewController} annotation to link to the fxml file.
      * You can skip the annotation if you want to use the controller API conventions. 
      * By doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController}
+     * must fit to a naming convention (see {@link ViewController}
      * for more information). The method returns a 
      * {@link io.datafx.controller.context.ViewContext}. 
      * This is a wrapper around the view (view-node and controller) and can be 
@@ -149,8 +150,8 @@ public class ViewFactory {
             // 1. Create an instance of the Controller
             final T controller = controllerClass.newInstance();
             ViewMetadata metadata = new ViewMetadata();
-            FXMLController controllerAnnotation = (FXMLController) controllerClass
-                    .getAnnotation(FXMLController.class);
+            ViewController controllerAnnotation = (ViewController) controllerClass
+                    .getAnnotation(ViewController.class);
             if (controllerAnnotation != null && !controllerAnnotation.title().isEmpty()) {
                 metadata.setTitle(controllerAnnotation.title());
             }
@@ -158,9 +159,16 @@ public class ViewFactory {
                 metadata.setGraphic(new ImageView(controllerClass.getResource(controllerAnnotation.iconPath()).toExternalForm()));
             }
 
-            // 2. load the FXML and make sure the @FXML annotations are injected
-            FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
-            Node viewNode = (Node) loader.load();
+
+            // 2. Create the view and make sure the @FXML annotations are injected
+            Node viewNode = null;
+            if(controllerAnnotation != null && controllerAnnotation.root() != null &&  !controllerAnnotation.root().equals(NullNode.class)) {
+                viewNode = controllerAnnotation.root().newInstance();
+                injectNodeIDs(viewNode);
+            } else {
+                FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
+                viewNode = (Node) loader.load();
+            }
             injectFXMLNodes(controller, viewNode);
 
             // 3. create the context
@@ -242,9 +250,9 @@ public class ViewFactory {
             }
         }
 
-        FXMLController controllerAnnotation = controllerClass
-                .getAnnotation(FXMLController.class);
-        if (controllerAnnotation != null) {
+        ViewController controllerAnnotation = controllerClass
+                .getAnnotation(ViewController.class);
+        if (controllerAnnotation != null && !controllerAnnotation.value().isEmpty()) {
             foundFxmlName = controllerAnnotation.value();
         }
         return foundFxmlName;
@@ -334,7 +342,37 @@ public class ViewFactory {
                     }
                 }
             }
+
+            if (field.getAnnotation(ViewNode.class) != null) {
+                String id = field.getName();
+                if(field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
+                    id = field.getAnnotation(ViewNode.class).value();
+                }
+                if (DataFXUtils.getPrivileged(field, controller) == null) {
+                    if (Node.class.isAssignableFrom(field.getType())) {
+                        Node toInject = root.lookup("#" + id);
+                        if(toInject != null) {
+                            DataFXUtils.setPrivileged(field, controller, toInject);
+                        }
+                    }
+                }
+            }
         }
 
+    }
+
+    private void injectNodeIDs(Node node) {
+        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(node.getClass());
+        for (Field field : fields) {
+            if (Node.class.isAssignableFrom(field.getType()) && field.getAnnotation(ViewNode.class) != null) {
+                String id = field.getName();
+                if(field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
+                    id = field.getAnnotation(ViewNode.class).value();
+                }
+
+                Node child = DataFXUtils.getPrivileged(field, node);
+                child.setId(id);
+            }
+        }
     }
 }

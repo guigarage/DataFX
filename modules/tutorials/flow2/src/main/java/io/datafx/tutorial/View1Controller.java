@@ -1,8 +1,8 @@
 package io.datafx.tutorial;
 
+import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.action.LinkAction;
 
 /**
@@ -34,7 +34,7 @@ import io.datafx.controller.flow.action.LinkAction;
  * As you will see later in the tutorials there are several other ways to define a navigation in a flow. Some of these work with an unique ID
  * as shown in tutorial 1.
  */
-@FXMLController("view1.fxml")
+@ViewController("view1.fxml")
 public class View1Controller {
 
     @FXML

@@ -26,10 +26,10 @@
  */
 package io.datafx.tutorial;
 
+import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.action.ActionMethod;
 import io.datafx.controller.flow.action.ActionTrigger;
 
@@ -80,7 +80,7 @@ import javax.annotation.PostConstruct;
  * more readable code.
  * </p>
  */
-@FXMLController("simpleView.fxml")
+@ViewController("simpleView.fxml")
 public class SimpleController {
 
     /**

@@ -26,6 +26,9 @@
  */
 package io.datafx.controller;
 
+import io.datafx.controller.util.NullNode;
+import javafx.scene.Node;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -68,7 +71,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface FXMLController {
+public @interface ViewController {
 
     /**
      * Defines the name of the fxml files that should be used with the annotated
@@ -76,9 +79,12 @@ public @interface FXMLController {
      *
      * @return name of the fxml file
      */
-    String value();
+    String value() default "";
 
     String title() default "";
 
     String iconPath() default "";
+
+    Class<? extends Node> root() default NullNode.class;
 }
+
