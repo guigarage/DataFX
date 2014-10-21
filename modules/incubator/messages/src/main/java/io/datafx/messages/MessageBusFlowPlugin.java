@@ -1,3 +1,29 @@
+/**
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ *     * Neither the name of DataFX, the website javafxdata.org, nor the
+ * names of its contributors may be used to endorse or promote products
+ * derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL DataFX BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package io.datafx.messages;
 
 import io.datafx.controller.context.ViewContext;
@@ -17,10 +43,19 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Created by hendrikebbers on 12.10.14.
+ * A Plugin for the {@link io.datafx.controller.flow.Flow} API that adds support for the following annotations:
+ * {@link io.datafx.messages.MessageProducer}
+ * {@link io.datafx.messages.MessageTrigger}
+ * {@link io.datafx.messages.OnMessage}
+ * This class should not be used by a developer. The class will be loaded by SPI and added automatically as a Plugin.
  */
 public class MessageBusFlowPlugin implements ContextPostConstructListener {
 
+    /**
+     * Register all message consumers in the controller class of the context
+     * @param context the context
+     * @param <T> type of the view controller
+     */
     private <T> void registerMessageConsumer(ViewContext<T> context) {
         T controller = context.getController();
 
@@ -73,6 +108,14 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
         });
     }
 
+    /**
+     * Returns a list of all message producers for the given producer id in the controller. By doing so a button action can trigger
+     * several message producers
+     * @param controller the controller
+     * @param producerId the producer id
+     * @param <T> type of the controller
+     * @return list of all message producers
+     */
     private <T> List<MessageProducerImpl> findMessageProducer(T controller, String producerId) {
         List<MessageProducerImpl> producers = new ArrayList<>();
 
@@ -113,6 +156,11 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
         return producers;
     }
 
+    /**
+     * Register all message producers in the controller class of the context
+     * @param context the context
+     * @param <T> type of the view controller
+     */
     private <T> void registerMessageProducer(ViewContext<T> context) {
         T controller = context.getController();
 
@@ -153,34 +201,70 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
         registerMessageProducer(context);
     }
 
+    /**
+     * Helper class that defines all properties of a message producer
+     */
     private class MessageProducerImpl {
 
+        /**
+         * the thread type of the producer
+         */
         private ThreadType threadType;
 
+        /**
+         * the message adress
+         */
         private String adress;
 
+        /**
+         * the message supplier
+         */
         private Supplier contentSupplier;
 
+        /**
+         * Setter for the threadType
+         * @param threadType the threadType
+         */
         public void setThreadType(ThreadType threadType) {
             this.threadType = threadType;
         }
 
+        /**
+         * Setter for the adress
+         * @param adress the adress
+         */
         public void setAdress(String adress) {
             this.adress = adress;
         }
 
+        /**
+         * Setter for the supplier
+         * @param contentSupplier the supplier
+         */
         public void setContentSupplier(Supplier contentSupplier) {
             this.contentSupplier = contentSupplier;
         }
 
+        /**
+         * Getter for the thread type
+         * @return the thread type
+         */
         public ThreadType getThreadType() {
             return threadType;
         }
 
+        /**
+         * Getter for the adress
+         * @return the adress
+         */
         public String getAdress() {
             return adress;
         }
 
+        /**
+         * Getter for the supplier
+         * @return the supplier
+         */
         public Supplier getContentSupplier() {
             return contentSupplier;
         }

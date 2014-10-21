@@ -46,6 +46,19 @@ import java.util.function.Supplier;
  * All processes will be running in a queue and the result of a process will be
  * used as the input parameter for the next process.
  *
+ * Here is a common usecase for the chain:
+ * <tt>
+ * ProcessChain.create().
+ * addRunnableInPlatformThread(() -> blockUI()).
+ * addSupplierInExecutor(() -> loadFromServer()).
+ * addConsumerInPlatformThread(d -> updateUI(d)).
+ * onException(e -> handleException(e)).
+ * withFinal(() -> unblockUI()).
+ * run();
+ *</tt>
+ * In this example the {@link io.datafx.core.concurrent.ProcessChain} is used to wrap a background task
+ * in some UI related tasks. By doing so, the UI can be blocked while the background action is running or
+ * a loading animation can be shown on screen.
  * @param <T> Return value of the chain.
  */
 public class ProcessChain<T> {
