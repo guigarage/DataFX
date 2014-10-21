@@ -32,7 +32,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by hendrikebbers on 10.10.14.
+ * This annotation can be used to define message receivers. A method that is marked with this annotation will be called
+ * whenever the {@link io.datafx.messages.MessageBus} sends a message for the given adress ({@link #value()} of the annotation).
+ * The methods needs a parameter of the message content type, otherwise a {@link java.lang.RuntimeException} will thrown
+ * in the {@link io.datafx.messages.MessageBus} (this don't stop the transmission to other receivers of the message).
+ * In addition to an message a {@link java.util.function.Consumer} field can be annotated with {@link io.datafx.messages.OnMessage}.
+ * The consumer will be called whenever the message bus transmits a new message.
+ * Normally the method / consumer will be called on the JavaFX Application Thread. If the message should be received on
+ * a background thread the {@link io.datafx.core.concurrent.Async} annotation should be used in combination with
+ * the {@link io.datafx.messages.OnMessage} annotation. In this case the message bus will call the method / consumer
+ * on a background thread.
+ *
+ * The annotation will automatically work in all view controls that are managed by the DataFX {@link io.datafx.controller.flow.Flow} API
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})

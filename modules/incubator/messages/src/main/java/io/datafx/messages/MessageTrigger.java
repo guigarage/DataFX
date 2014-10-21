@@ -32,11 +32,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by hendrikebbers on 10.10.14.
+ * A annotation that can used to define a UI component that should trigger a message transmission.
+ * Any class that extends Node can be used in this case. If the class supports action events a message will be send
+ * once an action event is fired. Otherwise the message will be send if a doubleclick event was sent.
+ *
+ * The {@link io.datafx.messages.MessageTrigger} annotation
+ * should be used in combination with the {@link io.datafx.messages.MessageProducer} annotation to trigger
+ * the transmission of the supplied message. Once the transmission is triggered the annotated method / supplier
+ * will be called and the return value will be send. Normally the message will be send on the JavaFX Application
+ * Thread. If the message should be send on a background thread the {@link io.datafx.core.concurrent.Async} annotation
+ * should be used in combination with the {@link io.datafx.messages.MessageProducer} annotation. In this case
+ * the producer (annotated method or supplier) will be called on a background thread. All messages will be send
+ * by the {@link io.datafx.messages.MessageBus}.
+ *
+ * The annotation will automatically work in all view controls that are managed by the DataFX {@link io.datafx.controller.flow.Flow} API
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface MessageTrigger {
 
+    /**
+     * Defines the producer id. This is used to bind a {@link io.datafx.messages.MessageProducer} to a
+     * {@link io.datafx.messages.MessageTrigger} in the same controller. Both annotations must define the
+     * same id. If there is only one producer and trigger in a class a specific id is not required because
+     * the default value "" can be used in this case.
+     * @return the adress
+     */
     String id() default "";
 }

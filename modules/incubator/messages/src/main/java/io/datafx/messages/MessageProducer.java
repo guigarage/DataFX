@@ -41,6 +41,8 @@ import java.lang.annotation.Target;
  * should be used in combination with the {@link io.datafx.messages.MessageProducer} annotation. In this case
  * the producer (annotated method or supplier) will be called on a background thread. All messages will be send
  * by the {@link io.datafx.messages.MessageBus}.
+ *
+ * The annotation will automatically work in all view controls that are managed by the DataFX {@link io.datafx.controller.flow.Flow} API
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
@@ -55,7 +57,7 @@ public @interface MessageProducer {
     /**
      * Defines the producer id. This is used to bind a {@link io.datafx.messages.MessageProducer} to a
      * {@link io.datafx.messages.MessageTrigger} in the same controller. Both annotations must define the
-     * same id. If there is only one producer and trigger in a class a specific id is not requiered because
+     * same id. If there is only one producer and trigger in a class a specific id is not required because
      * the default value "" can be used in this case.
      * @return the adress
      */
