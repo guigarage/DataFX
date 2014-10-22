@@ -120,7 +120,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
     }
 
     @Override
-    public T get() {
+    public T get() throws IOException {
         return converter.get();
     }
 

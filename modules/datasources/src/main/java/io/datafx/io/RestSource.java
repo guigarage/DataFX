@@ -41,6 +41,12 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import io.datafx.io.converter.InputStreamConverter;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Client class that is used to create a request to an external REST endpoint.
@@ -62,6 +68,9 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     private String requestMethod = "GET";
     private int timeout = -1;
     private String contentType;
+
+    private IntegerProperty responseCode = new SimpleIntegerProperty(-1);
+    private StringProperty responseMessage = new SimpleStringProperty();
 
     private static final Logger LOGGER = Logger.getLogger(RestSource.class.getName());
 
@@ -110,21 +119,17 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
         }
     }
 
-    protected synchronized void createRequest() {
-        try {
-            if (requestMade) {
-                return;
-            }
-            setInputStream(createInputStream());
-            requestMade = true;
-        } catch (IOException ex) {
-            Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
+    protected synchronized void createRequest() throws IOException {
+        if (requestMade) {
+            return;
         }
+        setInputStream(createInputStream());
+        requestMade = true;
     }
 
     @Override
-    public T get() {
-        LOGGER.fine("[datafx] restsource will get a value, requestMade = " + requestMade);
+    public T get() throws IOException {
+        LOGGER.log(Level.FINE, "[datafx] restsource will get a value, requestMade = {0}", requestMade);
         if (!requestMade) {
             createRequest();
         }
@@ -138,14 +143,22 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     @Override
     public boolean next() {
         if (!requestMade) {
-            createRequest();
+            try {
+                createRequest();
+            } catch (IOException ex) {
+                LOGGER.log(Level.SEVERE, null, ex);
+            }
         }
         return super.next();
     }
 
     /**
-     * Create the inputstream for this request. This method does all the
-     * required initialization, and passes the appropriate parameters.
+     * Create the InputStream for this request. This method does all the
+     * required initialization, and passes the appropriate parameters. When the
+     * server responds with an HTTP error code, the returned InputStream will be
+     * the {@link HttpURLConnection#getErrorStream() errorStream of the URL
+     * connection} instead and no IOException will be thrown. This allows the
+     * coupled Converter to continue parsing the response from the server.
      *
      * @return the created {@link java.io.InputStream}
      * @throws IOException in case the InputStream cannot be created
@@ -153,80 +166,89 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
      */
     public InputStream createInputStream() throws IOException {
         String urlBase = host + path;
-        try {
 
-            String request = urlBase;
-            String queryString = createQueryString();
-            if (queryString != null) {
-                request = request + "?" + queryString;
-            }
-            URL url = new URL(request);
+        String request = urlBase;
+        String queryString = createQueryString();
+        if (queryString != null) {
+            request = request + "?" + queryString;
+        }
+        URL url = new URL(request);
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if (getConsumerKey() != null) {
-                try {
-                    MultiValuedMap allParams = new MultiValuedMap();
-                    allParams.putMap(getQueryParams());
-                    allParams.putAll(getFormParams());
-                    String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
-                    connection.addRequestProperty("Authorization", header);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        if (getConsumerKey() != null) {
+            try {
+                MultiValuedMap allParams = new MultiValuedMap();
+                allParams.putMap(getQueryParams());
+                allParams.putAll(getFormParams());
+                String header = OAuth.getHeader(getRequestMethod(), urlBase, allParams, getConsumerKey(), getConsumerSecret());
+                connection.addRequestProperty("Authorization", header);
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (GeneralSecurityException ex) {
                     Logger.getLogger(RestSource.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
-            if (getRequestMethod() != null) {
-                connection.setRequestMethod(getRequestMethod());
-            }
-            if (timeout > -1) {
-                connection.setReadTimeout(timeout);
-                connection.setConnectTimeout(timeout);
-            }
-            if (getQueryParams() != null) {
-                for (Map.Entry<String, String> requestProperty : getQueryParams().entrySet()) {
-                    connection.addRequestProperty(requestProperty.getKey(), requestProperty.getValue());
-                }
-            }
-            if ((getFormParams() != null) && (getFormParams().size() > 0)) {
-                if (dataString == null) {
-                    dataString = "";
-                }
-                boolean first = true;
-                for (Map.Entry<String, List<String>> entryList : getFormParams().entrySet()) {
-                    String key = entryList.getKey();
-                    for (String val : entryList.getValue()) {
-                        if (val == null) {
-                            throw new IllegalArgumentException("Values in form parameters can't be null -- was null for key " + key);
-                        }
-                        if (!first) {
-                            dataString = dataString + "&";
-                        } else {
-                            first = false;
-                        }
-                        String eval = URLEncoder.encode(val, "UTF-8");
-                        dataString = dataString + key + "=" + eval;
-                    }
-                }
-
-            }
-            if (getDataString() != null) {
-                connection.setDoOutput(true);
-                if (contentType == null) {
-                    contentType = "application/x-www-form-urlencoded";
-                }
-                connection.setRequestProperty("Content-Type", contentType);
-                try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream())) {
-                    outputStreamWriter.write(getDataString());
-                }
-            }
-
-            InputStream is = connection.getInputStream();
-            return is;
-        } catch (Exception ex) {
-            LOGGER.severe("Can't initialize data");
-            throw new IOException("Can't read data from " + urlBase, ex);
         }
+        if (getRequestMethod() != null) {
+            connection.setRequestMethod(getRequestMethod());
+        }
+        if (timeout > -1) {
+            connection.setReadTimeout(timeout);
+            connection.setConnectTimeout(timeout);
+        }
+        if (getQueryParams() != null) {
+            for (Map.Entry<String, String> requestProperty : getQueryParams().entrySet()) {
+                connection.addRequestProperty(requestProperty.getKey(), requestProperty.getValue());
+            }
+        }
+        if ((getFormParams() != null) && (getFormParams().size() > 0)) {
+            if (dataString == null) {
+                dataString = "";
+            }
+            boolean first = true;
+            for (Map.Entry<String, List<String>> entryList : getFormParams().entrySet()) {
+                String key = entryList.getKey();
+                for (String val : entryList.getValue()) {
+                    if (val == null) {
+                        throw new IllegalArgumentException("Values in form parameters can't be null -- was null for key " + key);
+                    }
+                    if (!first) {
+                        dataString = dataString + "&";
+                    } else {
+                        first = false;
+                    }
+                    String eval = URLEncoder.encode(val, "UTF-8");
+                    dataString = dataString + key + "=" + eval;
+                }
+            }
+
+        }
+        if (getDataString() != null) {
+            connection.setDoOutput(true);
+            if (contentType == null) {
+                contentType = "application/x-www-form-urlencoded";
+            }
+            connection.setRequestProperty("Content-Type", contentType);
+            try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream())) {
+                outputStreamWriter.write(getDataString());
+            }
+        }
+
+        // catch the IOException when getting the InputStream and use the
+        // errorStream from the HttpUrlConnection as the InputStream to return
+        InputStream is;
+        try {
+            is = connection.getInputStream();
+        } catch (IOException ex) {
+            is = connection.getErrorStream();
+        }
+
+        // try to get the response code and response message that was returned
+        // from the server. when this code is not available, the original
+        // IOException will be thrown instead
+        this.responseCode.set(connection.getResponseCode());
+        this.responseMessage.set(connection.getResponseMessage());
+
+        return is;
     }
 
     /**
@@ -428,6 +450,45 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    /**
+     * Gets the value of the property responseCode.
+     *
+     * @return the value of the property responseCode
+     */
+    public int getResponseCode() {
+        return responseCode.get();
+    }
+
+    /**
+     * Gets the status code from an HTTP response message.
+     * 
+     * @return the HTTP Status-Code, or -1
+     * @see HttpURLConnection#getResponseCode()
+     */
+    public ReadOnlyIntegerProperty responseCodeProperty() {
+        return responseCode;
+    }
+
+    /**
+     * Gets the value of the property responseMessage.
+     *
+     * @return the value of the property responseMessage
+     */
+    public String getResponseMessage() {
+        return responseMessage.get();
+    }
+
+    /**
+     * Gets the HTTP response message, if any, returned along with the response
+     * code from a server.
+     *
+     * @return the HTTP response message, or <code>null</code>
+     * @see HttpURLConnection#getResponseMessage()
+     */
+    public ReadOnlyStringProperty responseMessageProperty() {
+        return responseMessage;
     }
 
 }
