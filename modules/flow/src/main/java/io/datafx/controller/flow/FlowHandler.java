@@ -31,6 +31,7 @@ import io.datafx.controller.flow.event.BeforeFlowActionHandler;
 import io.datafx.controller.flow.event.AfterFlowActionEvent;
 import io.datafx.controller.flow.event.BeforeFlowActionEvent;
 import io.datafx.controller.flow.event.VetoableBeforeFlowActionHandler;
+import io.datafx.controller.util.ActionUtil;
 import io.datafx.core.DataFXUtils;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -289,27 +290,27 @@ public class FlowHandler {
     }
 
     public void attachAction(Node node, Runnable action) {
-        DataFXUtils.defineNodeAction(node, action);
+        ActionUtil.defineNodeAction(node, action);
     }
 
     public void attachAction(MenuItem menuItem, Runnable action) {
-        DataFXUtils.defineItemAction(menuItem, action);
+        ActionUtil.defineItemAction(menuItem, action);
     }
 
     public void attachEventHandler(Node node, String actionId) {
-        DataFXUtils.defineNodeAction(node, () -> handleActionWithExceptionHandler(actionId));
+        ActionUtil.defineNodeAction(node, () -> handleActionWithExceptionHandler(actionId));
     }
 
     public void attachBackEventHandler(MenuItem menuItem) {
-        DataFXUtils.defineItemAction(menuItem, () -> handleBackActionWithExceptionHandler());
+        ActionUtil.defineItemAction(menuItem, () -> handleBackActionWithExceptionHandler());
     }
 
     public void attachBackEventHandler(Node node) {
-        DataFXUtils.defineNodeAction(node, () -> handleBackActionWithExceptionHandler());
+        ActionUtil.defineNodeAction(node, () -> handleBackActionWithExceptionHandler());
     }
 
     public void attachEventHandler(MenuItem menuItem, String actionId) {
-        DataFXUtils.defineItemAction(menuItem, () -> handleActionWithExceptionHandler(actionId));
+        ActionUtil.defineItemAction(menuItem, () -> handleActionWithExceptionHandler(actionId));
     }
 
     private void handleActionWithExceptionHandler(String id) {

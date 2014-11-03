@@ -183,7 +183,9 @@ public class ViewContext<U> extends AbstractContext {
                 }
             }
         }
-        contextDestroyedListeners.forEach(l -> l.contextDestroyed(this));
+        for(ContextDestroyedListener<U> listener : contextDestroyedListeners) {
+            listener.contextDestroyed(this);
+        }
     }
 
     public void addContextDestroyedListener(ContextDestroyedListener<U> listener) {

@@ -57,6 +57,9 @@ public class ConcurrentUtils {
 
     /**
      * Runs the given <tt>Runnable</tt> on the JavaFX Application Thread. The method blocks until the <tt>Runnable</tt> is executed completely.
+     * You should use the {@link io.datafx.core.concurrent.ProcessChain} for concurrent tasks and background tasks
+     * instead of using this low level API.
+     *
      *
      * @param runnable the runnable that will be executed on the JavaFX Application Thread
      * @throws InterruptedException if the JavaFX Application Thread was interrupted while waiting
@@ -71,6 +74,8 @@ public class ConcurrentUtils {
 
     /**
      * Runs the given <tt>Callable</tt> on the JavaFX Application Thread. The method blocks until the <tt>Callable</tt> is executed completely. The return value of the call() method of the callable will be returned
+     * You should use the {@link io.datafx.core.concurrent.ProcessChain} for concurrent tasks and background tasks
+     * instead of using this low level API.
      *
      * @param callable the callable that will be executed on the JavaFX Application Thread
      * @param <T>      return type of the callable
@@ -118,6 +123,13 @@ public class ConcurrentUtils {
         return worker.stateProperty().isEqualTo(Worker.State.CANCELLED).or(worker.stateProperty().isEqualTo(Worker.State.FAILED).or(worker.stateProperty().isEqualTo(Worker.State.SUCCEEDED)));
     }
 
+    /**
+     * The given consumer will be called once the worker is finished. The result of the worker
+     * will be passed to the consumer.
+     * @param worker the worker
+     * @param consumer the consumer
+     * @param <T> the resukt type of the worker
+     */
     public static <T> void then(Worker<T> worker, Consumer<T> consumer) {
         ReadOnlyBooleanProperty doneProperty = createIsDoneProperty(worker);
         ChangeListener<Boolean> listener = (o, oldValue, newValue) -> {
@@ -128,6 +140,12 @@ public class ConcurrentUtils {
         doneProperty.addListener(listener);
     }
 
+    /**
+     * Returns a property that defines the state of the given worker. Once the worker is done the value of the
+     * property will be set to true
+     * @param worker the worker
+     * @return the property
+     */
     public static ReadOnlyBooleanProperty createIsDoneProperty(Worker<?> worker) {
         final BooleanProperty property = new SimpleBooleanProperty();
         Consumer<Worker.State> stateChecker = (s) -> {
@@ -143,6 +161,15 @@ public class ConcurrentUtils {
 
     }
 
+    /**
+     * This methods blocks until the worker is done and returns the result value of the worker.
+     * If the worker was canceled an exception will be thrown.
+     *
+     * @param worker The worker
+     * @param <T> result type of the worker
+     * @return the result
+     * @throws InterruptedException if the worker was canceled
+     */
     public static <T> T waitFor(Worker<T> worker) throws InterruptedException {
         Lock lock = new ReentrantLock();
         Condition condition = lock.newCondition();

@@ -125,22 +125,4 @@ public class DataFXUtils {
         }
         return result;
     }
-
-    public static void defineNodeAction(Node node, Runnable action) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> action.run());
-        } else if (node instanceof TextField) {
-            ((TextField) node).setOnAction((e) -> action.run());
-        } else {
-            node.setOnMouseClicked((e) -> {
-                if (e.getClickCount() > 1) {
-                    action.run();
-                }
-            });
-        }
-    }
-
-    public static void defineItemAction(MenuItem menuItem, Runnable action) {
-        menuItem.setOnAction((e) -> action.run());
-    }
 }

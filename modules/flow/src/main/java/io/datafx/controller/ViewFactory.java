@@ -183,7 +183,9 @@ public class ViewFactory {
 
             // 5. Call listeners
             ServiceLoader<ContextPostConstructListener> postConstructLoader = ServiceLoader.load(ContextPostConstructListener.class);
-            postConstructLoader.forEach((l) -> l.postConstruct(context));
+            for(ContextPostConstructListener listener : postConstructLoader) {
+                listener.postConstruct(context);
+            }
 
             // 6. call PostConstruct methods
             for (final Method method : controller.getClass().getMethods()) {

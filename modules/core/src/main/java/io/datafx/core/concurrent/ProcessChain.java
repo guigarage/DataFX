@@ -57,7 +57,7 @@ import java.util.function.Supplier;
  * run();
  *</tt>
  * In this example the {@link io.datafx.core.concurrent.ProcessChain} is used to wrap a background task
- * in some UI related tasks. By doing so, the UI can be blocked while the background action is running or
+ * in some UI related tasks. By doing so, actions on the UI can be prohibited while the background action is running or
  * a loading animation can be shown on screen.
  * @param <T> Return value of the chain.
  */
