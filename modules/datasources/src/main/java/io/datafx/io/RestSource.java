@@ -41,6 +41,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import io.datafx.io.converter.InputStreamConverter;
+import java.io.PushbackInputStream;
+import java.util.zip.GZIPInputStream;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -235,11 +237,21 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
 
         // catch the IOException when getting the InputStream and use the
         // errorStream from the HttpUrlConnection as the InputStream to return
-        InputStream is;
+        InputStream answer;
         try {
-            is = connection.getInputStream();
+            InputStream is = connection.getInputStream();
+            PushbackInputStream pb = new PushbackInputStream(is, 2);
+            byte[] hdr = new byte[2];
+            pb.read(hdr);
+            pb.unread(hdr);
+            if (hdr[0] == (byte)0x1f && hdr[1] == (byte)0x8b) {
+                answer = new GZIPInputStream(pb);
+            }
+            else {
+                answer = is;
+            }
         } catch (IOException ex) {
-            is = connection.getErrorStream();
+            answer = connection.getErrorStream();
         }
 
         // try to get the response code and response message that was returned
@@ -248,7 +260,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
         this.responseCode.set(connection.getResponseCode());
         this.responseMessage.set(connection.getResponseMessage());
 
-        return is;
+        return answer;
     }
 
     /**

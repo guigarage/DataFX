@@ -105,6 +105,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
      */
     public void setInputStream(InputStream is) throws IOException {
         this.is = is;
+        System.out.println("set IS to "+is);
         if (converter != null) {
             converter.initialize(is);
         }
