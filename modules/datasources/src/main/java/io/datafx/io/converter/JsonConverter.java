@@ -306,7 +306,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                 case OBJECT:
                                     Parameter[] p = setter.getParameters();
                                     if (p.length != 1) {
-                                        System.out.println("ERROR, we expect a single parameter when setting an object but we got " + p.length);
+                                        LOGGER.info("We expect a single parameter when setting an object but we got " + p.length);
                                     } else {
                                         Class subClazz = p[0].getType();
                                         ObjectMapper mapper;
