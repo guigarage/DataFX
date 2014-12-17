@@ -26,10 +26,12 @@
  */
 package io.datafx.io.converter;
 
+import io.datafx.io.converter.JsonConverter.ObjectMapper;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -99,9 +101,6 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
     public void initialize(InputStream input) {
         JsonReader reader = Json.createReader(input);
         rootNode = reader.read();
-
-        System.out.println("rootNode.toString() = " + rootNode.toString());
-
         if (rootNode.getValueType() == JsonValue.ValueType.ARRAY) {
             JsonArray rootNodeArray = (JsonArray) rootNode;
             iterator = rootNodeArray.iterator();
@@ -121,7 +120,6 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
     public T get() { 
         T item;
         LOGGER.log(Level.FINER, "getting json data, tag = {0}", tag);
-
         // if no tag is specified, we assume it is a single item
         if (tag == null) {
             item = objectMapper.readValue(rootNode);
@@ -143,14 +141,15 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
         }
     }
 
-    class ObjectMapper<T> {
+    static class ObjectMapper<T> {
 
         private final Class<T> clazz;
         private final Map<String, Method> settersMappedByPropertyName = new HashMap<>();
+        private final static Map<Class, ObjectMapper> objectMappers = new HashMap<>();
 
         public ObjectMapper(Class<T> clazz) {
             this.clazz = clazz;
-
+            objectMappers.put(clazz, this);
             resolveProperties();
         }
 
@@ -212,12 +211,10 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                     JsonObject object = (JsonObject) value;
 
                     for (String property : settersMappedByPropertyName.keySet()) {
-                        System.out.println("Evaluate property "+property);
                         if (object.containsKey(property)) {
                             Method setter = settersMappedByPropertyName.get(property);
 
                             JsonValue propertyValue = (JsonValue) object.get(property);
-                            System.out.println("[JVDBG] we have to set the propval to "+propertyValue);
                             Object[] args = new Object[1];
                             switch (propertyValue.getValueType()) {
                                 case NULL:
@@ -307,8 +304,19 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                     args[0] = values;
                                     break;
                                 case OBJECT:
-                                    // TODO: implement nested objects
-                                    throw new UnsupportedOperationException("Nested Json Objects not yet supported.");
+                                    Parameter[] p = setter.getParameters();
+                                    if (p.length != 1) {
+                                        System.out.println("ERROR, we expect a single parameter when setting an object but we got " + p.length);
+                                    } else {
+                                        Class subClazz = p[0].getType();
+                                        ObjectMapper mapper;
+                                        if (objectMappers.containsKey(subClazz)) {
+                                            mapper = objectMappers.get(subClazz);
+                                        } else {
+                                            mapper = new ObjectMapper(subClazz);
+                                        }
+                                        args[0] = mapper.readValue(propertyValue);
+                                    }
                             }
 
                             try {
