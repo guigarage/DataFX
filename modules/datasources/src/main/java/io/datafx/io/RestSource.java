@@ -250,7 +250,7 @@ System.out.println ("[JVDBG] do we have a GZIP is?");
 System.out.println ("[JVDBG] yes");
             }
             else {
-                answer = is;
+                answer = pb;
 System.out.println ("[JVDBG] no");
             }
         } catch (IOException ex) {
