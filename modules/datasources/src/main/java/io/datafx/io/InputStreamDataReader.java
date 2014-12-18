@@ -104,6 +104,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
      * @throws  IOException in case initialization of the InputStream fails. 
      */
     public void setInputStream(InputStream is) throws IOException {
+System.out.println ("[JVDBG] SET INPUTSTREAM TO "+is);
         this.is = is;
         if (converter != null) {
             converter.initialize(is);
