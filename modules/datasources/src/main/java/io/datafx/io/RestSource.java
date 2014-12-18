@@ -244,18 +244,13 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
             byte[] hdr = new byte[2];
             pb.read(hdr);
             pb.unread(hdr);
-System.out.println ("[JVDBG] do we have a GZIP is?");
             if (hdr[0] == (byte)0x1f && hdr[1] == (byte)0x8b) {
                 answer = new GZIPInputStream(pb);
-System.out.println ("[JVDBG] yes");
             }
             else {
                 answer = pb;
-System.out.println ("[JVDBG] no");
             }
         } catch (IOException ex) {
-System.out.println ("[JVDBG] Whoops....");
-ex.printStackTrace();
             answer = connection.getErrorStream();
         }
 
