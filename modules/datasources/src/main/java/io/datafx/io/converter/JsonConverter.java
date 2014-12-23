@@ -28,7 +28,6 @@ package io.datafx.io.converter;
 
 import io.datafx.io.converter.JsonConverter.ObjectMapper;
 import java.io.InputStream;
-import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -305,11 +304,12 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                     args[0] = values;
                                     break;
                                 case OBJECT:
-                                    Parameter[] p = setter.getParameters();
+                                    Class[] p =setter.getParameterTypes();
+                                   // Parameter[] p = setter.getParameters();
                                     if (p.length != 1) {
                                         LOGGER.info("We expect a single parameter when setting an object but we got " + p.length);
                                     } else {
-                                        Class subClazz = p[0].getType();
+                                        Class subClazz = p[0];
                                         ObjectMapper mapper;
                                         if (objectMappers.containsKey(subClazz)) {
                                             mapper = objectMappers.get(subClazz);
