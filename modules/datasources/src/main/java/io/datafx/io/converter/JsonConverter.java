@@ -304,11 +304,12 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                     args[0] = values;
                                     break;
                                 case OBJECT:
-                                    Parameter[] p = setter.getParameters();
+                                    Class[] p =setter.getParameterTypes();
+                                   // Parameter[] p = setter.getParameters();
                                     if (p.length != 1) {
                                         LOGGER.info("We expect a single parameter when setting an object but we got " + p.length);
                                     } else {
-                                        Class subClazz = p[0].getType();
+                                        Class subClazz = p[0];
                                         ObjectMapper mapper;
                                         if (objectMappers.containsKey(subClazz)) {
                                             mapper = objectMappers.get(subClazz);

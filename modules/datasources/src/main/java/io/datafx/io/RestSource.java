@@ -248,7 +248,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
                 answer = new GZIPInputStream(pb);
             }
             else {
-                answer = is;
+                answer = pb;
             }
         } catch (IOException ex) {
             answer = connection.getErrorStream();

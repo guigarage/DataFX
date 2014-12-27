@@ -1,6 +1,16 @@
 Properties commons = new Properties()
 commons.load(new FileInputStream("$rootDir/datafx-build.properties"))
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+
+
 allprojects {
     def pluginLoc = project.rootDir.path+"/mavenPublish.gradle"
     apply plugin: 'java'
@@ -25,9 +35,28 @@ allprojects {
         archives sourceJar
         archives javadocJar
     }
+    repositories {
+        jcenter()
+    }
+}
+
+project(':core') {
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+    repositories {
+        mavenCentral()
+    }
+    apply plugin: 'me.tatarka.retrolambda'
 }
 
 project(':datasources') {
+    apply plugin: 'me.tatarka.retrolambda'
     repositories {
         mavenCentral()
     }
