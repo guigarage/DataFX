@@ -95,10 +95,12 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
         this.tag = tag;
         this.clazz = clazz;
         this.objectMapper = new ObjectMapper<>(clazz);
+        LOGGER.fine("created Json Converter");
     }
 
     @Override
     public void initialize(InputStream input) {
+        LOGGER.fine("Initialize jsonConverter");
         JsonReader reader = Json.createReader(input);
         rootNode = reader.read();
         if (rootNode.getValueType() == JsonValue.ValueType.ARRAY) {
@@ -114,6 +116,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                 }
             }
         }
+        LOGGER.fine("Inialized jsonconverter, rootNode = "+rootNode+" and iterator = "+iterator+" and tag = "+tag);
     }
 
     @Override
@@ -134,6 +137,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
 
     @Override
     public boolean next() {
+        LOGGER.finer("Does json has next for tag "+tag);
         if (tag == null) {
             return false;
         } else {
@@ -211,7 +215,9 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                     JsonObject object = (JsonObject) value;
 
                     for (String property : settersMappedByPropertyName.keySet()) {
+                        LOGGER.fine("Check if the received object has a property named "+property);
                         if (object.containsKey(property)) {
+                        LOGGER.fine("Yes, the received object has a property named "+property);
                             Method setter = settersMappedByPropertyName.get(property);
 
                             JsonValue propertyValue = (JsonValue) object.get(property);

@@ -122,11 +122,13 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     }
 
     protected synchronized void createRequest() throws IOException {
+        LOGGER.fine("RestSource will create request");
         if (requestMade) {
             return;
         }
         setInputStream(createInputStream());
         requestMade = true;
+        LOGGER.fine("RestSource has created a request");
     }
 
     @Override
