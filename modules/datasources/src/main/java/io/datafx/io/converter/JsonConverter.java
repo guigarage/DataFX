@@ -103,6 +103,7 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
         LOGGER.fine("Initialize jsonConverter");
         JsonReader reader = Json.createReader(input);
         rootNode = reader.read();
+        LOGGER.fine("RootNode valuetype = "+rootNode.getValueType());
         if (rootNode.getValueType() == JsonValue.ValueType.ARRAY) {
             JsonArray rootNodeArray = (JsonArray) rootNode;
             iterator = rootNodeArray.iterator();
@@ -302,6 +303,12 @@ public class JsonConverter<T> extends InputStreamConverter<T> {
                                                     values.add(numberArrayValue.doubleValue());
                                                 }
                                                 break;
+                                            case OBJECT:
+                                                System.out.println("ARRAYVAL = "+arrayValue);
+                                                System.out.println("expected type = "+setter.getParameterTypes()[0]);
+                                                Class<?> parameterTypes = setter.getParameterTypes()[0];
+                                                parameterTypes.getAnnotations();
+                                          
                                             default:
                                                 // TODO: implement nested arrays and objects in arrays
                                                 throw new UnsupportedOperationException("Arrays or objects within arrays not yet supported.");
