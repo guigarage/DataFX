@@ -57,6 +57,9 @@ import javafx.beans.property.StringProperty;
  */
 public class RestSource<T> extends InputStreamDataReader<T> implements WritableDataReader<T> {
 
+    public static final String METHOD_GET = "GET";
+    public static final String METHOD_POST = "POST";
+    
     private String host;
     // path should never be null. We check on this in all methods that can change the path.
     private String path = "";
@@ -67,7 +70,7 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
     private Map<String, String> queryParams = new HashMap<>();
     private MultiValuedMap formParams = new MultiValuedMap();
     private String dataString;
-    private String requestMethod = "GET";
+    private String requestMethod = null;
     private int timeout = -1;
     private String contentType;
 
@@ -163,6 +166,9 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
      * the {@link HttpURLConnection#getErrorStream() errorStream of the URL
      * connection} instead and no IOException will be thrown. This allows the
      * coupled Converter to continue parsing the response from the server.
+     * In case no requestMethod is specified via {@link setRequestMethod},
+     * a POST request will be created in case form parameters or a dataString
+     * are supplied; a GET request will be created in the other cases.
      *
      * @return the created {@link java.io.InputStream}
      * @throws IOException in case the InputStream cannot be created
@@ -177,6 +183,13 @@ public class RestSource<T> extends InputStreamDataReader<T> implements WritableD
             request = request + "?" + queryString;
         }
         URL url = new URL(request);
+        if (getRequestMethod() == null) {
+            if ((getFormParams().isEmpty()) && (getDataString() == null)) {
+                setRequestMethod(METHOD_GET);
+            } else {
+                setRequestMethod (METHOD_POST);
+            }
+        }
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         if (getConsumerKey() != null) {
