@@ -1,4 +1,4 @@
-include "core", "datasources", "websocket", "flow", "injection", "validation", "ui", "crud", "featuretoggle", "ejb", "ejb-wildfly", "samples-ejb", "samples", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5"
+include "core", "datasources", "websocket", "flow", "injection", "validation", "ui", "crud", "featuretoggle", "ejb", "ejb-wildfly", "samples-ejb", "samples", "tutorials-flow1", "tutorials-flow2", "tutorials-flow3", "tutorials-flow4", "tutorials-flow5", "tutorials-flow6"
 project(":core").projectDir = file("modules/core")
 project(":datasources").projectDir = file("modules/datasources")
 project(":websocket").projectDir = file("modules/websocket")
@@ -17,3 +17,4 @@ project(":tutorials-flow2").projectDir = file("modules/tutorials/flow2")
 project(":tutorials-flow3").projectDir = file("modules/tutorials/flow3")
 project(":tutorials-flow4").projectDir = file("modules/tutorials/flow4")
 project(":tutorials-flow5").projectDir = file("modules/tutorials/flow5")
+project(":tutorials-flow6").projectDir = file("modules/tutorials/flow6")

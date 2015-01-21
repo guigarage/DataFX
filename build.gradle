@@ -181,6 +181,12 @@ project(':tutorials-flow5') {
     }
 }
 
+project(':tutorials-flow6') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
 /*
 project (':tutorials') {
     dependencies {

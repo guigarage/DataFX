@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="navigateToButton" layoutX="10.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="319.0" text="navigate" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" />
+      <StackPane layoutX="132.0" layoutY="79.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="12.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="12.0" StackPane.alignment="CENTER">
+               <children>
+                  <RadioButton fx:id="radioButton1" mnemonicParsing="false" text="View 1" />
+                  <RadioButton fx:id="radioButton2" mnemonicParsing="false" text="View 2" />
+                  <RadioButton fx:id="radioButton3" mnemonicParsing="false" text="View3" />
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>
