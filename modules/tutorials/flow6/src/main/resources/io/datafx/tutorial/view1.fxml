@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Button fx:id="backButton" layoutX="10.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="319.0" text="back" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" />
+      <StackPane layoutX="127.0" layoutY="96.0" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="12.0">
+         <children>
+            <Label text="View 1">
+               <font>
+                  <Font size="60.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
+    </children>
+</AnchorPane>
