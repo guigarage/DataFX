@@ -28,6 +28,7 @@ package io.datafx.messages;
 
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.context.event.ContextPostConstructListener;
+import io.datafx.controller.util.ActionUtil;
 import io.datafx.core.DataFXUtils;
 import io.datafx.core.concurrent.Async;
 import io.datafx.core.concurrent.ObservableExecutor;
@@ -184,9 +185,9 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
                     };
 
                     if (Node.class.isAssignableFrom(field.getType())) {
-                        DataFXUtils.defineNodeAction(DataFXUtils.getPrivileged(field, controller), action);
+                        ActionUtil.defineNodeAction(DataFXUtils.getPrivileged(field, controller), action);
                     } else if (MenuItem.class.isAssignableFrom(field.getType())) {
-                        DataFXUtils.defineItemAction(DataFXUtils.getPrivileged(field, controller), action);
+                        ActionUtil.defineItemAction(DataFXUtils.getPrivileged(field, controller), action);
                     }
                 } else {
                     throw new RuntimeException("Field can't be used as message producer! " + field);
