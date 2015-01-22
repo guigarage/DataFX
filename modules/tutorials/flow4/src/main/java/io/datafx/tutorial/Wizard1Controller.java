@@ -1,8 +1,8 @@
 package io.datafx.tutorial;
 
+import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
-import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.action.ActionTrigger;
 
 /**
@@ -16,7 +16,7 @@ import io.datafx.controller.flow.action.ActionTrigger;
  * the @FXML annotation the hyperlink node can be bound to the action by using the {@link ActionTrigger} annotation.
  * So once the hyperlink will be clicked the action that is registered with the "help" id will be called.
  */
-@FXMLController(value="wizard1.fxml", title = "Wizard: Step 1")
+@ViewController(value="wizard1.fxml", title = "Wizard: Step 1")
 public class Wizard1Controller extends AbstractWizardController {
 
     @FXML

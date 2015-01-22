@@ -31,6 +31,8 @@ import io.datafx.controller.flow.event.BeforeFlowActionHandler;
 import io.datafx.controller.flow.event.AfterFlowActionEvent;
 import io.datafx.controller.flow.event.BeforeFlowActionEvent;
 import io.datafx.controller.flow.event.VetoableBeforeFlowActionHandler;
+import io.datafx.controller.util.ActionUtil;
+import io.datafx.core.DataFXUtils;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -99,6 +101,10 @@ public class FlowHandler {
 
     public StackPane start() throws FlowException {
         return start(new DefaultFlowContainer());
+    }
+
+    public void startInPane(StackPane pane) throws FlowException {
+        start(new DefaultFlowContainer(pane));
     }
 
     public Tab startInTab() throws FlowException {
@@ -284,53 +290,27 @@ public class FlowHandler {
     }
 
     public void attachAction(Node node, Runnable action) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> action.run());
-        } else {
-            node.setOnMouseClicked((ev) -> {
-                if (ev.getClickCount() > 1) {
-                    action.run();
-                }
-            });
-        }
+        ActionUtil.defineNodeAction(node, action);
     }
 
     public void attachAction(MenuItem menuItem, Runnable action) {
-        menuItem.setOnAction((e) -> action.run());
+        ActionUtil.defineItemAction(menuItem, action);
     }
 
     public void attachEventHandler(Node node, String actionId) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
-        } else if (node instanceof TextField) {
-            ((TextField) node).setOnAction((e) -> handleActionWithExceptionHandler(actionId));
-        } else {
-            node.setOnMouseClicked((e) -> {
-                if (e.getClickCount() > 1) {
-                    handleActionWithExceptionHandler(actionId);
-                }
-            });
-        }
+        ActionUtil.defineNodeAction(node, () -> handleActionWithExceptionHandler(actionId));
     }
 
     public void attachBackEventHandler(MenuItem menuItem) {
-        menuItem.setOnAction((e) -> handleBackActionWithExceptionHandler());
+        ActionUtil.defineItemAction(menuItem, () -> handleBackActionWithExceptionHandler());
     }
 
     public void attachBackEventHandler(Node node) {
-        if (node instanceof ButtonBase) {
-            ((ButtonBase) node).setOnAction((e) -> handleBackActionWithExceptionHandler());
-        } else {
-            node.setOnMouseClicked((e) -> {
-                if (e.getClickCount() > 1) {
-                    handleBackActionWithExceptionHandler();
-                }
-            });
-        }
+        ActionUtil.defineNodeAction(node, () -> handleBackActionWithExceptionHandler());
     }
 
     public void attachEventHandler(MenuItem menuItem, String actionId) {
-        menuItem.setOnAction((e) -> handleActionWithExceptionHandler(actionId));
+        ActionUtil.defineItemAction(menuItem, () -> handleActionWithExceptionHandler(actionId));
     }
 
     private void handleActionWithExceptionHandler(String id) {

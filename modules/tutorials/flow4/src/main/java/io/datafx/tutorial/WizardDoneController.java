@@ -1,6 +1,6 @@
 package io.datafx.tutorial;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 
 import javax.annotation.PostConstruct;
 
@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
  * controller instance were injected. So when the view appears on screen the buttons "next" and "finish" will be
  * disabled.
  */
-@FXMLController(value="wizardDone.fxml", title = "Wizard: Finish")
+@ViewController(value="wizardDone.fxml", title = "Wizard: Finish")
 public class WizardDoneController extends AbstractWizardController {
 
     @PostConstruct

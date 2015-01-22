@@ -29,6 +29,7 @@ package io.datafx.core.concurrent;
 import io.datafx.core.ExceptionHandler;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -46,6 +46,19 @@ import java.util.function.Supplier;
  * All processes will be running in a queue and the result of a process will be
  * used as the input parameter for the next process.
  *
+ * Here is a common usecase for the chain:
+ * <tt>
+ * ProcessChain.create().
+ * addRunnableInPlatformThread(() -> blockUI()).
+ * addSupplierInExecutor(() -> loadFromServer()).
+ * addConsumerInPlatformThread(d -> updateUI(d)).
+ * onException(e -> handleException(e)).
+ * withFinal(() -> unblockUI()).
+ * run();
+ *</tt>
+ * In this example the {@link io.datafx.core.concurrent.ProcessChain} is used to wrap a background task
+ * in some UI related tasks. By doing so, actions on the UI can be prohibited while the background action is running or
+ * a loading animation can be shown on screen.
  * @param <T> Return value of the chain.
  */
 public class ProcessChain<T> {
@@ -177,6 +190,16 @@ public class ProcessChain<T> {
     public ProcessChain<T> withFinal(Runnable finalRunnable) {
         this.finalRunnable = finalRunnable;
         return this;
+    }
+
+    public <V> ProcessChain<V> waitFor(Worker<V> worker) {
+        return addSupplierInExecutor(() -> {
+            try {
+                return ConcurrentUtils.waitFor(worker);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

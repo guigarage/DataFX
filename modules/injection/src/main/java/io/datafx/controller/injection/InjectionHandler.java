@@ -93,7 +93,7 @@ public class InjectionHandler<U> {
 
     private <T> void injectAllSupportedFields(T bean) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Class<T> cls = (Class<T>) bean.getClass();
-        for (final Field field : DataFXUtils.getInheritedPrivateFields(cls)) {
+        for (final Field field : DataFXUtils.getInheritedDeclaredFields(cls)) {
             if (field.isAnnotationPresent(Inject.class)) {
                 DataFXUtils.setPrivileged(field, bean, createProxy(field.getType()));
             }

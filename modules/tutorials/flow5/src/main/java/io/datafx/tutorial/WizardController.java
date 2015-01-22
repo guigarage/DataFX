@@ -26,11 +26,11 @@
  */
 package io.datafx.tutorial;
 
+import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
@@ -47,7 +47,7 @@ import javax.annotation.PostConstruct;
  * flow that contains all the custom views of the wizard is added to the view. The navigation for this internal flow
  * is managed here.
  */
-@FXMLController("wizard.fxml")
+@ViewController("wizard.fxml")
 public class WizardController {
 
     @FXML

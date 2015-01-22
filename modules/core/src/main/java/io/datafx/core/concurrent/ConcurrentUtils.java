@@ -40,44 +40,55 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 /**
- *  Utility class for concurrency issues in JavaFX
+ * Utility class for concurrency issues in JavaFX
  *
- *  @author Hendrik Ebbers
+ * @author Hendrik Ebbers
  */
 public class ConcurrentUtils {
 
-    private ConcurrentUtils() {}
+    private ConcurrentUtils() {
+    }
 
     /**
      * Runs the given <tt>Runnable</tt> on the JavaFX Application Thread. The method blocks until the <tt>Runnable</tt> is executed completely.
+     * You should use the {@link io.datafx.core.concurrent.ProcessChain} for concurrent tasks and background tasks
+     * instead of using this low level API.
+     *
+     *
      * @param runnable the runnable that will be executed on the JavaFX Application Thread
-     * @throws InterruptedException  if the JavaFX Application Thread was interrupted while waiting
-     * @throws ExecutionException if the call of the run method of the <tt>Runnable</tt> threw an exception
+     * @throws InterruptedException if the JavaFX Application Thread was interrupted while waiting
+     * @throws ExecutionException   if the call of the run method of the <tt>Runnable</tt> threw an exception
      */
-	public static void runAndWait(Runnable runnable)
-			throws InterruptedException, ExecutionException {
-		FutureTask<Void> future = new FutureTask<>(runnable, null);
-		Platform.runLater(future);
-		future.get();
-	}
+    public static void runAndWait(Runnable runnable)
+            throws InterruptedException, ExecutionException {
+        FutureTask<Void> future = new FutureTask<>(runnable, null);
+        Platform.runLater(future);
+        future.get();
+    }
 
     /**
      * Runs the given <tt>Callable</tt> on the JavaFX Application Thread. The method blocks until the <tt>Callable</tt> is executed completely. The return value of the call() method of the callable will be returned
-     * @param callable  the callable that will be executed on the JavaFX Application Thread
-     * @param <T>  return type of the callable
-     * @return  return value of the executed call() method of the <tt>Callable</tt>
-     * @throws InterruptedException   if the JavaFX Application Thread was interrupted while waiting
-     * @throws ExecutionException  if the call of the run method of the <tt>Callable</tt> threw an exception
+     * You should use the {@link io.datafx.core.concurrent.ProcessChain} for concurrent tasks and background tasks
+     * instead of using this low level API.
+     *
+     * @param callable the callable that will be executed on the JavaFX Application Thread
+     * @param <T>      return type of the callable
+     * @return return value of the executed call() method of the <tt>Callable</tt>
+     * @throws InterruptedException if the JavaFX Application Thread was interrupted while waiting
+     * @throws ExecutionException   if the call of the run method of the <tt>Callable</tt> threw an exception
      */
-	public static <T> T runCallableAndWait(Callable<T> callable)
-			throws InterruptedException, ExecutionException {
-		FutureTask<T> future = new FutureTask<T>(callable);
-		Platform.runLater(future);
-		return future.get();
-	}
+    public static <T> T runCallableAndWait(Callable<T> callable)
+            throws InterruptedException, ExecutionException {
+        FutureTask<T> future = new FutureTask<T>(callable);
+        Platform.runLater(future);
+        return future.get();
+    }
 
     public static DataFxService<Void> createService(Runnable runnable) {
         return createService(new RunnableBasedDataFxTask(runnable));
@@ -89,7 +100,8 @@ public class ConcurrentUtils {
 
     public static <T> DataFxService<T> createService(Task<T> task) {
         return new DataFxService<T>() {
-            @Override protected Task<T> createTask() {
+            @Override
+            protected Task<T> createTask() {
                 return task;
             }
         };
@@ -111,6 +123,13 @@ public class ConcurrentUtils {
         return worker.stateProperty().isEqualTo(Worker.State.CANCELLED).or(worker.stateProperty().isEqualTo(Worker.State.FAILED).or(worker.stateProperty().isEqualTo(Worker.State.SUCCEEDED)));
     }
 
+    /**
+     * The given consumer will be called once the worker is finished. The result of the worker
+     * will be passed to the consumer.
+     * @param worker the worker
+     * @param consumer the consumer
+     * @param <T> the resukt type of the worker
+     */
     public static <T> void then(Worker<T> worker, Consumer<T> consumer) {
         ReadOnlyBooleanProperty doneProperty = createIsDoneProperty(worker);
         ChangeListener<Boolean> listener = (o, oldValue, newValue) -> {
@@ -121,6 +140,12 @@ public class ConcurrentUtils {
         doneProperty.addListener(listener);
     }
 
+    /**
+     * Returns a property that defines the state of the given worker. Once the worker is done the value of the
+     * property will be set to true
+     * @param worker the worker
+     * @return the property
+     */
     public static ReadOnlyBooleanProperty createIsDoneProperty(Worker<?> worker) {
         final BooleanProperty property = new SimpleBooleanProperty();
         Consumer<Worker.State> stateChecker = (s) -> {
@@ -134,5 +159,43 @@ public class ConcurrentUtils {
         stateChecker.accept(worker.getState());
         return property;
 
+    }
+
+    /**
+     * This methods blocks until the worker is done and returns the result value of the worker.
+     * If the worker was canceled an exception will be thrown.
+     *
+     * @param worker The worker
+     * @param <T> result type of the worker
+     * @return the result
+     * @throws InterruptedException if the worker was canceled
+     */
+    public static <T> T waitFor(Worker<T> worker) throws InterruptedException {
+        Lock lock = new ReentrantLock();
+        Condition condition = lock.newCondition();
+        lock.lock();
+        try {
+            ReadOnlyBooleanProperty doneProperty = createIsDoneProperty(worker);
+            if (doneProperty.get()) {
+                return worker.getValue();
+            } else {
+                doneProperty.addListener(e -> {
+                    boolean locked = lock.tryLock();
+                    if (locked) {
+                        try {
+                            condition.signal();
+                        } finally {
+                            lock.unlock();
+                        }
+                    } else {
+                        throw new RuntimeException("Concurreny Error");
+                    }
+                });
+                condition.await();
+                return worker.getValue();
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 }

@@ -26,6 +26,9 @@
  */
 package io.datafx.controller;
 
+import io.datafx.controller.util.NullNode;
+import javafx.scene.Node;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,7 +36,7 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * Annotation for a FXML controller. This annotation will define the FXML-file
+ * Annotation for a MVC controller. This annotation will define the view (FXML file or java class)
  * this controller is made for. You don't need to use this annotation because
  * the API is designed using a convention over configuration approach: If you
  * have a fxml file "master.fxml" you can create a MasterController.java
@@ -49,7 +52,7 @@ import java.lang.annotation.Target;
  * {@literal @}FXMLController("Details.fxml")
  * public class DetailViewController {
  *  *
- * 	{@literal @}FXML
+ *    {@literal @}FXML
  *  private TextField myTextfield;
  *   
  *  *	{@literal @}FXML
@@ -64,11 +67,10 @@ import java.lang.annotation.Target;
  * </pre>
  *
  * @author Hendrik Ebbers
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface FXMLController {
+public @interface ViewController {
 
     /**
      * Defines the name of the fxml files that should be used with the annotated
@@ -76,9 +78,28 @@ public @interface FXMLController {
      *
      * @return name of the fxml file
      */
-    String value();
+    String value() default "";
 
+    /**
+     * Defines the title of the view. DataFX will use the title if the view is shown in a {@link javafx.scene.control.Tab} for example.
+     * @return the title of the view
+     */
     String title() default "";
 
+    /**
+     * Defines the icon path for the view. The path defines the default icon of the view.
+     * DataFX will use the icon if the view is shown in a {@link javafx.scene.control.Tab} for example.
+     * @return the icon of the view
+     */
     String iconPath() default "";
+
+    /**
+     * Defines a Java class that extends Node. If this is defined and != {@link io.datafx.controller.util.NullNode}
+     * a new instance of the class will be created and used as the view. Therefore the class needs a default constructor.
+     * In later version maybe additional constructors (for ressource bundle support, etc.) will be supported.
+     * In the view class the {@link io.datafx.controller.ViewNode} annotation can be used.
+     * @return
+     */
+    Class<? extends Node> root() default NullNode.class;
 }
+

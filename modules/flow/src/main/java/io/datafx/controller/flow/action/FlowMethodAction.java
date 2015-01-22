@@ -28,29 +28,46 @@ package io.datafx.controller.flow.action;
 
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
+import io.datafx.core.DataFXUtils;
+import io.datafx.core.concurrent.Async;
+import io.datafx.core.concurrent.ObservableExecutor;
+
+import java.lang.reflect.Method;
 
 /**
  * Implementation of a {@link FlowAction} that calls a method in the current view controller instance.
  */
 public class FlowMethodAction implements FlowAction {
 
-    private String actionMethodName;
+    private Method actionMethod;
 
     /**
      * Default constructor
-     * @param actionMethodName defines the name of the method that should be called whenever the action is triggered.
+     *
+     * @param actionMethod defines the method that should be called whenever the action is triggered.
      */
-    public FlowMethodAction(String actionMethodName) {
-        this.actionMethodName = actionMethodName;
+    public FlowMethodAction(Method actionMethod) {
+        this.actionMethod = actionMethod;
     }
 
     @Override
     public void handle(FlowHandler flowHandler, String actionId) throws FlowException {
         Object controller = flowHandler.getCurrentViewContext().getController();
         try {
-            controller.getClass().getMethod(actionMethodName).invoke(controller);
+            if (actionMethod.isAnnotationPresent(Async.class)) {
+                ObservableExecutor.getDefaultInstance().execute(() -> {
+                    try {
+                        DataFXUtils.callPrivileged(actionMethod, controller);
+                    } catch (Exception e) {
+                        flowHandler.getExceptionHandler().setException(e);
+                    }
+                });
+            } else {
+                DataFXUtils.callPrivileged(actionMethod, controller);
+            }
         } catch (Exception e) {
             throw new FlowException(e);
         }
+
     }
 }

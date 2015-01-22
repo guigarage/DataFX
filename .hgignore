@@ -36,3 +36,5 @@ build
 gradle
 datafx.iml
 *.iml
+datafx.ipr
+datafx.iws

@@ -26,7 +26,8 @@
  */
 package io.datafx.controller;
 
-import javafx.collections.ObservableMap;
+import io.datafx.controller.context.event.ContextPostConstructListener;
+import io.datafx.controller.util.NullNode;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -43,7 +44,9 @@ import io.datafx.core.ExceptionHandler;
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * This class contains static methods to create views in the DataFX Container context. 
@@ -75,10 +78,10 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. The
      * class needs a default constructor (no parameters) and a
-     * {@link FXMLController} annotation to link to the fxml file. You can skip
+     * {@link ViewController} annotation to link to the fxml file. You can skip
      * the annotation if you want to use the controller API conventions. By
      * doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController} for more
+     * must fit to a naming convention (see {@link ViewController} for more
      * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
      * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
@@ -96,10 +99,10 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. The
      * class needs a default constructor (no parameters) and a
-     * {@link FXMLController} annotation to link to the fxml file. You can skip
+     * {@link ViewController} annotation to link to the fxml file. You can skip
      * the annotation if you want to use the controller API conventions. By
      * doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController} for more
+     * must fit to a naming convention (see {@link ViewController} for more
      * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
      * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
@@ -121,10 +124,10 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. 
      * The class needs a default constructor (no parameters) and 
-     * a {@link FXMLController} annotation to link to the fxml file. 
+     * a {@link ViewController} annotation to link to the fxml file.
      * You can skip the annotation if you want to use the controller API conventions. 
      * By doing so the fxml files has to be in the package as the controller and
-     * must fit to a naming convention (see {@link io.datafx.controller.FXMLController}
+     * must fit to a naming convention (see {@link ViewController}
      * for more information). The method returns a 
      * {@link io.datafx.controller.context.ViewContext}. 
      * This is a wrapper around the view (view-node and controller) and can be 
@@ -147,8 +150,8 @@ public class ViewFactory {
             // 1. Create an instance of the Controller
             final T controller = controllerClass.newInstance();
             ViewMetadata metadata = new ViewMetadata();
-            FXMLController controllerAnnotation = (FXMLController) controllerClass
-                    .getAnnotation(FXMLController.class);
+            ViewController controllerAnnotation = (ViewController) controllerClass
+                    .getAnnotation(ViewController.class);
             if (controllerAnnotation != null && !controllerAnnotation.title().isEmpty()) {
                 metadata.setTitle(controllerAnnotation.title());
             }
@@ -156,20 +159,35 @@ public class ViewFactory {
                 metadata.setGraphic(new ImageView(controllerClass.getResource(controllerAnnotation.iconPath()).toExternalForm()));
             }
 
-            // 2. load the FXML and make sure the @FXML annotations are injected
-            FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
-            Node viewNode = (Node) loader.load();
+
+            // 2. Create the view and make sure the @FXML annotations are injected
+            Node viewNode = null;
+            if(controllerAnnotation != null && controllerAnnotation.root() != null &&  !controllerAnnotation.root().equals(NullNode.class)) {
+                viewNode = controllerAnnotation.root().newInstance();
+                injectNodeIDs(viewNode);
+            } else {
+                FXMLLoader loader = createLoader(controller, fxmlName, viewConfiguration);
+                viewNode = (Node) loader.load();
+            }
+            injectFXMLNodes(controller, viewNode);
+
+            // 3. create the context
             ViewContext<T> context = new ViewContext<>(viewNode,
                     controller, metadata, viewConfiguration, viewContextResources);
-            context.register(controller);
-            context.register("controller", controller);
 
-            injectFXMLNodes(context);
 
-            // 3. Resolve the @Inject points in the Controller and call
+
+            // 4. Resolve the @Inject points in the Controller and call
             // @PostConstruct
             context.getResolver().injectResources(controller);
 
+            // 5. Call listeners
+            ServiceLoader<ContextPostConstructListener> postConstructLoader = ServiceLoader.load(ContextPostConstructListener.class);
+            for(ContextPostConstructListener listener : postConstructLoader) {
+                listener.postConstruct(context);
+            }
+
+            // 6. call PostConstruct methods
             for (final Method method : controller.getClass().getMethods()) {
                 if (method.isAnnotationPresent(PostConstruct.class)) {
                     method.invoke(controller);
@@ -177,7 +195,7 @@ public class ViewFactory {
             }
             return context;
         } catch (Exception e) {
-            throw new FxmlLoadException(e);
+            throw new FxmlLoadException("Can't create controller for class " + controllerClass, e);
         }
     }
 
@@ -204,8 +222,13 @@ public class ViewFactory {
             throw new FxmlLoadException("No FXML File specified!");
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                controllerClass.getResource(foundFxmlName));
+        URL fxmlUrl = controllerClass.getResource(foundFxmlName);
+
+        if(fxmlUrl == null) {
+            throw new FxmlLoadException("Can't find FXML file for controller " + controller.getClass());
+        }
+
+        FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
         fxmlLoader.setBuilderFactory(viewConfiguration.getBuilderFactory());
         fxmlLoader.setCharset(viewConfiguration.getCharset());
         fxmlLoader.setResources(viewConfiguration.getResources());
@@ -229,9 +252,9 @@ public class ViewFactory {
             }
         }
 
-        FXMLController controllerAnnotation = (FXMLController) controllerClass
-                .getAnnotation(FXMLController.class);
-        if (controllerAnnotation != null) {
+        ViewController controllerAnnotation = controllerClass
+                .getAnnotation(ViewController.class);
+        if (controllerAnnotation != null && !controllerAnnotation.value().isEmpty()) {
             foundFxmlName = controllerAnnotation.value();
         }
         return foundFxmlName;
@@ -303,19 +326,33 @@ public class ViewFactory {
      * - private fields in a superclass of the controller class
      * - fields that defines a node that is part of a sub-fxml. This is a fxml definition that is included in the fxml
      * file.
-     * @param context The context of the view
+     * @param controller The controller instance
+     * @param root The root Node
      * @param <T> Type of the controller
      */
-    private <T> void injectFXMLNodes(ViewContext<T> context) {
-        T controller = context.getController();
-        Node n = context.getRootNode();
+    private <T> void injectFXMLNodes(T controller, Node root) {
 
-        List<Field> fields = DataFXUtils.getInheritedPrivateFields(controller.getClass());
+        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
         for (Field field : fields) {
             if (field.getAnnotation(FXML.class) != null) {
                 if (DataFXUtils.getPrivileged(field, controller) == null) {
                     if (Node.class.isAssignableFrom(field.getType())) {
-                        Node toInject = n.lookup("#" + field.getName());
+                        Node toInject = root.lookup("#" + field.getName());
+                        if(toInject != null) {
+                            DataFXUtils.setPrivileged(field, controller, toInject);
+                        }
+                    }
+                }
+            }
+
+            if (field.getAnnotation(ViewNode.class) != null) {
+                String id = field.getName();
+                if(field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
+                    id = field.getAnnotation(ViewNode.class).value();
+                }
+                if (DataFXUtils.getPrivileged(field, controller) == null) {
+                    if (Node.class.isAssignableFrom(field.getType())) {
+                        Node toInject = root.lookup("#" + id);
                         if(toInject != null) {
                             DataFXUtils.setPrivileged(field, controller, toInject);
                         }
@@ -324,5 +361,20 @@ public class ViewFactory {
             }
         }
 
+    }
+
+    private void injectNodeIDs(Node node) {
+        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(node.getClass());
+        for (Field field : fields) {
+            if (Node.class.isAssignableFrom(field.getType()) && field.getAnnotation(ViewNode.class) != null) {
+                String id = field.getName();
+                if(field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
+                    id = field.getAnnotation(ViewNode.class).value();
+                }
+
+                Node child = DataFXUtils.getPrivileged(field, node);
+                child.setId(id);
+            }
+        }
     }
 }

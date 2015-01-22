@@ -1,6 +1,6 @@
 package io.datafx.samples.validation.context;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.validation.ValidatorFX;
 import io.datafx.controller.validation.context.Validator;
 import io.datafx.controller.validation.event.ValidationFinishedEvent;
@@ -18,7 +18,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 
 
-@FXMLController("view.fxml")
+@ViewController("view.fxml")
 public class ValidationController {
 	
 	@FXML

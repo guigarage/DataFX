@@ -1,6 +1,6 @@
 package io.datafx.samples.app;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionTrigger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,7 +12,7 @@ import javax.inject.Inject;
 /**
  * The controller of the master view. The @FXMLController annotation defines the FXML file that describes the view.
  */
-@FXMLController(value="listView.fxml", title = "User overview")
+@ViewController(value="listView.fxml", title = "User overview")
 public class MasterViewController {
 
     /**

@@ -1,6 +1,6 @@
 package io.datafx.samples.validation.property;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.validation.ValidatorFX;
 import io.datafx.controller.validation.context.Validator;
 import io.datafx.controller.validation.event.ValidationFinishedEvent;
@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolation;
 import javax.validation.constraints.NotNull;
 
-@FXMLController("view.fxml")
+@ViewController("view.fxml")
 public class PropertyValidationController {
 
     @FXML

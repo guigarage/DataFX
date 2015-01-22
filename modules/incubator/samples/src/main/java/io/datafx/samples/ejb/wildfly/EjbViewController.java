@@ -1,6 +1,6 @@
 package io.datafx.samples.ejb.wildfly;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.context.ConcurrencyProvider;
 import io.datafx.core.concurrent.ObservableExecutor;
 import io.datafx.core.concurrent.ProcessChain;
@@ -11,8 +11,8 @@ import javafx.scene.control.Button;
 
 import javax.annotation.PostConstruct;
 
-@FXMLController("view.fxml")
-public class ViewController {
+@ViewController("view.fxml")
+public class EjbViewController {
 
     @RemoteEjb()
     RemoteCalculator calculator;

@@ -50,7 +50,7 @@ public class ContextResolver<U> {
         List<ControllerResourceConsumer> resourceConsumers = getControllerResourceConsumer();
 
         Class<? extends Object> cls = object.getClass();
-        for (final Field field : DataFXUtils.getInheritedPrivateFields(cls)) {
+        for (final Field field : DataFXUtils.getInheritedDeclaredFields(cls)) {
             List<Annotation> fieldAnnotations = Arrays.asList(field.getAnnotations());
             if(fieldAnnotations != null && !fieldAnnotations.isEmpty()) {
                 boolean injected = false;

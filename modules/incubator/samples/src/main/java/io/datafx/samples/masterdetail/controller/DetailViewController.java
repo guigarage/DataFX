@@ -26,7 +26,7 @@
  */
 package io.datafx.samples.masterdetail.controller;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionTrigger;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.ViewFlowContext;
@@ -40,7 +40,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 
-@FXMLController("Details.fxml")
+@ViewController("Details.fxml")
 public class DetailViewController {
 
     @FXMLViewFlowContext

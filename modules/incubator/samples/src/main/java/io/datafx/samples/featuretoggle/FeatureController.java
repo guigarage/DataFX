@@ -1,12 +1,12 @@
 package io.datafx.samples.featuretoggle;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.featuretoggle.DisabledByFeature;
 import io.datafx.featuretoggle.HideByFeature;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-@FXMLController("featureView.fxml")
+@ViewController("featureView.fxml")
 public class FeatureController {
 
     @FXML

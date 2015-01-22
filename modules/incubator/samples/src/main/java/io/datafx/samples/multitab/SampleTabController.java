@@ -1,6 +1,6 @@
 package io.datafx.samples.multitab;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.context.Metadata;
 import io.datafx.controller.context.ViewMetadata;
 import javafx.fxml.FXML;
@@ -11,7 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Date;
 
-@FXMLController(value = "view1.fxml", title = "Demo Dialog", iconPath = "smiley16.png")
+@ViewController(value = "view1.fxml", title = "Demo Dialog", iconPath = "smiley16.png")
 public class SampleTabController {
 
     @FXML

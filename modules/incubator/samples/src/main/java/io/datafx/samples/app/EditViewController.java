@@ -1,6 +1,6 @@
 package io.datafx.samples.app;
 
-import io.datafx.controller.FXMLController;
+import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.action.ActionTrigger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 /**
  * The controller for the edit view.
  */
-@FXMLController(value="detailView.fxml", title = "Edit user")
+@ViewController(value="detailView.fxml", title = "Edit user")
 public class EditViewController {
 
     /**
