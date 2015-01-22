@@ -29,6 +29,7 @@ package io.datafx.io;
 import java.io.IOException;
 import java.io.InputStream;
 import io.datafx.io.converter.InputStreamConverter;
+import java.util.logging.Logger;
 
 /**
  * Abstract class for functionality common across {@link DataReader}
@@ -43,6 +44,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
     private InputStream is;
     private InputStreamConverter<T> converter;
 
+    private static final Logger LOGGER = Logger.getLogger(InputStreamDataReader.class.getName());
     /**
      * Create an InputStreamDataReader without any configuration options
      */
@@ -104,6 +106,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
      * @throws  IOException in case initialization of the InputStream fails. 
      */
     public void setInputStream(InputStream is) throws IOException {
+        LOGGER.fine("set InputStream to "+is+", converter = "+converter);
         this.is = is;
         if (converter != null) {
             converter.initialize(is);
@@ -120,7 +123,7 @@ public abstract class InputStreamDataReader<T> extends AbstractDataReader<T> {
     }
 
     @Override
-    public T get() {
+    public T get() throws IOException {
         return converter.get();
     }
 

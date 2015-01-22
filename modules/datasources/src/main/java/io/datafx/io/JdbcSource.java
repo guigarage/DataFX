@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, 2013, Jonathan Giles, Johan Vos, Hendrik Ebbers
+ * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,16 +34,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author johan
+ * Create a connection to a relational DB and returns objects
+ * @param <T> the type of the returned objects.
  */
 public class JdbcSource<T> extends AbstractDataReader<T> implements WritableDataReader<T> {
 
     private final String sqlStatement;
     private final JdbcConverter<T> converter;
     private boolean connectionCreated;
-    private boolean lastResult;
     private ResultSet resultSet;
     private boolean updateQuery = false;
+    private static final Logger LOGGER = Logger.getLogger(JdbcSource.class.getName());
 
     private JdbcConnectionFactory connectionFactory;
 
@@ -95,10 +96,10 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
             connection = connectionFactory.getConnection();
             Statement query;
             if (updateQuery) {
-                System.out.println("updatequery");
+                LOGGER.info("an updatequery will be created");
                 query = connection.createStatement();
             } else {
-                System.out.println("regularquery");
+                LOGGER.info("a regularquery will be created");
                 query = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY,
                         ResultSet.CONCUR_READ_ONLY);
             }
@@ -106,7 +107,6 @@ public class JdbcSource<T> extends AbstractDataReader<T> implements WritableData
                 query.executeUpdate(sqlStatement);
             } else {
                 resultSet = query.executeQuery(sqlStatement);
-                lastResult = resultSet.next();
                 converter.initialize(resultSet);
             }
         } catch (Exception e) {

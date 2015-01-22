@@ -1,6 +1,16 @@
 Properties commons = new Properties()
 commons.load(new FileInputStream("$rootDir/datafx-build.properties"))
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+
+
 allprojects {
     def pluginLoc = project.rootDir.path+"/mavenPublish.gradle"
     apply plugin: 'java'
@@ -26,15 +36,34 @@ allprojects {
         archives sourceJar
         archives javadocJar
     }
+    repositories {
+        jcenter()
+    }
+}
+
+project(':core') {
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+    repositories {
+        mavenCentral()
+    }
+    apply plugin: 'me.tatarka.retrolambda'
 }
 
 project(':datasources') {
+    apply plugin: 'me.tatarka.retrolambda'
     repositories {
         mavenCentral()
     }
     dependencies {
         compile project(':core')
-        compile group:'javax.json', name:'javax.json-api', version:'1.0'
+        compile group:'org.glassfish', name:'javax.json', version: '1.0.4'
     }
 }
 
@@ -156,6 +185,12 @@ project(':tutorials-flow4') {
 }
 
 project(':tutorials-flow5') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow6') {
     dependencies {
         compile project(":flow");
     }
