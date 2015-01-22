@@ -1,8 +1,8 @@
-package io.datafx.samples.messagebus;
+package io.datafx.samples.eventsystem;
 
 import io.datafx.controller.ViewController;
-import io.datafx.messages.Message;
-import io.datafx.messages.OnMessage;
+import io.datafx.eventsystem.Event;
+import io.datafx.eventsystem.OnEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -15,8 +15,8 @@ public class ReceiverController {
     @FXML
     private Label messageLabel;
 
-    @OnMessage("test-message")
-    private void onNewChatMessage(Message<String> e) {
+    @OnEvent("test-message")
+    private void onNewChatMessage(Event<String> e) {
         messageLabel.setText(e.getContent());
     }
 }

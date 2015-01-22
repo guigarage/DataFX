@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.datafx.messages;
+package io.datafx.eventsystem;
 
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.context.event.ContextPostConstructListener;
@@ -45,109 +45,109 @@ import java.util.function.Supplier;
 
 /**
  * A Plugin for the {@link io.datafx.controller.flow.Flow} API that adds support for the following annotations:
- * {@link io.datafx.messages.MessageProducer}
- * {@link io.datafx.messages.MessageTrigger}
- * {@link io.datafx.messages.OnMessage}
+ * {@link EventProducer}
+ * {@link EventTrigger}
+ * {@link OnEvent}
  * This class should not be used by a developer. The class will be loaded by SPI and added automatically as a Plugin.
  */
-public class MessageBusFlowPlugin implements ContextPostConstructListener {
+public class EventSystemFlowPlugin implements ContextPostConstructListener {
 
     /**
-     * Register all message consumers in the controller class of the context
+     * Register all event consumers in the controller class of the context
      * @param context the context
      * @param <T> type of the view controller
      */
-    private <T> void registerMessageConsumer(ViewContext<T> context) {
+    private <T> void registerEventConsumer(ViewContext<T> context) {
         T controller = context.getController();
 
         List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
         fields.forEach(field -> {
-            if (field.isAnnotationPresent(OnMessage.class)) {
+            if (field.isAnnotationPresent(OnEvent.class)) {
                 if (Consumer.class.isAssignableFrom(field.getType())) {
                     ThreadType threadType = ThreadType.PLATFORM;
                     if (field.isAnnotationPresent(Async.class)) {
                         threadType = ThreadType.EXECUTOR;
                     }
-                    String adress = field.getAnnotation(OnMessage.class).value();
-                    Consumer<Message> consumer = DataFXUtils.getPrivileged(field, controller);
-                    MessageBus.getInstance().addReceiver(adress, consumer, threadType);
+                    String adress = field.getAnnotation(OnEvent.class).value();
+                    Consumer<Event> consumer = DataFXUtils.getPrivileged(field, controller);
+                    EventSystem.getInstance().addReceiver(adress, consumer, threadType);
                     context.addContextDestroyedListener(c -> {
-                        MessageBus.getInstance().removeReceiver(adress, consumer);
+                        EventSystem.getInstance().removeReceiver(adress, consumer);
                     });
                 } else {
-                    throw new RuntimeException("Field can't be used as message receiver! " + field);
+                    throw new RuntimeException("Field can't be used as event receiver! " + field);
                 }
             }
         });
 
         List<Method> methods = DataFXUtils.getInheritedDeclaredMethods(controller.getClass());
         methods.forEach(method -> {
-            if (method.isAnnotationPresent(OnMessage.class)) {
+            if (method.isAnnotationPresent(OnEvent.class)) {
                 ThreadType threadType = ThreadType.PLATFORM;
                 if (method.isAnnotationPresent(Async.class)) {
                     threadType = ThreadType.EXECUTOR;
                 }
-                String adress = method.getAnnotation(OnMessage.class).value();
-                Consumer<Message> consumer = null;
+                String adress = method.getAnnotation(OnEvent.class).value();
+                Consumer<Event> consumer = null;
                 if (method.getParameterCount() == 0) {
                     consumer = m -> DataFXUtils.callPrivileged(method, controller);
                 } else if (method.getParameterCount() == 1) {
-                    if (Message.class.isAssignableFrom(method.getParameterTypes()[0])) {
+                    if (Event.class.isAssignableFrom(method.getParameterTypes()[0])) {
                         consumer = m -> DataFXUtils.callPrivileged(method, controller, m);
                     } else {
                         consumer = m -> DataFXUtils.callPrivileged(method, controller, m.getContent());
                     }
                 } else {
-                    throw new RuntimeException("Method can't be used as message receiver! " + method);
+                    throw new RuntimeException("Method can't be used as event receiver! " + method);
                 }
-                MessageBus.getInstance().addReceiver(adress, consumer, threadType);
-                final Consumer<Message> finalConsumer = consumer;
+                EventSystem.getInstance().addReceiver(adress, consumer, threadType);
+                final Consumer<Event> finalConsumer = consumer;
                 context.addContextDestroyedListener(c -> {
-                    MessageBus.getInstance().removeReceiver(adress, finalConsumer);
+                    EventSystem.getInstance().removeReceiver(adress, finalConsumer);
                 });
             }
         });
     }
 
     /**
-     * Returns a list of all message producers for the given producer id in the controller. By doing so a button action can trigger
-     * several message producers
+     * Returns a list of all event producers for the given producer id in the controller. By doing so a button action can trigger
+     * several event producers
      * @param controller the controller
      * @param producerId the producer id
      * @param <T> type of the controller
-     * @return list of all message producers
+     * @return list of all event producers
      */
-    private <T> List<MessageProducerImpl> findMessageProducer(T controller, String producerId) {
-        List<MessageProducerImpl> producers = new ArrayList<>();
+    private <T> List<EventProducerImpl> findEventProducers(T controller, String producerId) {
+        List<EventProducerImpl> producers = new ArrayList<>();
 
         List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
         fields.forEach(field -> {
-            if (field.isAnnotationPresent(MessageProducer.class) && field.getAnnotation(MessageProducer.class).id().equals(producerId)) {
+            if (field.isAnnotationPresent(EventProducer.class) && field.getAnnotation(EventProducer.class).id().equals(producerId)) {
                 if (Supplier.class.isAssignableFrom(field.getType())) {
                     ThreadType threadType = ThreadType.PLATFORM;
                     if (field.isAnnotationPresent(Async.class)) {
                         threadType = ThreadType.EXECUTOR;
                     }
-                    MessageProducerImpl producer = new MessageProducerImpl();
-                    producer.setAdress(field.getAnnotation(MessageProducer.class).value());
+                    EventProducerImpl producer = new EventProducerImpl();
+                    producer.setAdress(field.getAnnotation(EventProducer.class).value());
                     producer.setThreadType(threadType);
                     producer.setContentSupplier(DataFXUtils.getPrivileged(field, controller));
                     producers.add(producer);
                 } else {
-                    throw new RuntimeException("Field can't be used as message producer! " + field);
+                    throw new RuntimeException("Field can't be used as event producer! " + field);
                 }
             }
         });
 
         List<Method> methods = DataFXUtils.getInheritedDeclaredMethods(controller.getClass());
         methods.forEach(method -> {
-            if (method.isAnnotationPresent(MessageProducer.class) && method.getAnnotation(MessageProducer.class).id().equals(producerId)) {
+            if (method.isAnnotationPresent(EventProducer.class) && method.getAnnotation(EventProducer.class).id().equals(producerId)) {
                 ThreadType threadType = ThreadType.PLATFORM;
                 if (method.isAnnotationPresent(Async.class)) {
                     threadType = ThreadType.EXECUTOR;
                 }
-                MessageProducerImpl producer = new MessageProducerImpl();
-                producer.setAdress(method.getAnnotation(MessageProducer.class).value());
+                EventProducerImpl producer = new EventProducerImpl();
+                producer.setAdress(method.getAnnotation(EventProducer.class).value());
                 producer.setThreadType(threadType);
                 producer.setContentSupplier(() -> DataFXUtils.callPrivileged(method, controller));
                 producers.add(producer);
@@ -158,28 +158,28 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
     }
 
     /**
-     * Register all message producers in the controller class of the context
+     * Register all event producers in the controller class of the context
      * @param context the context
      * @param <T> type of the view controller
      */
-    private <T> void registerMessageProducer(ViewContext<T> context) {
+    private <T> void registerEventProducers(ViewContext<T> context) {
         T controller = context.getController();
 
         List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
         fields.forEach(field -> {
-            if (field.isAnnotationPresent(MessageTrigger.class)) {
+            if (field.isAnnotationPresent(EventTrigger.class)) {
                 if (Node.class.isAssignableFrom(field.getType()) || MenuItem.class.isAssignableFrom(field.getType())) {
-                    String producerId = field.getAnnotation(MessageTrigger.class).id();
-                    List<MessageProducerImpl> messageProducers = findMessageProducer(context.getController(), producerId);
+                    String producerId = field.getAnnotation(EventTrigger.class).id();
+                    List<EventProducerImpl> eventProducers = findEventProducers(context.getController(), producerId);
 
                     Runnable action = () -> {
-                        for (MessageProducerImpl messageProducer : messageProducers) {
-                            if (messageProducer.getThreadType().equals(ThreadType.EXECUTOR)) {
+                        for (EventProducerImpl eventProducer : eventProducers) {
+                            if (eventProducer.getThreadType().equals(ThreadType.EXECUTOR)) {
                                 ObservableExecutor.getDefaultInstance().execute(() -> {
-                                    MessageBus.getInstance().send(messageProducer.getAdress(), messageProducer.getContentSupplier().get());
+                                    EventSystem.getInstance().send(eventProducer.getAdress(), eventProducer.getContentSupplier().get());
                                 });
                             } else {
-                                MessageBus.getInstance().send(messageProducer.getAdress(), messageProducer.getContentSupplier().get());
+                                EventSystem.getInstance().send(eventProducer.getAdress(), eventProducer.getContentSupplier().get());
                             }
                         }
                     };
@@ -190,7 +190,7 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
                         ActionUtil.defineItemAction(DataFXUtils.getPrivileged(field, controller), action);
                     }
                 } else {
-                    throw new RuntimeException("Field can't be used as message producer! " + field);
+                    throw new RuntimeException("Field can't be used as event producer! " + field);
                 }
             }
         });
@@ -198,14 +198,14 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
 
     @Override
     public void postConstruct(ViewContext context) {
-        registerMessageConsumer(context);
-        registerMessageProducer(context);
+        registerEventConsumer(context);
+        registerEventProducers(context);
     }
 
     /**
-     * Helper class that defines all properties of a message producer
+     * Helper class that defines all properties of a event producer
      */
-    private class MessageProducerImpl {
+    private class EventProducerImpl {
 
         /**
          * the thread type of the producer
@@ -213,12 +213,12 @@ public class MessageBusFlowPlugin implements ContextPostConstructListener {
         private ThreadType threadType;
 
         /**
-         * the message adress
+         * the event adress
          */
         private String adress;
 
         /**
-         * the message supplier
+         * the event supplier
          */
         private Supplier contentSupplier;
 

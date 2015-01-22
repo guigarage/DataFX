@@ -24,30 +24,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.datafx.messages;
+package io.datafx.eventsystem;
 
 /**
- * A Message that will send by the DataFX Message Bus. Normally a developer don't need to use this class because the
- * {@link io.datafx.messages.MessageBus} can be used to simply send content and will create a Message instance automatically.
+ * An Event that will send by the DataFX Event System. Normally a developer don't need to use this class because the
+ * {@link EventSystem} can be used to simply send content and will create an event instance automatically.
  * @param <T> Type of the content
  */
-public class Message<T> {
+public class Event<T> {
 
     /**
-     * The content of the message
+     * The content of the event
      */
     private T content;
 
     /**
-     * Create a new message with the given content
+     * Create a new event with the given content
      * @param content the given content
      */
-    public Message(T content) {
+    public Event(T content) {
         this.content = content;
     }
 
     /**
-     * Returns the content of the message
+     * Returns the content of the event
      * @return the content
      */
     public T getContent() {

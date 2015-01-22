@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.datafx.messages;
+package io.datafx.eventsystem;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,35 +32,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to define a message producer. A message producer can be a method with a return value or a
- * {@link java.util.function.Supplier} field. The {@link io.datafx.messages.MessageProducer} annotation
- * should be used in combination with the {@link io.datafx.messages.MessageTrigger} annotation to trigger
- * the transmission of the supplied message. Once the transmission is triggered the annotated method / supplier
- * will be called and the return value will be send. Normally the message will be send on the JavaFX Application
- * Thread. If the message should be send on a background thread the {@link io.datafx.core.concurrent.Async} annotation
- * should be used in combination with the {@link io.datafx.messages.MessageProducer} annotation. In this case
- * the producer (annotated method or supplier) will be called on a background thread. All messages will be send
- * by the {@link io.datafx.messages.MessageBus}.
+ * This annotation can be used to define event receivers. A method that is marked with this annotation will be called
+ * whenever the {@link EventSystem} sends a event for the given adress ({@link #value()} of the annotation).
+ * The methods needs a parameter of the event content type, otherwise a {@link java.lang.RuntimeException} will thrown
+ * in the {@link EventSystem} (this don't stop the transmission to other receivers of the event).
+ * In addition a {@link java.util.function.Consumer} field can be annotated with {@link OnEvent}.
+ * The consumer will be called whenever the event system transmits a new event.
+ * Normally the method / consumer will be called on the JavaFX Application Thread. If the event should be received on
+ * a background thread the {@link io.datafx.core.concurrent.Async} annotation should be used in combination with
+ * the {@link OnEvent} annotation. In this case the event system will call the method / consumer
+ * on a background thread.
  *
  * The annotation will automatically work in all view controls that are managed by the DataFX {@link io.datafx.controller.flow.Flow} API
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
-public @interface MessageProducer {
+public @interface OnEvent {
 
     /**
-     * Defines the adress to that the message should be send by the {@link io.datafx.messages.MessageBus}
+     * Defines the adress of this receiver
      * @return the adress
      */
     String value() default "";
-
-    /**
-     * Defines the producer id. This is used to bind a {@link io.datafx.messages.MessageProducer} to a
-     * {@link io.datafx.messages.MessageTrigger} in the same controller. Both annotations must define the
-     * same id. If there is only one producer and trigger in a class a specific id is not required because
-     * the default value "" can be used in this case.
-     * @return the adress
-     */
-    String id() default "";
-
 }

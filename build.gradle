@@ -95,7 +95,7 @@ project(':ui') {
     }
 }
 
-project(':messages') {
+project(':eventsystem') {
     dependencies {
         compile project(':flow')
         compile project(':injection')
@@ -148,7 +148,7 @@ project(':samples') {
         compile project(':ejb-wildfly')
         compile project(':samples-ejb')
         compile project(':ui')
-        compile project(':messages')
+        compile project(':eventsystem')
         compile project(':datasources')
         compile group:'org.controlsfx', name:'controlsfx', version:'8.0.6'
     }

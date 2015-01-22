@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package io.datafx.messages;
+package io.datafx.eventsystem;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -32,22 +32,31 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used to define message receivers. A method that is marked with this annotation will be called
- * whenever the {@link io.datafx.messages.MessageBus} sends a message for the given adress ({@link #value()} of the annotation).
- * The methods needs a parameter of the message content type, otherwise a {@link java.lang.RuntimeException} will thrown
- * in the {@link io.datafx.messages.MessageBus} (this don't stop the transmission to other receivers of the message).
- * In addition to an message a {@link java.util.function.Consumer} field can be annotated with {@link io.datafx.messages.OnMessage}.
- * The consumer will be called whenever the message bus transmits a new message.
- * Normally the method / consumer will be called on the JavaFX Application Thread. If the message should be received on
- * a background thread the {@link io.datafx.core.concurrent.Async} annotation should be used in combination with
- * the {@link io.datafx.messages.OnMessage} annotation. In this case the message bus will call the method / consumer
- * on a background thread.
+ * A annotation that can used to define a UI component that should trigger a event transmission.
+ * Any class that extends Node can be used in this case. If the class supports action events a event will be send
+ * once an action event is fired. Otherwise the event will be send if a doubleclick event was sent.
+ *
+ * The {@link EventTrigger} annotation
+ * should be used in combination with the {@link EventProducer} annotation to trigger
+ * the transmission of the supplied event. Once the transmission is triggered the annotated method / supplier
+ * will be called and the return value will be send. Normally the event will be send on the JavaFX Application
+ * Thread. If the event should be send on a background thread the {@link io.datafx.core.concurrent.Async} annotation
+ * should be used in combination with the {@link EventProducer} annotation. In this case
+ * the producer (annotated method or supplier) will be called on a background thread. All events will be send
+ * by the {@link EventSystem}.
  *
  * The annotation will automatically work in all view controls that are managed by the DataFX {@link io.datafx.controller.flow.Flow} API
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface OnMessage {
+@Target({ElementType.FIELD})
+public @interface EventTrigger {
 
-    String value() default "";
+    /**
+     * Defines the producer id. This is used to bind a {@link EventProducer} to a
+     * {@link EventTrigger} in the same controller. Both annotations must define the
+     * same id. If there is only one producer and trigger in a class a specific id is not required because
+     * the default value "" can be used in this case.
+     * @return the adress
+     */
+    String id() default "";
 }

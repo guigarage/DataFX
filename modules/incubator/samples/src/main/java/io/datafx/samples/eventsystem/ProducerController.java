@@ -1,8 +1,8 @@
-package io.datafx.samples.messagebus;
+package io.datafx.samples.eventsystem;
 
 import io.datafx.controller.ViewController;
-import io.datafx.messages.MessageProducer;
-import io.datafx.messages.MessageTrigger;
+import io.datafx.eventsystem.EventProducer;
+import io.datafx.eventsystem.EventTrigger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -14,13 +14,13 @@ import javafx.scene.control.TextField;
 public class ProducerController {
 
     @FXML
-    @MessageTrigger()
+    @EventTrigger()
     private Button sendButton;
 
     @FXML
     private TextField textField;
 
-    @MessageProducer("test-message")
+    @EventProducer("test-message")
     private String getMessage() {
         return textField.getText();
     }
