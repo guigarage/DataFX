@@ -370,11 +370,11 @@ public class Flow {
      * By using the method a flow based application can be created by only a few lines of code as shown in this example:
      * <code>
      * public class Example extends Application {
-     * <p>
+     *
      * public static void main(String[] args) {
      * launch(args);
      * }
-     * <p>
+     *
      * public void start(Stage primaryStage) throws Exception {
      * new Flow(SimpleController.class).startInStage(primaryStage);
      * }
