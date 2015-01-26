@@ -28,12 +28,12 @@ package io.datafx.eventsystem;
 
 import io.datafx.core.ExceptionHandler;
 import io.datafx.core.concurrent.ConcurrentUtils;
-import io.datafx.core.concurrent.DataFxRunnable;
 import io.datafx.core.concurrent.ObservableExecutor;
 import io.datafx.core.concurrent.ThreadType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 
 import java.util.concurrent.ExecutionException;
@@ -116,12 +116,27 @@ public final class EventSystem {
      * @return a worker that will be finished once the event was sent to all receivers.
      */
     public <T> Worker<Void> sendEvent(String address, Event<T> event) {
-        DataFxRunnable runner = handler -> {
-            handler.updateTaskTitle("EventRunner for " + address);
+        Task<Void> runner = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                updateTitle("EventRunner for " + address);
 
-            try {
-                ConcurrentUtils.runAndWait(() -> {
-                    ObservableList<Consumer<Event>> eventConsumers = consumers.get(address);
+                try {
+                    ConcurrentUtils.runAndWait(() -> {
+                        ObservableList<Consumer<Event>> eventConsumers = consumers.get(address);
+                        if (eventConsumers != null) {
+                            eventConsumers.forEach(c -> {
+                                try {
+                                    c.accept(event);
+                                } catch (Exception e) {
+                                    exceptionHandler.setException(e);
+                                }
+                            });
+                        }
+                    });
+
+                    //TODO: Use ThreadPool
+                    ObservableList<Consumer<Event>> eventConsumers = asyncConsumers.get(address);
                     if (eventConsumers != null) {
                         eventConsumers.forEach(c -> {
                             try {
@@ -131,26 +146,14 @@ public final class EventSystem {
                             }
                         });
                     }
-                });
 
-                //TODO: Use ThreadPool
-                ObservableList<Consumer<Event>> eventConsumers = asyncConsumers.get(address);
-                if (eventConsumers != null) {
-                    eventConsumers.forEach(c -> {
-                        try {
-                            c.accept(event);
-                        } catch (Exception e) {
-                            exceptionHandler.setException(e);
-                        }
-                    });
+                } catch (InterruptedException e) {
+                    exceptionHandler.setException(e);
+                } catch (ExecutionException e) {
+                    exceptionHandler.setException(e);
                 }
-
-            } catch (InterruptedException e) {
-                exceptionHandler.setException(e);
-            } catch (ExecutionException e) {
-                exceptionHandler.setException(e);
+                return null;
             }
-
         };
         return ConcurrentUtils.executeService(executor, ConcurrentUtils.createService(runner));
     }
