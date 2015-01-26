@@ -26,8 +26,15 @@
  */
 package io.datafx.controller;
 
+import io.datafx.controller.context.ViewContext;
+import io.datafx.controller.context.ViewMetadata;
 import io.datafx.controller.context.event.ContextPostConstructListener;
 import io.datafx.controller.util.NullNode;
+import io.datafx.core.DataFXUtils;
+import io.datafx.core.ExceptionHandler;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -36,10 +43,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import io.datafx.controller.context.ViewContext;
-import io.datafx.controller.context.ViewMetadata;
-import io.datafx.core.DataFXUtils;
-import io.datafx.core.ExceptionHandler;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
@@ -49,11 +52,11 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * This class contains static methods to create views in the DataFX Container context. 
- * All views that will use DataFX controller or Flow features have to be created by this class. 
- * Normally a developer doesn't need to use this class because the Flow API will 
- * call the methods internally whenever a new view is created in a flow. 
- * If a developers doesn't want to use the flow API and only want to create a 
+ * This class contains static methods to create views in the DataFX Container context.
+ * All views that will use DataFX controller or Flow features have to be created by this class.
+ * Normally a developer doesn't need to use this class because the Flow API will
+ * call the methods internally whenever a new view is created in a flow.
+ * If a developers doesn't want to use the flow API and only want to create a
  * single view that uses DataFX controller features this class can be used to create the view.
  */
 public class ViewFactory {
@@ -122,25 +125,26 @@ public class ViewFactory {
     }
 
     /**
-     * Creates a new MVC based view by using the given controller class. 
-     * The class needs a default constructor (no parameters) and 
+     * Creates a new MVC based view by using the given controller class.
+     * The class needs a default constructor (no parameters) and
      * a {@link ViewController} annotation to link to the fxml file.
-     * You can skip the annotation if you want to use the controller API conventions. 
+     * You can skip the annotation if you want to use the controller API conventions.
      * By doing so the fxml files has to be in the package as the controller and
      * must fit to a naming convention (see {@link ViewController}
-     * for more information). The method returns a 
-     * {@link io.datafx.controller.context.ViewContext}. 
-     * This is a wrapper around the view (view-node and controller) and can be 
-     * used to register your datamodel to the view. The doc of 
-     * {@link io.datafx.controller.context.ViewContext} will 
+     * for more information). The method returns a
+     * {@link io.datafx.controller.context.ViewContext}.
+     * This is a wrapper around the view (view-node and controller) and can be
+     * used to register your datamodel to the view. The doc of
+     * {@link io.datafx.controller.context.ViewContext} will
      * provide more information about this topic. By using this method you can
      * overwrite the path to your fxml file.
+     *
      * @param <T>
      * @param controllerClass
      * @param fxmlName
-     * @param viewConfiguration The configuration for the view
+     * @param viewConfiguration    The configuration for the view
      * @param viewContextResources initial resources that will be added to the view context
-     * @return 
+     * @return
      * @throws io.datafx.controller.FxmlLoadException
      */
     public <T> ViewContext<T> createByController(
@@ -162,7 +166,7 @@ public class ViewFactory {
 
             // 2. Create the view and make sure the @FXML annotations are injected
             Node viewNode = null;
-            if(controllerAnnotation != null && controllerAnnotation.root() != null &&  !controllerAnnotation.root().equals(NullNode.class)) {
+            if (controllerAnnotation != null && controllerAnnotation.root() != null && !controllerAnnotation.root().equals(NullNode.class)) {
                 viewNode = controllerAnnotation.root().newInstance();
                 injectNodeIDs(viewNode);
             } else {
@@ -176,14 +180,13 @@ public class ViewFactory {
                     controller, metadata, viewConfiguration, viewContextResources);
 
 
-
             // 4. Resolve the @Inject points in the Controller and call
             // @PostConstruct
             context.getResolver().injectResources(controller);
 
             // 5. Call listeners
             ServiceLoader<ContextPostConstructListener> postConstructLoader = ServiceLoader.load(ContextPostConstructListener.class);
-            for(ContextPostConstructListener listener : postConstructLoader) {
+            for (ContextPostConstructListener listener : postConstructLoader) {
                 listener.postConstruct(context);
             }
 
@@ -200,9 +203,10 @@ public class ViewFactory {
     }
 
     /**
-     * Helper method that will show exactly one view in a stage. 
+     * Helper method that will show exactly one view in a stage.
      * This method can be used to create a simple one view application or test a view by only some lines of code
-     * @param stage The stage in that the view will be shown
+     *
+     * @param stage           The stage in that the view will be shown
      * @param controllerClass the class of the controller that defines the view
      */
     public void showInStage(Stage stage, Class<?> controllerClass) throws FxmlLoadException {
@@ -224,7 +228,7 @@ public class ViewFactory {
 
         URL fxmlUrl = controllerClass.getResource(foundFxmlName);
 
-        if(fxmlUrl == null) {
+        if (fxmlUrl == null) {
             throw new FxmlLoadException("Can't find FXML file for controller " + controller.getClass());
         }
 
@@ -261,10 +265,11 @@ public class ViewFactory {
     }
 
 
-   /**
-     * This methods creates a tab that contains the given view. 
-     * By doing so the metadata of the view will be bound to the tab properties. 
+    /**
+     * This methods creates a tab that contains the given view.
+     * By doing so the metadata of the view will be bound to the tab properties.
      * So the text and icon of the tab can be changed by the view.
+     *
      * @param controllerClass the class that defines the controller of the view
      */
     public <T> Tab createTab(Class<T> controllerClass) throws FxmlLoadException {
@@ -272,10 +277,11 @@ public class ViewFactory {
     }
 
     /**
-     * This methods creates a tab that contains the given view. 
-     * By doing so the metadata of the view will be bound to the tab properties. 
+     * This methods creates a tab that contains the given view.
+     * By doing so the metadata of the view will be bound to the tab properties.
      * So the text and icon of the tab can be changed by the view.
-     * @param controllerClass the class that defines the controller of the view
+     *
+     * @param controllerClass  the class that defines the controller of the view
      * @param exceptionHandler the exception handle for the view. This handler will handle all exceptions that will be thrown in the DataFX container context
      */
     public <T> Tab createTab(Class<T> controllerClass, ExceptionHandler exceptionHandler) throws FxmlLoadException {
@@ -283,25 +289,25 @@ public class ViewFactory {
     }
 
     /**
-     * This methods creates a tab that contains the given view. 
-     * By doing so the metadata of the view will be bound to the tab properties. 
+     * This methods creates a tab that contains the given view.
+     * By doing so the metadata of the view will be bound to the tab properties.
      * So the text and icon of the tab can be changed by the view.
-     * 
-     * @param  context the context of the view. This includes the view and its controller instance 
-     * so that all needed informations are part of the context
+     *
+     * @param context the context of the view. This includes the view and its controller instance
+     *                so that all needed informations are part of the context
      */
     public <T> Tab createTab(ViewContext<T> context) {
         return createTab(context, ExceptionHandler.getDefaultInstance());
     }
 
     /**
-     * This methods creates a tab that contains the given view. 
-     * By doing so the metadata of the view will be bound to the tab properties. 
+     * This methods creates a tab that contains the given view.
+     * By doing so the metadata of the view will be bound to the tab properties.
      * So the text and icon of the tab can be changed by the view.
-     * 
-     * @param  context the context of the view. This includes the view and its controller instance 
-     * so that all needed informations are part of the context
-     * @param  exceptionHandler the exception handle for the view. This handler will handle all exceptions that will be thrown in the DataFX container context
+     *
+     * @param context          the context of the view. This includes the view and its controller instance
+     *                         so that all needed informations are part of the context
+     * @param exceptionHandler the exception handle for the view. This handler will handle all exceptions that will be thrown in the DataFX container context
      */
     public <T> Tab createTab(ViewContext<T> context, ExceptionHandler exceptionHandler) {
         Tab tab = new Tab();
@@ -326,9 +332,10 @@ public class ViewFactory {
      * - private fields in a superclass of the controller class
      * - fields that defines a node that is part of a sub-fxml. This is a fxml definition that is included in the fxml
      * file.
+     *
      * @param controller The controller instance
-     * @param root The root Node
-     * @param <T> Type of the controller
+     * @param root       The root Node
+     * @param <T>        Type of the controller
      */
     private <T> void injectFXMLNodes(T controller, Node root) {
 
@@ -338,7 +345,7 @@ public class ViewFactory {
                 if (DataFXUtils.getPrivileged(field, controller) == null) {
                     if (Node.class.isAssignableFrom(field.getType())) {
                         Node toInject = root.lookup("#" + field.getName());
-                        if(toInject != null) {
+                        if (toInject != null) {
                             DataFXUtils.setPrivileged(field, controller, toInject);
                         }
                     }
@@ -347,13 +354,13 @@ public class ViewFactory {
 
             if (field.getAnnotation(ViewNode.class) != null) {
                 String id = field.getName();
-                if(field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
+                if (field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
                     id = field.getAnnotation(ViewNode.class).value();
                 }
                 if (DataFXUtils.getPrivileged(field, controller) == null) {
                     if (Node.class.isAssignableFrom(field.getType())) {
                         Node toInject = root.lookup("#" + id);
-                        if(toInject != null) {
+                        if (toInject != null) {
                             DataFXUtils.setPrivileged(field, controller, toInject);
                         }
                     }
@@ -363,17 +370,45 @@ public class ViewFactory {
 
     }
 
-    private void injectNodeIDs(Node node) {
-        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(node.getClass());
+    private void injectNodeIDs(Node root) {
+        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(root.getClass());
         for (Field field : fields) {
             if (Node.class.isAssignableFrom(field.getType()) && field.getAnnotation(ViewNode.class) != null) {
                 String id = field.getName();
-                if(field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
+                if (field.getAnnotation(ViewNode.class).value() != null && !field.getAnnotation(ViewNode.class).value().isEmpty()) {
                     id = field.getAnnotation(ViewNode.class).value();
                 }
 
-                Node child = DataFXUtils.getPrivileged(field, node);
+                Node child = DataFXUtils.getPrivileged(field, root);
                 child.setId(id);
+            }
+        }
+    }
+
+    private <T> void injectProperties(T controller, Node root) {
+        List<Field> fields = DataFXUtils.getInheritedDeclaredFields(controller.getClass());
+        for (Field field : fields) {
+            if (field.getAnnotation(ViewProperty.class) != null && ObservableValue.class.isAssignableFrom(field.getType())) {
+                String id = field.getAnnotation(ViewProperty.class).value();
+                String[] splitted = id.split(".");
+                Node baseNode = root.lookup("#" + splitted[0]);
+                Object foundProperty = null;
+
+                ObservableValue toInject = DataFXUtils.getPrivileged(field, controller);
+                if (toInject == null) {
+                    toInject = new SimpleObjectProperty<>();
+                    DataFXUtils.setPrivileged(field, controller, toInject);
+                }
+
+                if(Property.class.isAssignableFrom(field.getType())) {
+                    if(foundProperty instanceof Property) {
+                        ((Property)toInject).bindBidirectional((Property) foundProperty);
+                    } else if(foundProperty instanceof ObservableValue) {
+                        ((Property)toInject).bind((ObservableValue) foundProperty);
+                    }
+                } else if(foundProperty instanceof Property) {
+                    ((Property)toInject).bind((ObservableValue) foundProperty);
+                }
             }
         }
     }

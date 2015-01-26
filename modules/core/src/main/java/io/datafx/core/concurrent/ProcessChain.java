@@ -49,11 +49,11 @@ import java.util.function.Supplier;
  * Here is a common usecase for the chain:
  * <tt>
  * ProcessChain.create().
- * addRunnableInPlatformThread(() -> blockUI()).
- * addSupplierInExecutor(() -> loadFromServer()).
- * addConsumerInPlatformThread(d -> updateUI(d)).
- * onException(e -> handleException(e)).
- * withFinal(() -> unblockUI()).
+ * addRunnableInPlatformThread(() -&gt; blockUI()).
+ * addSupplierInExecutor(() -&gt; loadFromServer()).
+ * addConsumerInPlatformThread(d -&gt; updateUI(d)).
+ * onException(e -&gt; handleException(e)).
+ * withFinal(() -&gt; unblockUI()).
  * run();
  *</tt>
  * In this example the {@link io.datafx.core.concurrent.ProcessChain} is used to wrap a background task

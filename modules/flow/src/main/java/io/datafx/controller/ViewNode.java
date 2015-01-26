@@ -10,10 +10,10 @@ import java.lang.annotation.Target;
  * It can only be used for fields that define a {@link javafx.scene.Node} instance. Normally it will be used
  * to annotate children of the view:
  * <tt>
- *     @ViewController
+ *     &#64;ViewController
  *     public class SimpleController {
  *
- *        @ViewNode
+ *        &#64;ViewNode
  *        private Button myButton;
  *
  *     }
