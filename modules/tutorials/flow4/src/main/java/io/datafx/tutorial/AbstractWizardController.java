@@ -51,15 +51,4 @@ public class AbstractWizardController {
     public Button getNextButton() {
         return nextButton;
     }
-
-    @PreDestroy
-    private void onClose() {
-        System.out.println("Closing " + getClass());
-    }
-
-    @PostConstruct
-    private void onOpen() {
-        System.out.println("Closing " + getClass());
-    }
-
 }
