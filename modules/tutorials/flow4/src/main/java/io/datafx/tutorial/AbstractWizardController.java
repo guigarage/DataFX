@@ -4,6 +4,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import io.datafx.controller.flow.action.ActionTrigger;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 /**
  * Note: Tutorial 4 depends on tutorial 3. To understand the complete tutorial please check tutorial 3 because some
  * informations are documented there. Here only the features and code that differ from tutorial 3 will be described.
@@ -48,4 +51,15 @@ public class AbstractWizardController {
     public Button getNextButton() {
         return nextButton;
     }
+
+    @PreDestroy
+    private void onClose() {
+        System.out.println("Closing " + getClass());
+    }
+
+    @PostConstruct
+    private void onOpen() {
+        System.out.println("Closing " + getClass());
+    }
+
 }

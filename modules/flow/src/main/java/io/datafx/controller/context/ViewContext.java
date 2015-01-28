@@ -27,6 +27,7 @@
 package io.datafx.controller.context;
 
 import io.datafx.controller.context.event.ContextDestroyedListener;
+import io.datafx.core.DataFXUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -177,9 +178,9 @@ public class ViewContext<U> extends AbstractContext {
             IllegalArgumentException, InvocationTargetException {
         // TODO: All managed Object should be checked for a pre destroy....
         if (controller != null) {
-            for (final Method method : getController().getClass().getDeclaredMethods()) {
+            for (final Method method : DataFXUtils.getInheritedDeclaredMethods(getController().getClass())) {
                 if (method.isAnnotationPresent(PreDestroy.class)) {
-                    method.invoke(getController());
+                    DataFXUtils.callPrivileged(method, getController());
                 }
             }
         }

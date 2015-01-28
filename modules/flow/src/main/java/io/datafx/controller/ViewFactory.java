@@ -191,9 +191,9 @@ public class ViewFactory {
             }
 
             // 6. call PostConstruct methods
-            for (final Method method : controller.getClass().getMethods()) {
+            for (final Method method : DataFXUtils.getInheritedDeclaredMethods(controller.getClass())) {
                 if (method.isAnnotationPresent(PostConstruct.class)) {
-                    method.invoke(controller);
+                    DataFXUtils.callPrivileged(method, controller);
                 }
             }
             return context;
