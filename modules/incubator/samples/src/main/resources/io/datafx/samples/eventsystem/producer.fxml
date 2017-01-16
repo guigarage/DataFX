@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="12.0" style="-fx-border-color: darkgrey; -fx-border-width: 2;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label text="Sender">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="textField" />
+      <Button fx:id="sendButton" mnemonicParsing="false" text="send" />
+   </children>
+   <padding>
+      <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+   </padding>
+</VBox>

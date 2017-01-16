@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="513.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <TableView fx:id="dataTable" layoutX="14.0" layoutY="14.0" prefHeight="372.0" prefWidth="485.0" />
+    <Button id="updateButton" fx:id="reloadButton" layoutX="14.0" layoutY="397.0" mnemonicParsing="false" text="reload" />
+    <Button fx:id="addButton" layoutX="93.0" layoutY="397.0" mnemonicParsing="false" text="add" />
+    <Button fx:id="removeButton" layoutX="174.0" layoutY="397.0" mnemonicParsing="false" text="remove" />
+  </children>
+</AnchorPane>

@@ -1,0 +1,247 @@
+Properties commons = new Properties()
+commons.load(new FileInputStream("$rootDir/datafx-build.properties"))
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+
+
+allprojects {
+    def pluginLoc = project.rootDir.path+"/mavenPublish.gradle"
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply from: pluginLoc
+    apply plugin: 'idea'
+
+    group = commons.datafx_group
+    version = commons.datafx_version
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.java
+        from sourceSets.main.resources
+        classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        dependsOn javadoc
+        from javadoc.destinationDir
+        classifier = 'javadoc'
+    }
+    artifacts {
+        archives sourceJar
+        archives javadocJar
+    }
+    repositories {
+        jcenter()
+    }
+}
+
+project(':core') {
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
+    }
+}
+    repositories {
+        mavenCentral()
+    }
+    apply plugin: 'me.tatarka.retrolambda'
+}
+
+project(':datasources') {
+    apply plugin: 'me.tatarka.retrolambda'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        compile project(':core')
+        compile group:'org.glassfish', name:'javax.json', version: '1.0.4'
+    }
+}
+
+project(':websocket') {
+    dependencies {
+        compile project(':datasources')
+        compile group:'javax.websocket', name:'javax.websocket-client-api', version:'1.0'
+    }
+}
+
+project(':injection') {
+    dependencies {
+        compile project(':flow')
+        compile group:'org.javassist', name:'javassist', version:'3.18.1-GA'
+        compile group:'javax.inject', name:'javax.inject', version:'1'
+    }
+}
+
+project(':validation') {
+    dependencies {
+        compile project(':flow')
+        compile group:'javax.validation', name:'validation-api', version:'1.1.0.Final'
+    }
+}
+
+project(':ui') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project(':eventsystem') {
+    dependencies {
+        compile project(':flow')
+        compile project(':injection')
+    }
+}
+
+project(':crud') {
+    dependencies {
+        compile project(':core')
+        compile group:'org.hibernate.javax.persistence', name:'hibernate-jpa-2.0-api', version:'1.0.1.Final'
+    }
+}
+
+project(':featuretoggle') {
+    dependencies {
+        compile project(':flow')
+        compile group:'com.guigarage', name:'observable-toogles', version:'0.1'
+    }
+}
+
+project(':ejb') {
+    dependencies {
+        compile project(':flow')
+        compile group:'javax.ejb', name:'ejb-api', version:'3.0'
+        compile group:'org.apache.commons', name:'commons-lang3', version:'3.2.1'
+
+    }
+}
+
+project(':ejb-wildfly') {
+    dependencies {
+        compile project(':ejb')
+        compile group:'org.jboss', name:'jboss-ejb-client', version:'2.0.0.Final'
+
+    }
+}
+
+project(':samples-ejb') {
+    dependencies {
+        compile group:'javax.ejb', name:'ejb-api', version:'3.0'
+    }
+}
+
+project(':samples') {
+    dependencies {
+        compile project(':crud')
+        compile project(':featuretoggle')
+        compile project(':injection')
+        compile project(':validation')
+        compile project(':ejb-wildfly')
+        compile project(':samples-ejb')
+        compile project(':ui')
+        compile project(':eventsystem')
+        compile project(':datasources')
+        compile group:'org.controlsfx', name:'controlsfx', version:'8.0.6'
+    }
+}
+
+project(':flow') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project(':tutorials-flow1') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow2') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow3') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow4') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow5') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+project(':tutorials-flow6') {
+    dependencies {
+        compile project(":flow");
+    }
+}
+
+/*
+project (':tutorials') {
+    dependencies {
+        compile project(":flow");
+    }
+    File dir = projectDir;
+    def subdirs = projectDir.listFiles().each {File s ->
+logger.info("PROCESS SUBDIR $s");
+        int ablen = projectDir.absolutePath.length()+1;
+        String abspath = s.absolutePath;
+        String relpath = abspath.substring(ablen);
+        if (relpath.startsWith("flow")) {
+            String idx = relpath.substring(4);
+            sourceSets {
+               "$relpath" {
+                    java {
+                        srcDir "$relpath/src/main/java"
+                    }
+                    resources {
+                        srcDir "$relpath/src/main/resources"
+                    }
+                }
+               main {
+                    java {
+                        srcDir "$relpath/src/main/java"
+                    }
+                    resources {
+                        srcDir "$relpath/src/main/resources"
+                    }
+                }
+            }
+            String cpstr = relpath+"Compile";
+            dependencies {
+               "$cpstr" project(':flow')
+            }
+            def jartask = tasks.create(name: "$relpath"+"Jar", type:Jar) {
+                from sourceSets."$relpath".output
+            }
+            tasks.create(name: "$relpath"+"Exec", type: JavaExec) {
+                classpath sourceSets."$relpath".runtimeClasspath
+                main "org.datafx.tutorial.Tutorial"+"$idx"+"Main"
+            }
+            artifacts {
+                archives jartask
+            }
+        }
+    };
+}
+*/

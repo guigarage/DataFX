@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.javafxdata</groupId>
+		<artifactId>datafx-parent</artifactId>
+		<version>8.0b6-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<artifactId>datafx-websocket</artifactId>
+	<packaging>jar</packaging>
+
+	<name>datafx-websocket</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javafxdata</groupId>
+			<artifactId>datafx-datareader</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.websocket</groupId>
+			<artifactId>javax.websocket-client-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

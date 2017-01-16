@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+    <persistence-unit name="DataFX-Samples" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby:memory:test-jpa;create=true"/>
+            <property name="javax.persistence.jdbc.user" value="APP"/>
+            <property name="javax.persistence.jdbc.password" value="APP"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect"/>
+            <property name="show_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
