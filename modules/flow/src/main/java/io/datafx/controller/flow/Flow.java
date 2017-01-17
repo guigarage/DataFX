@@ -385,23 +385,7 @@ public class Flow {
      * @throws FlowException If the flow can't be created or started
      */
     public void startInStage(Stage stage) throws FlowException {
-        FlowHandler handler = createHandler();
-        stage.setScene(new Scene(handler.start(new DefaultFlowContainer())));
-        handler.getCurrentViewMetadata().addListener((e) -> {
-            stage.titleProperty().unbind();
-            ViewMetadata metadata = handler.getCurrentViewMetadata().get();
-            if (metadata != null) {
-                stage.titleProperty().bind(metadata.titleProperty());
-            }
-        });
-
-        stage.titleProperty().unbind();
-        ViewMetadata metadata = handler.getCurrentViewMetadata().get();
-        if (metadata != null) {
-            stage.titleProperty().bind(metadata.titleProperty());
-        }
-
-        stage.show();
+        createHandler().startInStage(stage, new DefaultFlowContainer());
     }
 
     public void startInPane(StackPane pane) throws FlowException {
