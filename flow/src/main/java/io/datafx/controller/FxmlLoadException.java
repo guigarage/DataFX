@@ -31,7 +31,7 @@ package io.datafx.controller;
  * @author hendrikebbers
  *
  */
-public class FxmlLoadException extends Exception{
+public class FxmlLoadException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
