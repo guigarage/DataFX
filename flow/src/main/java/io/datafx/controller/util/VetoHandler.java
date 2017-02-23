@@ -26,6 +26,7 @@
  */
 package io.datafx.controller.util;
 
+@FunctionalInterface
 public interface VetoHandler {
 
     void onVeto(Veto veto);

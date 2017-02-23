@@ -28,6 +28,7 @@ package io.datafx.controller.flow.event;
 
 import javafx.event.EventHandler;
 
+@FunctionalInterface
 public interface AfterFlowActionHandler extends EventHandler<AfterFlowActionEvent>{
 
 }

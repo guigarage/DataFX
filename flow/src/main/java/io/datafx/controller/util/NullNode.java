@@ -10,7 +10,7 @@ import javafx.scene.Node;
 /**
  * Created by hendrikebbers on 21.10.14.
  */
-public class NullNode extends Node{
+public class NullNode extends Node {
     @Override
     protected NGNode impl_createPeer() {
         throw new RuntimeException("This class should not be used!");

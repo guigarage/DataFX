@@ -28,13 +28,7 @@ package io.datafx.controller.flow.event;
 
 import io.datafx.controller.util.VetoableEventHandler;
 
-/**
- * Created with IntelliJ IDEA.
- * User: hendrikebbers
- * Date: 18.12.13
- * Time: 00:17
- * To change this template use File | Settings | File Templates.
- */
+@FunctionalInterface
 public interface VetoableBeforeFlowActionHandler extends VetoableEventHandler<BeforeFlowActionEvent> {
 
 }

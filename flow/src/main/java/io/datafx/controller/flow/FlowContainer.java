@@ -48,13 +48,13 @@ public interface FlowContainer<T extends Node> {
      *
      * @param context Context of the current view
      */
-    public <U> void setViewContext(ViewContext<U> context);
+    <U> void setViewContext(ViewContext<U> context);
 
     /**
      * Return the <tt>Parent</tt> node that is rendering the flow.
      *
      * @return the <tt>Parent</tt> node that is rendering the flow
      */
-    public T getView();
+    T getView();
 
 }
