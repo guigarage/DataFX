@@ -27,13 +27,19 @@
 package io.datafx.core.concurrent;
 
 //import org.datafx.DataFXConfiguration;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.concurrent.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import io.datafx.core.Assert;
 import io.datafx.core.DataFXConfiguration;
 import io.datafx.core.ExceptionHandler;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ThreadPoolExecutorFactory {
 
@@ -41,7 +47,8 @@ public class ThreadPoolExecutorFactory {
 
     private static ThreadPoolExecutor defaultExecutor;
 
-    private static void onUncaughtException(Thread thread, Throwable throwable) {
+    private static void onUncaughtException(final Thread thread, final Throwable throwable) {
+        Assert.requireNonNull(thread, "thread");
         if (!ExceptionHandler.isLogException()) {
             LOGGER.log(Level.SEVERE, "Uncaught throwable in " + thread.getName(), throwable);
         }
@@ -50,7 +57,6 @@ public class ThreadPoolExecutorFactory {
 
     public static synchronized ThreadPoolExecutor getThreadPoolExecutor() {
         if(defaultExecutor == null) {
-
             BlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>() {
                 @Override
                 public boolean offer(Runnable runnable) {

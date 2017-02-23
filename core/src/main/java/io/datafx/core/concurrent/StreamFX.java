@@ -26,6 +26,7 @@
  */
 package io.datafx.core.concurrent;
 
+import io.datafx.core.Assert;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -42,14 +43,14 @@ import java.util.stream.Stream;
  */
 public class StreamFX<T> {
 
-    private Stream<T> stream;
+    private final Stream<T> stream;
 
     /**
      * Create a StreamFX as a wrapper of a Stream
      * @param stream the stream to wrap
      */
-    public StreamFX(Stream<T> stream) {
-        this.stream = stream;
+    public StreamFX(final Stream<T> stream) {
+        this.stream = Assert.requireNonNull(stream, "stream");
     }
 
     /**
@@ -58,6 +59,7 @@ public class StreamFX<T> {
      * @param action action to perform on the elements
      */
     public void forEach(final Consumer<ObjectProperty<? super T>> action) {
+        Assert.requireNonNull(action, "action");
         stream.forEach((Consumer<T>) (t) -> {Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t)));});
     }
 
@@ -69,6 +71,7 @@ public class StreamFX<T> {
      * @param action action to perform on the elements
      */
     public void forEachOrdered(final Consumer<ObjectProperty<? super T>> action) {
+        Assert.requireNonNull(action, "action");
         stream.forEachOrdered((Consumer<T>) (t) -> {Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t)));});
     }
 
@@ -78,6 +81,7 @@ public class StreamFX<T> {
      * @param list List to publish all elements to
      */
     public void publish(final ObservableList<T> list) {
+        Assert.requireNonNull(list, "list");
         stream.forEach((Consumer<T>) (t) -> {Platform.runLater(() -> list.add(t));});
     }
 
@@ -89,6 +93,7 @@ public class StreamFX<T> {
      * @param list List to publish all elements to
      */
     public void publishOrderer(final ObservableList<T> list) {
+        Assert.requireNonNull(list, "list");
         stream.forEachOrdered((Consumer<T>) (t) -> {Platform.runLater(() -> list.add(t));});
     }
 

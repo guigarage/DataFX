@@ -38,9 +38,9 @@ import java.util.function.Function;
  */
 public class ProcessDescription<V, T> {
 
-    private Function<V, T> function;
+    private final Function<V, T> function;
 
-    private ThreadType threadType;
+    private final ThreadType threadType;
 
     /**
      * Creates a new <tt>ProcessDescription</tt> with the given function and thread type. 
@@ -52,7 +52,7 @@ public class ProcessDescription<V, T> {
      * @param function  defines what this process will do
      * @param threadType  defines if the process should be executed om the JavaFX Platform Thread or on a background thread
      */
-    public ProcessDescription(Function<V, T> function, ThreadType threadType) {
+    public ProcessDescription(final Function<V, T> function, final ThreadType threadType) {
         this.function = function;
         this.threadType = threadType;
     }

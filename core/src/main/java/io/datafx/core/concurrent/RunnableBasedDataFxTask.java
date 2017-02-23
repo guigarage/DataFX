@@ -25,6 +25,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package io.datafx.core.concurrent;
+
+import io.datafx.core.Assert;
+
 /**
 * Helper class that can be used to easily create a JavaFX service from a runnable. 
 * The class extends the {@link javafx.concurrent.Task} class. 
@@ -45,10 +48,10 @@ package io.datafx.core.concurrent;
 
 public class RunnableBasedDataFxTask extends DataFxTask<Void> {
 
-    private Runnable runnable;
+    private final Runnable runnable;
 
-    public RunnableBasedDataFxTask(Runnable runnable) {
-        this.runnable = runnable;
+    public RunnableBasedDataFxTask(final Runnable runnable) {
+        this.runnable = Assert.requireNonNull(runnable, "runnable");
         if (this.runnable instanceof DataFxRunnable) {
             ((DataFxRunnable) this.runnable).injectStateHandler(this);
         }

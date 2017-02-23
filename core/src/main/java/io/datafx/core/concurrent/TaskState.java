@@ -59,7 +59,7 @@ public class TaskState {
      * Sets the max progress value. The value defines the maximum value that the progress value can reach
      * @param maxProgress  the max progress value
      */
-	public void setMaxProgress(double maxProgress) {
+	public void setMaxProgress(final double maxProgress) {
 		maxProgress().set(maxProgress);
 	}
 

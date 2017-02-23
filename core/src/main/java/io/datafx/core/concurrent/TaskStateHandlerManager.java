@@ -51,7 +51,7 @@ public class TaskStateHandlerManager {
      * @param task the task for that the <tt>TaskStateHandler</tt> instance should be registered
      * @param stateHandler the <tt>TaskStateHandler</tt> instance
      */
-    public static synchronized void add(Object task, TaskStateHandler stateHandler) {
+    public static synchronized void add(final Object task, final TaskStateHandler stateHandler) {
         if (weakMap == null) {
             weakMap = new HashMap<>();
         }
@@ -63,7 +63,7 @@ public class TaskStateHandlerManager {
      * @param task the task
      * @return the <tt>TaskStateHandler</tt> instance
      */
-    public static synchronized TaskStateHandler get(Object task) {
+    public static synchronized TaskStateHandler get(final Object task) {
         for (WeakReference ref : weakMap.keySet()) {
             if (ref.get() == null) {
                 //TODO: remove

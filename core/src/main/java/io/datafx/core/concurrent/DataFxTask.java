@@ -40,26 +40,27 @@ import java.util.function.Consumer;
  * @param <V> the result type of method <tt>getValue</tt>
  */
 public abstract class DataFxTask<V> extends Task<V> implements TaskStateHandler {
-    private BooleanProperty cancelable;
+
+    private final BooleanProperty cancelable;
 
     public DataFxTask() {
         cancelable = new SimpleBooleanProperty(true);
         updateTitle("Unknown task");
     }
 
-    @Override public void updateTaskTitle(String title) {
+    @Override public void updateTaskTitle(final String title) {
         updateTitle(title);
     }
 
-    @Override public void updateTaskMessage(String message) {
+    @Override public void updateTaskMessage(final String message) {
         updateMessage(message);
     }
 
-    @Override public void updateTaskProgress(double workDone, double max) {
+    @Override public void updateTaskProgress(final double workDone, final double max) {
         updateProgress(workDone, max);
     }
 
-    @Override public void updateTaskProgress(long workDone, long max) {
+    @Override public void updateTaskProgress(final long workDone, final long max) {
         updateProgress(workDone, max);
     }
 
@@ -80,7 +81,7 @@ public abstract class DataFxTask<V> extends Task<V> implements TaskStateHandler 
         return cancelable.get();
     }
 
-    public void setCancelable(boolean cancelable) {
+    public void setCancelable(final boolean cancelable) {
         this.cancelable.set(cancelable);
     }
 
@@ -89,7 +90,7 @@ public abstract class DataFxTask<V> extends Task<V> implements TaskStateHandler 
      * 
      * throws a RuntimeException if the task is not cancelable
      */
-    @Override public boolean cancel(boolean mayInterruptIfRunning) {
+    @Override public boolean cancel(final boolean mayInterruptIfRunning) {
         if (cancelable.get()) {
             return super.cancel(mayInterruptIfRunning);
         } else {
@@ -97,7 +98,7 @@ public abstract class DataFxTask<V> extends Task<V> implements TaskStateHandler 
         }
     }
 
-    public void then(Consumer<V> consumer) {
+    public void then(final Consumer<V> consumer) {
         ConcurrentUtils.then(this, consumer);
     }
 }

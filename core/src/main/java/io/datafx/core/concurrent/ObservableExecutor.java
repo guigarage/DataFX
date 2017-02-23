@@ -26,6 +26,8 @@
  */
 package io.datafx.core.concurrent;
 
+import io.datafx.core.Assert;
+import io.datafx.core.ExceptionHandler;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -37,12 +39,10 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
-import io.datafx.core.ExceptionHandler;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * A Executor that task can be observed. All current running and scheduled task
@@ -61,11 +61,13 @@ import java.util.concurrent.Executors;
  */
 public class ObservableExecutor implements Executor {
 
-    private Executor executor;
+    private static ObservableExecutor defaultInstance;
 
-    private ListProperty<Service<?>> currentServices;
+    private final Executor executor;
 
-    private ExceptionHandler exceptionHandler;
+    private final ListProperty<Service<?>> currentServices;
+
+    private final ExceptionHandler exceptionHandler;
 
     /**
      * Creates a new ObservableExecutor that uses a cached thread pool to handle
@@ -75,11 +77,11 @@ public class ObservableExecutor implements Executor {
         this(ThreadPoolExecutorFactory.getThreadPoolExecutor());
     }
 
-    public ObservableExecutor(Executor executor) {
+    public ObservableExecutor(final Executor executor) {
         this(executor, ExceptionHandler.getDefaultInstance());
     }
 
-    public ObservableExecutor(ExceptionHandler exceptionHandler) {
+    public ObservableExecutor(final ExceptionHandler exceptionHandler) {
         this(ThreadPoolExecutorFactory.getThreadPoolExecutor(), exceptionHandler);
     }
 
@@ -91,9 +93,9 @@ public class ObservableExecutor implements Executor {
      * are commited to this executor.
      * @param exceptionHandler the exceptionhandler
      */
-    public ObservableExecutor(Executor executor, ExceptionHandler exceptionHandler) {
-        this.executor = executor;
-        this.exceptionHandler = exceptionHandler;
+    public ObservableExecutor(final Executor executor, final ExceptionHandler exceptionHandler) {
+        this.executor = Assert.requireNonNull(executor, "executor");
+        this.exceptionHandler = Assert.requireNonNull(exceptionHandler, "exceptionHandler");
         currentServices = new SimpleListProperty<Service<?>>(
                 FXCollections.<Service<?>>observableArrayList());
         currentServices.addListener(new ListChangeListener<Service<?>>() {
@@ -153,7 +155,8 @@ public class ObservableExecutor implements Executor {
      * @return a worker that can be used to check the state of the service and
      * receive the result of it.
      */
-    public <T> Worker<T> submit(Service<T> service) {
+    public <T> Worker<T> submit(final Service<T> service) {
+        Assert.requireNonNull(service, "service");
         service.setExecutor(executor);
         currentServices.add(service);
         if(exceptionHandler != null) {
@@ -205,7 +208,7 @@ public class ObservableExecutor implements Executor {
      * @param runnable the runnable. If a <code>DataFxRunnable</code> is used
      * here a <code>TaskStateHandler</code> will be injected.
      */
-    public void execute(Runnable runnable) {
+    public void execute(final Runnable runnable) {
         submit(runnable);
     }
 
@@ -218,8 +221,6 @@ public class ObservableExecutor implements Executor {
     public ProcessChain<Void> createProcessChain() {
         return new ProcessChain<>(this);
     }
-
-    private static ObservableExecutor defaultInstance;
 
     /**
      * Returns the default executor. This one uses an internal cached thread pool.

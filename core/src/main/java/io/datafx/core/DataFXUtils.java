@@ -1,10 +1,5 @@
 package io.datafx.core;
 
-import javafx.scene.Node;
-import javafx.scene.control.ButtonBase;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,7 +21,8 @@ public class DataFXUtils {
      * @param resourceName name / path of the resource
      * @return true if the resource can be accessed
      */
-    public static boolean canAccess(Class<?> controllerClass, String resourceName) {
+    public static boolean canAccess(final Class<?> controllerClass, final String resourceName) {
+        Assert.requireNonNull(controllerClass, "controllerClass");
         try {
             URL url = controllerClass.getResource(resourceName);
             if (url == null) {
@@ -46,6 +42,7 @@ public class DataFXUtils {
      */
     public static void setPrivileged(final Field field, final Object bean,
                                      final Object value) {
+        Assert.requireNonNull(field, "field");
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
             @Override
             public Void run() {
@@ -71,6 +68,7 @@ public class DataFXUtils {
      * @return the value
      */
     public static <T> T getPrivileged(final Field field, final Object bean) {
+        Assert.requireNonNull(field, "field");
         return AccessController.doPrivileged(new PrivilegedAction<T>() {
             @Override
             public T run() {
@@ -89,6 +87,7 @@ public class DataFXUtils {
     }
 
     public static <T> T callPrivileged(final Method method, final Object bean, Object... args) {
+        Assert.requireNonNull(method, "method");
         return AccessController.doPrivileged(new PrivilegedAction<T>() {
             @Override
             public T run() {
@@ -106,7 +105,7 @@ public class DataFXUtils {
         });
     }
 
-    public static List<Field> getInheritedDeclaredFields(Class<?> type) {
+    public static List<Field> getInheritedDeclaredFields(final Class<?> type) {
         List<Field> result = new ArrayList<>();
         Class<?> i = type;
         while (i != null && i != Object.class) {
@@ -116,7 +115,7 @@ public class DataFXUtils {
         return result;
     }
 
-    public static List<Method> getInheritedDeclaredMethods(Class<?> type) {
+    public static List<Method> getInheritedDeclaredMethods(final Class<?> type) {
         List<Method> result = new ArrayList<>();
         Class<?> i = type;
         while (i != null && i != Object.class) {

@@ -26,6 +26,7 @@
  */
 package io.datafx.core.concurrent;
 
+import io.datafx.core.Assert;
 import io.datafx.core.ExceptionHandler;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -63,21 +64,24 @@ import java.util.function.Supplier;
  */
 public class ProcessChain<T> {
 
-    private List<ProcessDescription<?, ?>> processes;
-    private Executor executorService;
+    private final List<ProcessDescription<?, ?>> processes;
+
+    private final Executor executorService;
+
     private ExceptionHandler exceptionHandler;
+
     private Runnable finalRunnable;
 
     public ProcessChain() {
         this(ObservableExecutor.getDefaultInstance());
     }
 
-    public ProcessChain(Executor executorService) {
+    public ProcessChain(final Executor executorService) {
         this(executorService, null, null, null);
     }
 
-    private ProcessChain(Executor executorService, List<ProcessDescription<?, ?>> processes, ExceptionHandler exceptionHandler, Runnable finalRunnable) {
-        this.executorService = executorService;
+    private ProcessChain(final Executor executorService, final List<ProcessDescription<?, ?>> processes, final ExceptionHandler exceptionHandler, final Runnable finalRunnable) {
+        this.executorService = Assert.requireNonNull(executorService, "executorService");
         this.processes = new ArrayList<>();
         if (processes != null) {
             this.processes.addAll(processes);
@@ -88,72 +92,77 @@ public class ProcessChain<T> {
         return new ProcessChain<>();
     }
 
-    public static ProcessChain<Void> create(Executor executorService) {
+    public static ProcessChain<Void> create(final Executor executorService) {
         return new ProcessChain<>(executorService);
     }
 
-    public <V> ProcessChain<V> addFunction(Function<T, V> function, ThreadType type) {
+    public <V> ProcessChain<V> addFunction(final Function<T, V> function, final ThreadType type) {
         return addProcessDescription(new ProcessDescription<T, V>(function, type));
     }
 
-    public <V> ProcessChain<V> addProcessDescription(ProcessDescription<T, V> processDescription) {
+    public <V> ProcessChain<V> addProcessDescription(final ProcessDescription<T, V> processDescription) {
         processes.add(processDescription);
         return new ProcessChain<V>(executorService, processes, exceptionHandler, finalRunnable);
     }
 
-    public <V> ProcessChain<V> addFunctionInPlatformThread(Function<T, V> function) {
+    public <V> ProcessChain<V> addFunctionInPlatformThread(final Function<T, V> function) {
         return addFunction(function, ThreadType.PLATFORM);
     }
 
-    public <V> ProcessChain<V> addFunctionInExecutor(Function<T, V> function) {
+    public <V> ProcessChain<V> addFunctionInExecutor(final Function<T, V> function) {
         return addFunction(function, ThreadType.EXECUTOR);
     }
 
-    public ProcessChain<Void> addRunnable(Runnable runnable, ThreadType type) {
+    public ProcessChain<Void> addRunnable(final Runnable runnable, final ThreadType type) {
+        Assert.requireNonNull(runnable, "runnable");
         return addFunction((Function<T, Void>) (e) -> {
             runnable.run();
             return null;
         }, type);
     }
 
-    public ProcessChain<Void> addRunnableInPlatformThread(Runnable runnable) {
+    public ProcessChain<Void> addRunnableInPlatformThread(final Runnable runnable) {
         return addRunnable(runnable, ThreadType.PLATFORM);
     }
 
-    public ProcessChain<Void> addRunnableInExecutor(Runnable runnable) {
+    public ProcessChain<Void> addRunnableInExecutor(final Runnable runnable) {
         return addRunnable(runnable, ThreadType.EXECUTOR);
     }
 
-    public ProcessChain<Void> addConsumer(Consumer<T> consumer, ThreadType type) {
+    public ProcessChain<Void> addConsumer(final Consumer<T> consumer, final ThreadType type) {
+        Assert.requireNonNull(consumer, "consumer");
         return addFunction((Function<T, Void>) (e) -> {
             consumer.accept(e);
             return null;
         }, type);
     }
 
-    public ProcessChain<Void> addConsumerInPlatformThread(Consumer<T> consumer) {
+    public ProcessChain<Void> addConsumerInPlatformThread(final Consumer<T> consumer) {
         return addConsumer(consumer, ThreadType.PLATFORM);
     }
 
-    public ProcessChain<Void> addConsumerInExecutor(Consumer<T> consumer) {
+    public ProcessChain<Void> addConsumerInExecutor(final Consumer<T> consumer) {
         return addConsumer(consumer, ThreadType.EXECUTOR);
     }
 
-    public <V> ProcessChain<V> addSupplierInPlatformThread(Supplier<V> supplier) {
+    public <V> ProcessChain<V> addSupplierInPlatformThread(final Supplier<V> supplier) {
         return addSupplier(supplier, ThreadType.PLATFORM);
     }
 
-    public <V> ProcessChain<V> addSupplierInExecutor(Supplier<V> supplier) {
+    public <V> ProcessChain<V> addSupplierInExecutor(final Supplier<V> supplier) {
         return addSupplier(supplier, ThreadType.EXECUTOR);
     }
 
-    public <V> ProcessChain<V> addSupplier(Supplier<V> supplier, ThreadType type) {
+    public <V> ProcessChain<V> addSupplier(final Supplier<V> supplier, final ThreadType type) {
+        Assert.requireNonNull(supplier, "supplier");
         return addFunction((Function<T, V>) (e) -> {
             return supplier.get();
         }, type);
     }
 
-    public <V> ProcessChain<List<V>> addPublishingTask(Supplier<List<V>> supplier, Consumer<Publisher<V>> consumer) {
+    public <V> ProcessChain<List<V>> addPublishingTask(final Supplier<List<V>> supplier, final Consumer<Publisher<V>> consumer) {
+        Assert.requireNonNull(supplier, "supplier");
+        Assert.requireNonNull(consumer, "consumer");
         return addFunction((Function<T, List<V>>) (e) -> {
             List<V> list = supplier.get();
             Publisher<V> publisher = p -> {
@@ -168,31 +177,32 @@ public class ProcessChain<T> {
         }, ThreadType.EXECUTOR);
     }
 
-    public <V> ProcessChain<List<V>> addPublishingTask(List<V> list, Consumer<Publisher<V>> consumer) {
+    public <V> ProcessChain<List<V>> addPublishingTask(final List<V> list, final Consumer<Publisher<V>> consumer) {
         return addPublishingTask(() -> list, consumer);
     }
 
-    public <V> ProcessChain<List<V>> addPublishingTask(Consumer<Publisher<V>> consumer) {
+    public <V> ProcessChain<List<V>> addPublishingTask(final Consumer<Publisher<V>> consumer) {
         return addPublishingTask(() -> FXCollections.<V>observableArrayList(), consumer);
     }
 
-    public ProcessChain<T> onException(Consumer<Throwable> c) {
+    public ProcessChain<T> onException(final Consumer<Throwable> consumer) {
+        Assert.requireNonNull(consumer, "consumer");
         this.exceptionHandler = new ExceptionHandler();
-        exceptionHandler.exceptionProperty().addListener(e -> c.accept(exceptionHandler.getException()));
+        exceptionHandler.exceptionProperty().addListener(e -> consumer.accept(exceptionHandler.getException()));
         return this;
     }
 
-    public ProcessChain<T> onException(ExceptionHandler handler) {
+    public ProcessChain<T> onException(final ExceptionHandler handler) {
         this.exceptionHandler = handler;
         return this;
     }
 
-    public ProcessChain<T> withFinal(Runnable finalRunnable) {
+    public ProcessChain<T> withFinal(final Runnable finalRunnable) {
         this.finalRunnable = finalRunnable;
         return this;
     }
 
-    public <V> ProcessChain<V> waitFor(Worker<V> worker) {
+    public <V> ProcessChain<V> waitFor(final Worker<V> worker) {
         return addSupplierInExecutor(() -> {
             try {
                 return ConcurrentUtils.waitFor(worker);
@@ -203,7 +213,8 @@ public class ProcessChain<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private <U, V> V execute(U inputParameter, ProcessDescription<U, V> processDescription) throws InterruptedException, ExecutionException {
+    private <U, V> V execute(final U inputParameter, final ProcessDescription<U, V> processDescription) throws InterruptedException, ExecutionException {
+        Assert.requireNonNull(processDescription, "processDescription");
         if (processDescription.getThreadType().equals(ThreadType.EXECUTOR)) {
             return processDescription.getFunction().apply(inputParameter);
         } else {
@@ -215,15 +226,16 @@ public class ProcessChain<T> {
         return repeat(Integer.MAX_VALUE);
     }
 
-    public Task<T> repeatInfinite(Duration pauseTime) {
+    public Task<T> repeatInfinite(final Duration pauseTime) {
         return repeat(Integer.MAX_VALUE, pauseTime);
     }
 
-    public Task<T> repeat(int count) {
+    public Task<T> repeat(final int count) {
         return repeat(count, Duration.ZERO);
     }
 
-    public Task<T> repeat(int count, Duration pauseTime) {
+    public Task<T> repeat(final int count, final Duration pauseTime) {
+        Assert.requireNonNull(pauseTime, "pauseTime");
         Task<T> task = new Task<T>() {
 
             @Override

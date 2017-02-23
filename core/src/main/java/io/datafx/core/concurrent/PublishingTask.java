@@ -26,6 +26,7 @@
  */
 package io.datafx.core.concurrent;
 
+import io.datafx.core.Assert;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -42,14 +43,15 @@ import java.util.Arrays;
  * @param <T> The type of the values that are obtained.
  */
 public abstract class PublishingTask<T> extends Task<ObservableList<T>> implements Publisher<T> {
+
     private final ObservableList<T> publishedValues;
 
     public PublishingTask() {
         this(new SimpleListProperty<T>(FXCollections.<T>observableArrayList()));
     }
 
-    public PublishingTask(ObservableList<T> values) {
-        this.publishedValues = values;
+    public PublishingTask(final ObservableList<T> values) {
+        this.publishedValues = Assert.requireNonNull(values, "values");
     }
 
     public ObservableList<T> getPublishedValues() {

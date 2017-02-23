@@ -26,6 +26,7 @@
  */
 package io.datafx.core.concurrent;
 
+import io.datafx.core.Assert;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,7 +44,8 @@ import java.util.concurrent.Executor;
  * @param <V> the result type of method <tt>getValue</tt>
  */
 public abstract class DataFxService<V> extends Service<V> {
-    private BooleanProperty cancelable;
+
+    private final BooleanProperty cancelable;
 
     /**
      * Default Constructor
@@ -52,7 +54,8 @@ public abstract class DataFxService<V> extends Service<V> {
         cancelable = new SimpleBooleanProperty(true);
     }
 
-    @Override protected void executeTask(Task<V> task) {
+    @Override protected void executeTask(final Task<V> task) {
+        Assert.requireNonNull(task, "task");
         cancelable.unbind();
         if (task instanceof DataFxTask) {
             cancelable.bind(((DataFxTask<V>) task).cancelableProperty());
