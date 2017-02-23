@@ -26,15 +26,16 @@
  */
 package io.datafx.core;
 
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import io.datafx.core.concurrent.ConcurrentUtils;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker;
-import io.datafx.core.concurrent.ConcurrentUtils;
+
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Exception handler for DataFX. By default a handler is used that will log all exceptions.
@@ -67,7 +68,7 @@ public class ExceptionHandler {
             loggerListener = (ob, o, e) -> {
                 if(e != null) {
                     if(e instanceof Exception) {
-                        LOGGER.log(Level.SEVERE, "DataFX Exception Handler", (Exception)e);
+                        LOGGER.log(Level.SEVERE, "DataFX Exception Handler", e);
                     } else {
                         LOGGER.log(Level.SEVERE, "DataFX Exception Handler: " + e.getMessage());
                     }

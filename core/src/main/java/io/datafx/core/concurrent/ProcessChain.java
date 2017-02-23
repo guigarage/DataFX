@@ -115,7 +115,7 @@ public class ProcessChain<T> {
 
     public ProcessChain<Void> addRunnable(final Runnable runnable, final ThreadType type) {
         Assert.requireNonNull(runnable, "runnable");
-        return addFunction((Function<T, Void>) (e) -> {
+        return addFunction(e -> {
             runnable.run();
             return null;
         }, type);
@@ -131,7 +131,7 @@ public class ProcessChain<T> {
 
     public ProcessChain<Void> addConsumer(final Consumer<T> consumer, final ThreadType type) {
         Assert.requireNonNull(consumer, "consumer");
-        return addFunction((Function<T, Void>) (e) -> {
+        return addFunction(e -> {
             consumer.accept(e);
             return null;
         }, type);
@@ -155,7 +155,7 @@ public class ProcessChain<T> {
 
     public <V> ProcessChain<V> addSupplier(final Supplier<V> supplier, final ThreadType type) {
         Assert.requireNonNull(supplier, "supplier");
-        return addFunction((Function<T, V>) (e) -> {
+        return addFunction(e -> {
             return supplier.get();
         }, type);
     }
@@ -163,7 +163,7 @@ public class ProcessChain<T> {
     public <V> ProcessChain<List<V>> addPublishingTask(final Supplier<List<V>> supplier, final Consumer<Publisher<V>> consumer) {
         Assert.requireNonNull(supplier, "supplier");
         Assert.requireNonNull(consumer, "consumer");
-        return addFunction((Function<T, List<V>>) (e) -> {
+        return addFunction(e -> {
             List<V> list = supplier.get();
             Publisher<V> publisher = p -> {
                 try {
@@ -182,7 +182,7 @@ public class ProcessChain<T> {
     }
 
     public <V> ProcessChain<List<V>> addPublishingTask(final Consumer<Publisher<V>> consumer) {
-        return addPublishingTask(() -> FXCollections.<V>observableArrayList(), consumer);
+        return addPublishingTask(() -> FXCollections.observableArrayList(), consumer);
     }
 
     public ProcessChain<T> onException(final Consumer<Throwable> consumer) {
@@ -212,7 +212,6 @@ public class ProcessChain<T> {
         });
     }
 
-    @SuppressWarnings("unchecked")
     private <U, V> V execute(final U inputParameter, final ProcessDescription<U, V> processDescription) throws InterruptedException, ExecutionException {
         Assert.requireNonNull(processDescription, "processDescription");
         if (processDescription.getThreadType().equals(ThreadType.EXECUTOR)) {

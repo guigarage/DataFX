@@ -60,7 +60,7 @@ public class StreamFX<T> {
      */
     public void forEach(final Consumer<ObjectProperty<? super T>> action) {
         Assert.requireNonNull(action, "action");
-        stream.forEach((Consumer<T>) (t) -> {Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t)));});
+        stream.forEach(t -> Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t))));
     }
 
     /**
@@ -72,7 +72,7 @@ public class StreamFX<T> {
      */
     public void forEachOrdered(final Consumer<ObjectProperty<? super T>> action) {
         Assert.requireNonNull(action, "action");
-        stream.forEachOrdered((Consumer<T>) (t) -> {Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t)));});
+        stream.forEachOrdered(t -> Platform.runLater(() -> action.accept(new SimpleObjectProperty<T>(t))));
     }
 
     /**
@@ -82,7 +82,7 @@ public class StreamFX<T> {
      */
     public void publish(final ObservableList<T> list) {
         Assert.requireNonNull(list, "list");
-        stream.forEach((Consumer<T>) (t) -> {Platform.runLater(() -> list.add(t));});
+        stream.forEach(t -> Platform.runLater(() -> list.add(t)));
     }
 
     /**
@@ -94,7 +94,7 @@ public class StreamFX<T> {
      */
     public void publishOrderer(final ObservableList<T> list) {
         Assert.requireNonNull(list, "list");
-        stream.forEachOrdered((Consumer<T>) (t) -> {Platform.runLater(() -> list.add(t));});
+        stream.forEachOrdered(t -> Platform.runLater(() -> list.add(t)));
     }
 
 }

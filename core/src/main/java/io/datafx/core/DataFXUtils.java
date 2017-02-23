@@ -17,8 +17,9 @@ public class DataFXUtils {
 
     /**
      * Checks if the resource / file can be accessed by the controller class
+     *
      * @param controllerClass the controller class
-     * @param resourceName name / path of the resource
+     * @param resourceName    name / path of the resource
      * @return true if the resource can be accessed
      */
     public static boolean canAccess(final Class<?> controllerClass, final String resourceName) {
@@ -36,6 +37,7 @@ public class DataFXUtils {
 
     /**
      * Set's a field by using <tt>AccessController.doPrivileged</tt>
+     *
      * @param field the field
      * @param bean  the bean
      * @param value the value
@@ -43,64 +45,56 @@ public class DataFXUtils {
     public static void setPrivileged(final Field field, final Object bean,
                                      final Object value) {
         Assert.requireNonNull(field, "field");
-        AccessController.doPrivileged(new PrivilegedAction<Void>() {
-            @Override
-            public Void run() {
-                boolean wasAccessible = field.isAccessible();
-                try {
-                    field.setAccessible(true);
-                    field.set(bean, value);
-                    return null; // return nothing...
-                } catch (IllegalArgumentException | IllegalAccessException ex) {
-                    throw new IllegalStateException("Cannot set field: "
-                            + field, ex);
-                } finally {
-                    field.setAccessible(wasAccessible);
-                }
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            boolean wasAccessible = field.isAccessible();
+            try {
+                field.setAccessible(true);
+                field.set(bean, value);
+                return null; // return nothing...
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                throw new IllegalStateException("Cannot set field: "
+                        + field, ex);
+            } finally {
+                field.setAccessible(wasAccessible);
             }
         });
     }
 
     /**
      * Access a field by using <tt>AccessController.doPrivileged</tt>
+     *
      * @param field the field
-     * @param bean the bean
+     * @param bean  the bean
      * @return the value
      */
     public static <T> T getPrivileged(final Field field, final Object bean) {
         Assert.requireNonNull(field, "field");
-        return AccessController.doPrivileged(new PrivilegedAction<T>() {
-            @Override
-            public T run() {
-                boolean wasAccessible = field.isAccessible();
-                try {
-                    field.setAccessible(true);
-                    return (T) field.get(bean);
-                } catch (IllegalArgumentException | IllegalAccessException ex) {
-                    throw new IllegalStateException("Cannot access field: "
-                            + field, ex);
-                } finally {
-                    field.setAccessible(wasAccessible);
-                }
+        return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
+            boolean wasAccessible = field.isAccessible();
+            try {
+                field.setAccessible(true);
+                return (T) field.get(bean);
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                throw new IllegalStateException("Cannot access field: "
+                        + field, ex);
+            } finally {
+                field.setAccessible(wasAccessible);
             }
         });
     }
 
     public static <T> T callPrivileged(final Method method, final Object bean, Object... args) {
         Assert.requireNonNull(method, "method");
-        return AccessController.doPrivileged(new PrivilegedAction<T>() {
-            @Override
-            public T run() {
-                boolean wasAccessible = method.isAccessible();
-                try {
-                    method.setAccessible(true);
-                    return (T) method.invoke(bean, args);
-                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException ex) {
-                    throw new IllegalStateException("Cannot call Method: "
-                            + method, ex);
-                } finally {
-                    method.setAccessible(wasAccessible);
-                }
+        return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
+            boolean wasAccessible = method.isAccessible();
+            try {
+                method.setAccessible(true);
+                return (T) method.invoke(bean, args);
+            } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException ex) {
+                throw new IllegalStateException("Cannot call Method: "
+                        + method, ex);
+            } finally {
+                method.setAccessible(wasAccessible);
             }
         });
     }

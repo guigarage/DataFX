@@ -52,7 +52,7 @@ public interface TaskWithStateHandler {
         return TaskStateHandlerManager.get(this);
     }
 
-    public default void updateTaskTitle(String title) {
+    default void updateTaskTitle(String title) {
         getStateHandler().updateTaskTitle(title);
     }
 

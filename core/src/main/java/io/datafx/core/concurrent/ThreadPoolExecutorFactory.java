@@ -1,18 +1,18 @@
 /**
  * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ * * Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ * * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *     * Neither the name of DataFX, the website javafxdata.org, nor the
+ * * Neither the name of DataFX, the website javafxdata.org, nor the
  * names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -26,7 +26,6 @@
  */
 package io.datafx.core.concurrent;
 
-//import org.datafx.DataFXConfiguration;
 import io.datafx.core.Assert;
 import io.datafx.core.DataFXConfiguration;
 import io.datafx.core.ExceptionHandler;
@@ -56,7 +55,7 @@ public class ThreadPoolExecutorFactory {
     }
 
     public static synchronized ThreadPoolExecutor getThreadPoolExecutor() {
-        if(defaultExecutor == null) {
+        if (defaultExecutor == null) {
             BlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>() {
                 @Override
                 public boolean offer(Runnable runnable) {
@@ -67,28 +66,22 @@ public class ThreadPoolExecutorFactory {
                 }
             };
 
-            ThreadFactory threadFactory = new ThreadFactory() {
-                @Override
-                public Thread newThread(final Runnable run) {
-                    ThreadGroup threadGroup = AccessController.doPrivileged(new PrivilegedAction<ThreadGroup>() {
-                        @Override
-                        public ThreadGroup run() {
-                            return new ThreadGroup(DataFXConfiguration.getInstance().getThreadGroupName());
-                        }
-                    });
+            ThreadFactory threadFactory = runnable -> {
+                ThreadGroup threadGroup = AccessController.doPrivileged(new PrivilegedAction<ThreadGroup>() {
+                    @Override
+                    public ThreadGroup run() {
+                        return new ThreadGroup(DataFXConfiguration.getInstance().getThreadGroupName());
+                    }
+                });
 
-                    // Addition of doPrivileged added due to RT-19580
-                    return AccessController.doPrivileged(new PrivilegedAction<Thread>() {
-                        @Override
-                        public Thread run() {
-                            final Thread th = new Thread(threadGroup, run);
-                            th.setUncaughtExceptionHandler((t, e) -> onUncaughtException(t, e));
-                            th.setPriority(Thread.MIN_PRIORITY);
-                            th.setDaemon(true);
-                            return th;
-                        }
-                    });
-                }
+                // Addition of doPrivileged added due to RT-19580
+                return AccessController.doPrivileged((PrivilegedAction<Thread>) () -> {
+                    final Thread th = new Thread(threadGroup, runnable);
+                    th.setUncaughtExceptionHandler((t, e) -> onUncaughtException(t, e));
+                    th.setPriority(Thread.MIN_PRIORITY);
+                    th.setDaemon(true);
+                    return th;
+                });
             };
 
             defaultExecutor = new ThreadPoolExecutor(

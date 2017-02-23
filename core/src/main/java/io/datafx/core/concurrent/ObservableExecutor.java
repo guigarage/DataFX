@@ -1,18 +1,18 @@
 /**
  * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ * * Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ * * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *     * Neither the name of DataFX, the website javafxdata.org, nor the
+ * * Neither the name of DataFX, the website javafxdata.org, nor the
  * names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -96,39 +96,37 @@ public class ObservableExecutor implements Executor {
     public ObservableExecutor(final Executor executor, final ExceptionHandler exceptionHandler) {
         this.executor = Assert.requireNonNull(executor, "executor");
         this.exceptionHandler = Assert.requireNonNull(exceptionHandler, "exceptionHandler");
-        currentServices = new SimpleListProperty<Service<?>>(
+        currentServices = new SimpleListProperty<>(
                 FXCollections.<Service<?>>observableArrayList());
-        currentServices.addListener(new ListChangeListener<Service<?>>() {
-            @Override public void onChanged(
-                    javafx.collections.ListChangeListener.Change<? extends Service<?>> change) {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        List<? extends Service<?>> newServices = change
-                                .getAddedSubList();
-                        for (final Service<?> service : newServices) {
-                            service.stateProperty().addListener(
-                                    new ChangeListener<State>() {
-                                @Override public void changed(
-                                        ObservableValue<? extends State> observableValue,
-                                        State oldSate, State newState) {
-                                    if (newState != null
-                                            && (newState
-                                            .equals(State.CANCELLED)
-                                            || newState
-                                            .equals(State.SUCCEEDED) || newState
-                                            .equals(State.FAILED))) {
-                                        currentServices.remove(service);
+        currentServices.addListener((ListChangeListener<? super Service<?>>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    List<? extends Service<?>> newServices = change
+                            .getAddedSubList();
+                    for (final Service<?> service : newServices) {
+                        service.stateProperty().addListener(
+                                new ChangeListener<State>() {
+                                    @Override
+                                    public void changed(
+                                            ObservableValue<? extends State> observableValue,
+                                            State oldSate, State newState) {
+                                        if (newState != null
+                                                && (newState
+                                                .equals(State.CANCELLED)
+                                                || newState
+                                                .equals(State.SUCCEEDED) || newState
+                                                .equals(State.FAILED))) {
+                                            currentServices.remove(service);
+                                        }
                                     }
-                                }
-                            });
-                            State currentState = service.getState();
-                            if (currentState != null
-                                    && (currentState.equals(State.CANCELLED)
-                                    || currentState
-                                    .equals(State.SUCCEEDED) || currentState
-                                    .equals(State.FAILED))) {
-                                currentServices.remove(service);
-                            }
+                                });
+                        State currentState = service.getState();
+                        if (currentState != null
+                                && (currentState.equals(State.CANCELLED)
+                                || currentState
+                                .equals(State.SUCCEEDED) || currentState
+                                .equals(State.FAILED))) {
+                            currentServices.remove(service);
                         }
                     }
                 }
@@ -159,7 +157,7 @@ public class ObservableExecutor implements Executor {
         Assert.requireNonNull(service, "service");
         service.setExecutor(executor);
         currentServices.add(service);
-        if(exceptionHandler != null) {
+        if (exceptionHandler != null) {
             exceptionHandler.observeWorker(service);
         }
         service.start();
@@ -227,7 +225,7 @@ public class ObservableExecutor implements Executor {
      * @return the default executor
      */
     public static synchronized ObservableExecutor getDefaultInstance() {
-        if(defaultInstance == null) {
+        if (defaultInstance == null) {
             //TODO: support of system properties to define the inner executor
             defaultInstance = new ObservableExecutor();
         }
