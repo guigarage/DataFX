@@ -39,11 +39,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 import io.datafx.controller.FxmlLoadException;
 import io.datafx.controller.ViewConfiguration;
 import io.datafx.controller.ViewFactory;
@@ -105,6 +109,29 @@ public class FlowHandler {
 
     public void startInPane(StackPane pane) throws FlowException {
         start(new DefaultFlowContainer(pane));
+    }
+
+    public void startInStage(Stage stage) throws FlowException {
+        startInStage(stage, new DefaultFlowContainer());
+    }
+
+    public <T extends Parent> void startInStage(Stage stage, FlowContainer<T> container) throws FlowException {
+        stage.setScene(new Scene(start(container)));
+        getCurrentViewMetadata().addListener((e) -> {
+            stage.titleProperty().unbind();
+            ViewMetadata metadata = getCurrentViewMetadata().get();
+            if (metadata != null) {
+                stage.titleProperty().bind(metadata.titleProperty());
+            }
+        });
+
+        stage.titleProperty().unbind();
+        ViewMetadata metadata = getCurrentViewMetadata().get();
+        if (metadata != null) {
+            stage.titleProperty().bind(metadata.titleProperty());
+        }
+
+        stage.show();
     }
 
     public Tab startInTab() throws FlowException {
