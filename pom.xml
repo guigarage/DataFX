@@ -26,5 +26,7 @@
         <module>tutorials/flow4</module>
         <module>tutorials/flow5</module>
         <module>tutorials/flow6</module>
+
+        <module>application-sample</module>
     </modules>
 </project>

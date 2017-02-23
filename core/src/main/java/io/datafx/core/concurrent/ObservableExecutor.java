@@ -226,7 +226,6 @@ public class ObservableExecutor implements Executor {
      */
     public static synchronized ObservableExecutor getDefaultInstance() {
         if (defaultInstance == null) {
-            //TODO: support of system properties to define the inner executor
             defaultInstance = new ObservableExecutor();
         }
         return defaultInstance;

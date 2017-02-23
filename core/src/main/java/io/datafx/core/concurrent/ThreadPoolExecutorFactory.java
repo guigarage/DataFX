@@ -74,7 +74,6 @@ public class ThreadPoolExecutorFactory {
                     }
                 });
 
-                // Addition of doPrivileged added due to RT-19580
                 return AccessController.doPrivileged((PrivilegedAction<Thread>) () -> {
                     final Thread th = new Thread(threadGroup, runnable);
                     th.setUncaughtExceptionHandler((t, e) -> onUncaughtException(t, e));
