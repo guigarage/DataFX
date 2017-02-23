@@ -32,7 +32,7 @@ import io.datafx.controller.context.ViewContext;
 public class ViewContextResourceType implements AnnotatedControllerResourceType<FXMLViewContext, ViewContext>{
 
     @Override
-    public ViewContext getResource(FXMLViewContext annotation, Class<ViewContext> cls, ViewContext<?> context) {
+    public ViewContext getResource(final FXMLViewContext annotation, final Class<ViewContext> cls, final ViewContext<?> context) {
         return context;
     }
 

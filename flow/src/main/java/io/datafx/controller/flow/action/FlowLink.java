@@ -32,6 +32,7 @@ import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.flow.FlowView;
 import io.datafx.controller.FxmlLoadException;
+import io.datafx.core.Assert;
 
 /**
  * A {@link FlowAction} implementation that navigates to a different view in a flow.
@@ -39,7 +40,7 @@ import io.datafx.controller.FxmlLoadException;
  */
 public class FlowLink<T> implements FlowAction {
 
-    private Class<T> controllerClass;
+    private final Class<T> controllerClass;
 
     private boolean addOldToHistory;
 
@@ -47,7 +48,7 @@ public class FlowLink<T> implements FlowAction {
      * Default constructor of the class
      * @param controllerClass controller class of the target view
      */
-    public FlowLink(Class<T> controllerClass) {
+    public FlowLink(final Class<T> controllerClass) {
         this(controllerClass, true);
     }
 
@@ -57,14 +58,15 @@ public class FlowLink<T> implements FlowAction {
      * @param controllerClass controller class of the target view
      * @param addOldToHistory defines if the old view should be added to the view history of the flow
      */
-    public FlowLink(Class<T> controllerClass, boolean addOldToHistory) {
+    public FlowLink(final Class<T> controllerClass, final boolean addOldToHistory) {
         this.controllerClass = controllerClass;
         this.addOldToHistory = addOldToHistory;
     }
 	
 	@Override
-	public void handle(FlowHandler flowHandler, String actionId)
+	public void handle(final FlowHandler flowHandler, final String actionId)
 			throws FlowException {
+        Assert.requireNonNull(flowHandler, "flowHandler");
 		try {
 			ViewContext<T> viewContext = ViewFactory.getInstance().createByController(controllerClass, null, flowHandler.getViewConfiguration(), flowHandler.getFlowContext());
             flowHandler.setNewView(new FlowView<T>(viewContext), addOldToHistory);

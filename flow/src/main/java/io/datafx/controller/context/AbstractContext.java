@@ -38,8 +38,9 @@ import java.util.UUID;
  */
 public class AbstractContext {
 
-    private String id = UUID.randomUUID().toString();
-    private Map<String, Object> registeredObjects;
+    private final String id = UUID.randomUUID().toString();
+
+    private final Map<String, Object> registeredObjects;
 
     public AbstractContext() {
         registeredObjects = new HashMap<String, Object>();
@@ -60,7 +61,7 @@ public class AbstractContext {
      * @param key   the key
      * @param value the object
      */
-    public void register(String key, Object value) {
+    public void register(final String key, final Object value) {
         registeredObjects.put(key, value);
     }
 
@@ -71,7 +72,7 @@ public class AbstractContext {
      * @param key the key
      * @return the registered object
      */
-    public Object getRegisteredObject(String key) {
+    public Object getRegisteredObject(final String key) {
         return registeredObjects.get(key);
     }
 
@@ -82,15 +83,15 @@ public class AbstractContext {
      * @return the object
      */
     @SuppressWarnings("unchecked")
-    public <T> T getRegisteredObject(Class<T> cls) {
+    public <T> T getRegisteredObject(final Class<T> cls) {
         return (T) getRegisteredObject(cls.toString());
     }
 
-    public void register(Object value) {
+    public void register(final Object value) {
         register(value.getClass().toString(), value);
     }
 
-    public <S, T extends S> void register(T value, Class<S> asClass) {
+    public <S, T extends S> void register(final T value, final Class<S> asClass) {
         register(asClass.toString(), value);
     }
 

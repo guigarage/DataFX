@@ -33,7 +33,7 @@ import io.datafx.controller.context.ViewContext;
 public class ConcurrencyProviderResourceType implements AnnotatedControllerResourceType<ConcurrencyProvider, ObservableExecutor>{
 
     @Override
-    public ObservableExecutor getResource(ConcurrencyProvider annotation, Class<ObservableExecutor> cls, ViewContext<?> context) {
+    public ObservableExecutor getResource(final ConcurrencyProvider annotation, final Class<ObservableExecutor> cls, final ViewContext<?> context) {
         return ObservableExecutor.getDefaultInstance();
     }
 

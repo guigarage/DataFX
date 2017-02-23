@@ -29,12 +29,13 @@ package io.datafx.controller.context.resource;
 import io.datafx.controller.context.ApplicationContext;
 import io.datafx.controller.context.FXMLApplicationContext;
 import io.datafx.controller.context.ViewContext;
+import io.datafx.core.Assert;
 
 public class ApplicationContextResourceType implements AnnotatedControllerResourceType<FXMLApplicationContext, ApplicationContext>{
 
     @Override
-    public ApplicationContext getResource(FXMLApplicationContext annotation, Class<ApplicationContext> cls, ViewContext<?> context) {
-        return context.getApplicationContext();
+    public ApplicationContext getResource(final FXMLApplicationContext annotation, final Class<ApplicationContext> cls, final ViewContext<?> context) {
+        return Assert.requireNonNull(context, "context").getApplicationContext();
     }
 
     @Override

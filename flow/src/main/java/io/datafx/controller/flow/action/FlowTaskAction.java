@@ -26,6 +26,8 @@
  */
 package io.datafx.controller.flow.action;
 
+import io.datafx.core.Assert;
+
 import java.util.concurrent.Executor;
 
 /**
@@ -57,8 +59,8 @@ public class FlowTaskAction extends AbstractFlowTaskAction {
 
 
     @Override
-    protected void execute(Runnable r) throws Exception {
-        r.run();
+    protected void execute(final Runnable r) throws Exception {
+        Assert.requireNonNull(r, "r").run();
     }
 
 }

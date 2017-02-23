@@ -28,6 +28,7 @@ package io.datafx.controller.context;
 
 import io.datafx.controller.context.resource.AnnotatedControllerResourceType;
 import io.datafx.controller.context.resource.ControllerResourceConsumer;
+import io.datafx.core.Assert;
 import io.datafx.core.DataFXUtils;
 
 import java.lang.annotation.Annotation;
@@ -36,16 +37,14 @@ import java.util.*;
 
 public class ContextResolver<U> {
 
-    private ViewContext<U> context;
+    private final ViewContext<U> context;
 
     public ContextResolver(ViewContext<U> context) {
         this.context = context;
     }
 
-
-
-    public void injectResources(Object object) {
-
+    public void injectResources(final Object object) {
+        Assert.requireNonNull(object, "object");
         List<AnnotatedControllerResourceType> allResourceTypes = getAnnotatedControllerResourceTypes();
         List<ControllerResourceConsumer> resourceConsumers = getControllerResourceConsumer();
 

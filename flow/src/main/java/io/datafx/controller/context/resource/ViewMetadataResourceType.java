@@ -29,13 +29,14 @@ package io.datafx.controller.context.resource;
 import io.datafx.controller.context.Metadata;
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.context.ViewMetadata;
+import io.datafx.core.Assert;
 
 public class ViewMetadataResourceType implements AnnotatedControllerResourceType<Metadata, ViewMetadata>{
 
 
     @Override
-    public ViewMetadata getResource(Metadata annotation, Class<ViewMetadata> resourceClass, ViewContext<?> context) {
-        return context.getMetadata();
+    public ViewMetadata getResource(final Metadata annotation, final Class<ViewMetadata> resourceClass, final ViewContext<?> context) {
+        return Assert.requireNonNull(context, "context").getMetadata();
     }
 
     @Override

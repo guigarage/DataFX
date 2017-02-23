@@ -39,6 +39,7 @@ import io.datafx.controller.flow.FlowHandler;
  * });
  * </tt>
  */
+@FunctionalInterface
 public interface FlowAction {
 
     /**
@@ -48,5 +49,5 @@ public interface FlowAction {
      * @param actionId    unique ID of this action in the current flow
      * @throws FlowException if an error occures while handling the action
      */
-    public void handle(FlowHandler flowHandler, String actionId) throws FlowException;
+    void handle(FlowHandler flowHandler, String actionId) throws FlowException;
 }

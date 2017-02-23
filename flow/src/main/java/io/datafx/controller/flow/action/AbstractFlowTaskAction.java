@@ -28,6 +28,7 @@ package io.datafx.controller.flow.action;
 
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
+import io.datafx.core.Assert;
 
 /**
  * Basic class for {@link FlowAction} implementations that execute a custom task. In this case a task is always defined
@@ -35,9 +36,9 @@ import io.datafx.controller.flow.FlowHandler;
  */
 public abstract class AbstractFlowTaskAction implements FlowAction {
 
-    private Class<? extends Runnable> runnableClass;
+    private final TaskFactory runnableFactory;
 
-    private TaskFactory runnableFactory;
+    private Class<? extends Runnable> runnableClass;
 
     /**
      * Defines a new {@link AbstractFlowTaskAction} instance that task is defined by a class that extends
@@ -46,20 +47,24 @@ public abstract class AbstractFlowTaskAction implements FlowAction {
      * class that defines the task, too.
      * @param runnableClass the class that defines the task
      */
-    public AbstractFlowTaskAction(Class<? extends Runnable> runnableClass) {
-        this.runnableFactory = (f) -> f.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass);
+    public AbstractFlowTaskAction(final Class<? extends Runnable> runnableClass) {
+        this((f) -> f.getCurrentViewContext().getResolver().createInstanceWithInjections(runnableClass));
     }
 
     /**
      * Defines a new {@link AbstractFlowTaskAction} instance that task is defined by a {@link Runnable} instance.
      * @param runnable defines the task and will be called whenever the action is triggered.
      */
-    public AbstractFlowTaskAction(Runnable runnable) {
-        this.runnableFactory = (f) -> runnable;
+    public AbstractFlowTaskAction(final Runnable runnable) {
+        this((f) -> runnable);
+    }
+
+    public AbstractFlowTaskAction(final TaskFactory runnableFactory) {
+        this.runnableFactory = Assert.requireNonNull(runnableFactory, "runnableFactory");
     }
 
     @Override
-    public void handle(FlowHandler flowHandler, String actionId)
+    public void handle(final FlowHandler flowHandler, final String actionId)
             throws FlowException {
         try {
             Runnable runnable = runnableFactory.create(flowHandler);

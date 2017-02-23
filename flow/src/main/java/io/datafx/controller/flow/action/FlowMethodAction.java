@@ -28,6 +28,7 @@ package io.datafx.controller.flow.action;
 
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
+import io.datafx.core.Assert;
 import io.datafx.core.DataFXUtils;
 import io.datafx.core.concurrent.Async;
 import io.datafx.core.concurrent.ObservableExecutor;
@@ -39,20 +40,20 @@ import java.lang.reflect.Method;
  */
 public class FlowMethodAction implements FlowAction {
 
-    private Method actionMethod;
+    private final Method actionMethod;
 
     /**
      * Default constructor
      *
      * @param actionMethod defines the method that should be called whenever the action is triggered.
      */
-    public FlowMethodAction(Method actionMethod) {
-        this.actionMethod = actionMethod;
+    public FlowMethodAction(final Method actionMethod) {
+        this.actionMethod = Assert.requireNonNull(actionMethod, "actionMethod");
     }
 
     @Override
-    public void handle(FlowHandler flowHandler, String actionId) throws FlowException {
-        Object controller = flowHandler.getCurrentViewContext().getController();
+    public void handle(final FlowHandler flowHandler, final String actionId) throws FlowException {
+        Object controller = Assert.requireNonNull(flowHandler, "flowHandler").getCurrentViewContext().getController();
         try {
             if (actionMethod.isAnnotationPresent(Async.class)) {
                 ObservableExecutor.getDefaultInstance().execute(() -> {

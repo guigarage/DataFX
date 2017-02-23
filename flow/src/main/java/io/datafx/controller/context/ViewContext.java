@@ -94,17 +94,17 @@ import java.lang.reflect.Method;
  */
 public class ViewContext<U> extends AbstractContext {
 
-    private Node rootNode;
+    private final Node rootNode;
 
-    private U controller;
+    private final U controller;
+
+    private final ViewConfiguration configuration;
+
+    private final ViewMetadata metadata;
+
+    private final ObservableList<ContextDestroyedListener<U>> contextDestroyedListeners;
 
     private ContextResolver<U> resolver;
-
-    private ViewConfiguration configuration;
-
-    private ViewMetadata metadata;
-
-    private ObservableList<ContextDestroyedListener<U>> contextDestroyedListeners;
 
     /**
      * Create a new ViewContext for a (view-){@link Node} and a controller.
@@ -117,7 +117,7 @@ public class ViewContext<U> extends AbstractContext {
      * @param configuration
      * @param resources
      */
-    public ViewContext(Node rootNode, U controller, ViewMetadata metadata, ViewConfiguration configuration, Object... resources) {
+    public ViewContext(final Node rootNode, final U controller, final ViewMetadata metadata, final ViewConfiguration configuration, final Object... resources) {
         this.rootNode = rootNode;
         this.controller = controller;
         this.configuration = configuration;

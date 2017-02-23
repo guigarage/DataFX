@@ -36,7 +36,7 @@ import java.util.concurrent.Executor;
  */
 public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
 
-    private Executor executorService;
+    private final Executor executorService;
 
     /**
      * Defines a new {@link FlowAsyncTaskAction} instance that task is defined by a class that extends
@@ -47,7 +47,7 @@ public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
      *
      * @param runnableClass the class that defines the task
      */
-    public FlowAsyncTaskAction(Class<? extends Runnable> runnableClass) {
+    public FlowAsyncTaskAction(final Class<? extends Runnable> runnableClass) {
         this(runnableClass, ObservableExecutor.getDefaultInstance());
     }
 
@@ -61,7 +61,7 @@ public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
      * @param runnableClass   the class that defines the task
      * @param executorService  the executor that will execute the task
      */
-    public FlowAsyncTaskAction(Class<? extends Runnable> runnableClass, Executor executorService) {
+    public FlowAsyncTaskAction(final Class<? extends Runnable> runnableClass, final Executor executorService) {
         super(runnableClass);
         this.executorService = executorService;
     }
@@ -73,7 +73,7 @@ public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
      *
      * @param runnable defines the task and will be called whenever the action is triggered.
      */
-    public FlowAsyncTaskAction(Runnable runnable) {
+    public FlowAsyncTaskAction(final Runnable runnable) {
         this(runnable, ObservableExecutor.getDefaultInstance());
     }
 
@@ -84,13 +84,13 @@ public class FlowAsyncTaskAction extends AbstractFlowTaskAction {
      * @param runnable defines the task and will be called whenever the action is triggered.
      * @param executorService the executor that will execute the task
      */
-    public FlowAsyncTaskAction(Runnable runnable, Executor executorService) {
+    public FlowAsyncTaskAction(final Runnable runnable, final Executor executorService) {
         super(runnable);
         this.executorService = executorService;
     }
 
     @Override
-    protected void execute(Runnable r) throws Exception {
+    protected void execute(final Runnable r) throws Exception {
         executorService.execute(r);
     }
 

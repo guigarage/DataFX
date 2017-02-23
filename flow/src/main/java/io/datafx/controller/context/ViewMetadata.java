@@ -49,7 +49,7 @@ public class ViewMetadata {
         return titleProperty;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         titleProperty().set(title);
     }
 
@@ -65,7 +65,7 @@ public class ViewMetadata {
         return graphicsProperty().get();
     }
 
-    public void setGraphic(Node graphic) {
+    public void setGraphic(final Node graphic) {
         this.graphicsProperty().set(graphic);
     }
 }

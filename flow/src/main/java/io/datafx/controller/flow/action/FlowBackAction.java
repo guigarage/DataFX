@@ -29,6 +29,7 @@ package io.datafx.controller.flow.action;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
 import io.datafx.controller.util.VetoException;
+import io.datafx.core.Assert;
 
 /**
  * Defines a {@link FlowAction} that navigates back to the last view of a flow. You should know this behavior from a back
@@ -37,10 +38,10 @@ import io.datafx.controller.util.VetoException;
 public class FlowBackAction implements FlowAction {
 
     @Override
-    public void handle(FlowHandler flowHandler, String actionId)
+    public void handle(final FlowHandler flowHandler, final String actionId)
             throws FlowException {
         try {
-            flowHandler.navigateBack();
+            Assert.requireNonNull(flowHandler, "flowHandler").navigateBack();
         } catch (VetoException e) {
             throw new FlowException(e);
         }

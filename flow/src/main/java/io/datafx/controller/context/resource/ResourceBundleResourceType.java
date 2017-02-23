@@ -28,14 +28,15 @@ package io.datafx.controller.context.resource;
 
 import io.datafx.controller.context.ViewContext;
 import io.datafx.controller.context.ViewResourceBundle;
+import io.datafx.core.Assert;
 
 import java.util.ResourceBundle;
 
 public class ResourceBundleResourceType implements AnnotatedControllerResourceType<ViewResourceBundle, ResourceBundle> {
 
     @Override
-    public ResourceBundle getResource(ViewResourceBundle annotation, Class<ResourceBundle> cls, ViewContext<?> context) {
-        return context.getConfiguration().getResources();
+    public ResourceBundle getResource(final ViewResourceBundle annotation, final Class<ResourceBundle> cls, final ViewContext<?> context) {
+        return Assert.requireNonNull(context, "context").getConfiguration().getResources();
     }
 
     @Override
