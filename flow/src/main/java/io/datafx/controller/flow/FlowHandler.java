@@ -385,10 +385,10 @@ public class FlowHandler {
     }
 
     public <T> void registerInApplicationContext(String key, T object) {
-        getFlowContext().getApplicationContext().register(object);
+        getFlowContext().getApplicationContext().register(key, object);
     }
 
-    public <S, T extends S> void registerInApplicationContext(Class<S> toRegister, T object) {
+    public <S, T extends S> void registerInApplicationContext(T object, Class<S> toRegister) {
         getFlowContext().getApplicationContext().register(object, toRegister);
     }
 }
