@@ -95,7 +95,7 @@ public class WizardController {
     }
 
     /**
-     * This method will be called when the {@code back} action will be executed. The method handles the navigation of
+     * This method will be called when the {@code back} action is executed. The method handles the navigation of
      * the internal flow that contains the steps of the wizard as separate views. In addition the states of the action
      * buttons will be managed.
      * @throws VetoException If the navigation can't be executed
