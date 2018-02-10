@@ -11,7 +11,7 @@ import io.datafx.controller.flow.Flow;
  * won't be explained here any more.
  * </p>
  * <p>
- * This tutorial shows how navigation can be implemented with the FLow API. To do so two views are part of this example.
+ * This tutorial shows how navigation can be implemented with the Flow API. To do so two views are part of this example.
  * Both views are defined by controller classes: View1Controller and View2Controller. In the example you can navigate
  * from view1 to view2 and vice versa. To do so a Flow is created in this Application class and added to the Stage.
  * The Flow instance has view1 as its start view that is defined by passing its controller class (View1Controller) as the parameter
