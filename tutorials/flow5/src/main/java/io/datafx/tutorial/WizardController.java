@@ -43,7 +43,7 @@ import io.datafx.controller.util.VetoException;
 import javax.annotation.PostConstruct;
 
 /**
- * This class defines the main controller of the wizard. The complete action toolbar is managed here. In addition a
+ * This class defines the main controller of the wizard. The complete action toolbar is managed here. In addition, a
  * flow that contains all the custom views of the wizard is added to the view. The navigation for this internal flow
  * is managed here.
  */
@@ -66,8 +66,18 @@ public class WizardController {
     private FlowHandler flowHandler;
 
     /**
-     * The {@code init} method defines a internal flow that contains the steps of the wizard as separate views.
+     * Here, our {@code init} method defines a internal flow that contains the steps of the wizard as separate views.
      * This internal flow will use animations for the navigation between different views.
+     * <p>
+     * Using a snippet of the below as an example,
+     * <pre>{@code
+     * Flow(WizardView1Controller.class).
+     *     withLink(WizardView1Controller.class, "next", WizardView2Controller.class)
+     * }</pre>
+     * will make it so that whenever you're in Wizard1, the "next" button will take you to Wizard2.
+     * That is to say, that it will assign the action with the id of "next" to navigate to Wizard2, whenever you're
+     * in Wizard1.
+     *
      * @throws FlowException if the internal flow can't be created
      */
     @PostConstruct

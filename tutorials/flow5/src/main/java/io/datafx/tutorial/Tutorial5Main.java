@@ -36,8 +36,9 @@ import io.datafx.controller.flow.container.DefaultFlowContainer;
 
 /**
  * Main class of tutorial 5.
+ * <p>
  * A flow with only 1 view controller is created here. The view controller that is defined by the
- * {@link WizardController} class defines a internal flow that manages all the separate views of the wizard.
+ * {@link WizardController} class defines an internal flow that manages all the separate views of the wizard.
  * @see WizardController
  */
 public class Tutorial5Main  extends Application {
