@@ -69,7 +69,7 @@ import javax.annotation.PostConstruct;
  * <p>
  * As you will see later there are other types of actions than simply calling a method. These will be shown later in other tutorial.
  * For now the most important point is that a component that is annotated with @ActionTrigger can trigger a method that is annotated with
- * {link @io.datafx.controller.flow.action.ActionMethod} if both annotations define the same unique action id.
+ * {@link io.datafx.controller.flow.action.ActionMethod} if both annotations define the same unique action id.
  * So once the actionButton in this example is clicked the onAction() method will be called and the text of the label will change.
  * </p>
  * <p>
