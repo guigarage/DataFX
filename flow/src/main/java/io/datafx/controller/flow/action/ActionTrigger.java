@@ -32,7 +32,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that adds a action to the annotated node. The action is defined by an id. The {@link #value()}  field of
+ * Annotation that adds an action to the annotated node. The action is defined by an id. The {@link #value()}  field of
  * the annotation defines the id.
  * The node value must be injected from fxml. Therefore the ActionTrigger should be always used in combination with the
  * {@link javafx.fxml.FXML} annotation.

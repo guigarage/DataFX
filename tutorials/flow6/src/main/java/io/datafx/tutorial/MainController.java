@@ -75,7 +75,7 @@ public class MainController {
 
 
     @ActionMethod("navigate")
-    public void navigate() throws VetoException, FlowException {
+    public void onNavigate() throws VetoException, FlowException {
         actionHandler.navigate((Class<?>) group.getSelectedToggle().getUserData());
     }
 }
