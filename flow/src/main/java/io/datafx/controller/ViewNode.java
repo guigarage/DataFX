@@ -9,21 +9,21 @@ import java.lang.annotation.Target;
  * Annotation to define UI elements. The annotation can be used in a controller class and in a view class.
  * It can only be used for fields that define a {@link javafx.scene.Node} instance. Normally it will be used
  * to annotate children of the view:
- * <tt>
- *     &#64;ViewController
+ * <pre>{@code
+ *    @literal @ViewController
  *     public class SimpleController {
  *
- *        &#64;ViewNode
+ *       @literal @ViewNode
  *        private Button myButton;
  *
  *     }
- * </tt>
+ * }</pre>
  *
- * By using the annotation in the view class the annotated view element (node) will get an id. If the {@link #value()} of the
+ * By using the annotation in the view class, the annotated view element (node) will get an id. If the {@link #value()} of the
  * annotation is != "" the {@link #value()} will be used. Otherwise the name of the field will be used as the id of the node.
- *
+ * <p>
  * By using the annotation in the controller class the annotated view element (node) will be injected. To find the matching
- * node the {@link #value()} of the annotation will be used. If the {@link value} is == "" the name of the field will be
+ * node, the {@link #value()} of the annotation will be used. If the {@link #value() value} is == "" the name of the field will be
  * used as the id of the node.
  *
  */
