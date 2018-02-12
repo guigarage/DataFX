@@ -7,7 +7,7 @@ import io.datafx.controller.flow.action.LinkAction;
 
 /**
  * <p>
- * This class defines the controller for the second view of this example. The @FXMLController annotation defines that the
+ * This class defines the controller for the second view of this example. The @ViewController annotation defines that the
  * view2.fxml file contains the definition of the UI of this view.
  * As described in the Tutorial2Main class this example will show how you can navigate between several views in flow. In
  * this example there are only two views that are defined by its controller classes: View1Controller and View2Controller.

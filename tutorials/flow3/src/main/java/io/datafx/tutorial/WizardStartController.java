@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
  * is annotated with the  @PostConstruct annotation and therefore this method will be called once all fields of the
  * controller instance were injected. So when the view appears on screen the "back" button will be disabled.
  *
- * When looking at the @FXMLController annotation of the class you can find a new feature. next to the fxml files that
+ * When looking at the @ViewController annotation of the class you can find a new feature. next to the fxml files that
  * defines the view of the wizard step a "title" is added. This defines the title of the view. Because the wizard is
  * added to a Stage by using the Flow.startInStage() method the title of the flow is automatically bound to the window
  * title of the Stage. So whenever the view in the flow changes the title of the application window will change to the
