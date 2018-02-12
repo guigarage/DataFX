@@ -81,11 +81,14 @@ public class ViewFactory {
     /**
      * Creates a new MVC based view by using the given controller class. The
      * class needs a default constructor (no parameters) and a
-     * {@link ViewController} annotation to link to the fxml file. You can skip
-     * the annotation if you want to use the controller API conventions. By
-     * doing so the fxml files has to be in the package as the controller and
+     * {@link ViewController} annotation to link to the fxml file.
+     * <p>
+     * You can skip the annotation if you want to use the controller API conventions.
+     * In order to do so, the fxml file has to be in the same package as the controller and
      * must fit to a naming convention (see {@link ViewController} for more
-     * informations). The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
+     * information).
+     * <p>
+     * The method returns a {@link io.datafx.controller.context.ViewContext}. This is a
      * wrapper around the view (view-node and controller) and can be used to
      * register your datamodel to the view. The doc of {@link io.datafx.controller.context.ViewContext} will
      * provide more information about this topic.
