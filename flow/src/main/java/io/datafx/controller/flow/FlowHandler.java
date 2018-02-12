@@ -66,6 +66,7 @@ import io.datafx.core.ExceptionHandler;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+// FIXME: 2/10/2018 Needs documentation
 public class FlowHandler {
 
     private final ObservableList<ViewHistoryDefinition<?>> controllerHistory;
