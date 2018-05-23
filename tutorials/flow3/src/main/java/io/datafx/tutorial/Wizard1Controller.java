@@ -11,7 +11,7 @@ import io.datafx.controller.flow.action.LinkAction;
  * define the "next" button. By using the @LinkAction annotation this button will link on the next step of the
  * wizard. This annotation was already described in tutorial 2.
  *
- * When looking at the @FXMLController annotation of the class you can find a new feature. Next to the fxml files that
+ * When looking at the @ViewController annotation of the class you can find a new feature. Next to the fxml files that
  * defines the view of the wizard step a "title" is added. This defines the title of the view. Because the wizard is
  * added to a Stage by using the Flow.startInStage() method, the window title of the Stage is automatically bound to
  * the title of the flow. So whenever the view in the flow changes the title of the application window will change to

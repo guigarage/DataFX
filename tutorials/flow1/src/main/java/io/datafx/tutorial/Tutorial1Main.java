@@ -46,7 +46,7 @@ public class Tutorial1Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         // This is the most simple way to start a flow:
         // The Controller class of the start view is always passed as parameter to the constructor of the Flow class.
-        // The Controller class should be annotated with @FXMLController
+        // The Controller class should be annotated with @ViewController
         
         // The Flow class provides a utility method (startInStage) that renders the Flow in a Stage. By doing so the Scene will be created
         // automatically and the Stage will contain a Scene that only contains the flow.

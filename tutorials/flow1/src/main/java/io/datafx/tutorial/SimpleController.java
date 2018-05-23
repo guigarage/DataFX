@@ -37,7 +37,7 @@ import javax.annotation.PostConstruct;
 
 /**
  * This is the controller class for the view used in this first tutorial. 
- * By using the DataFX @FXMLController annotation
+ * By using the DataFX @ViewController annotation
  * the class defines its FXML file that contains the layout of the view and defines its UI components.
  * By using the JavaFX @FXML annotation that is part of the basic JavaFX API, components that are defined in the FXML file can be easily
  * injected in the controller. Once the controller is created the init() methods will be called by the Flow Framework. 

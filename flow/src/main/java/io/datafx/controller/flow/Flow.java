@@ -364,7 +364,7 @@ public class Flow {
      * Starts the flow directly in a Stage. This method is useful if an application contains of one main flow. Because
      * this flow can contain several sub-flows this is the preferred way to create a DataFX based application. The title
      * of the Stage will be bound to the title of the flow metadata and will change whenever the flow title fill change.
-     * This can happen if a view of the flow defines its own title by using the title attribute of the @FXMLController
+     * This can happen if a view of the flow defines its own title by using the title attribute of the @ViewController
      * annotation or the ViewMetadata of an view is changed in code.
      * <p>
      * By using the method a flow based application can be created by only a few lines of code as shown in this example:

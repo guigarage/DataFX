@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011, 2014, Jonathan Giles, Johan Vos, Hendrik Ebbers All
  * rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met: *
  * Redistributions of source code must retain the above copyright notice, this
@@ -12,7 +12,7 @@
  * javafxdata.org, nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written
  * permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -35,15 +35,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>
  * Annotation for a MVC controller. This annotation will define the view (FXML file or java class)
- * this controller is made for. You don't need to use this annotation because
- * the API is designed using a convention over configuration approach: If you
- * have a fxml file "master.fxml" you can create a MasterController.java
+ * this controller is made for.
+ * <p>
+ * You don't <i>need</i> to use this annotation—the API is designed
+ * using a convention over configuration approach: If you
+ * have an fxml file "master.fxml" you can create a MasterController.java
  * controller in the same package and the controller API will use this
  * controller for the fxml. To create a controller/view pair you need to use the
  * {@link ViewFactory}.
- * </p>
  * <p>
  * An example of a simple controller:
  * </p>
